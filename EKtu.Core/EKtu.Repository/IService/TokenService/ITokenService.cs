@@ -11,5 +11,7 @@ namespace EKtu.Repository.IService.TokenService
     {
         Task<Response<GenerateTokenResponseDto>> GeneratedTokenService(GenerateTokenRequestDto generateTokenRequestDto);
 
+        Task<Response<bool>> CheckToken(string accessToken);
+
     }
 }

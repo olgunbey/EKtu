@@ -1,9 +1,11 @@
 using EKtu.Persistence;
 using EKtu.Repository.Dtos;
 using EKtu.WEBAPI;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,7 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(x =>
         ValidateAudience = true
     };
 });
+
 builder.Services.AddAuthorization(y =>
 {
     y.AddPolicy("StudentPolicy", x => x.RequireClaim("scope", "student.read"));
