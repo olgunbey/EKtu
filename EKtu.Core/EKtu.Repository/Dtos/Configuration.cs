@@ -11,5 +11,8 @@ namespace EKtu.Repository.Dtos
         
         public string mail{ get; set; }
         public string mailPassword{ get; set; }
+        public string tokenKey { get; set; }
+        public string tokenIssuer{ get; set; }
+        public string tokenAudience{ get; set; }
     }
 }
