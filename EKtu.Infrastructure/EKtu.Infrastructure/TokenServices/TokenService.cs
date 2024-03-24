@@ -27,8 +27,8 @@ namespace EKtu.Infrastructure.TokenServices
 
               var y = await   handler.ValidateTokenAsync(accessToken, new TokenValidationParameters()
                 {
-                  IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Value.tokenKey)),
-                  ValidateIssuer = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Value.tokenKey)),
+                    ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidIssuer = _options.Value.tokenIssuer,
@@ -36,7 +36,6 @@ namespace EKtu.Infrastructure.TokenServices
                     LifetimeValidator= CustomLifeTimeValidator
 
               });
-                
             if(y.IsValid)
             {
                 return Response<bool>.Success(200);
@@ -45,23 +44,19 @@ namespace EKtu.Infrastructure.TokenServices
             {
                 if (y.Exception.Message == "IDX10230: Lifetime validation failed. Delegate returned false, securitytoken: '[PII of type 'System.IdentityModel.Tokens.Jwt.JwtSecurityToken' is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'.")
                     return Response<bool>.Fail("süresi geçmiş", 401);
-
-                if (y.Exception.Message != null)
+                else
                     return Response<bool>.Fail("geçersiz sayfa", 401);
             }
-                return Response<bool>.Success(200);
                
-
-            
-        
         }
         public bool CustomLifeTimeValidator(DateTime? notBefore,DateTime? expires, SecurityToken tokenToValidate, TokenValidationParameters @param)
         {
+          //var y = param.Clone(); //burada herşeyi kontrol edebiliriz
+            
             if(expires != null && notBefore !=null)
             {
                 var expiresNow = expires.Value.ToLocalTime();
                 var beforeNow = notBefore.Value.ToLocalTime();
-
                if(expiresNow > DateTime.Now)
                 {
                     return true;
