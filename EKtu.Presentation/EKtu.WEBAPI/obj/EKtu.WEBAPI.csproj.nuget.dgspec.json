@@ -170,6 +170,10 @@
               "target": "Package",
               "version": "[6.35.0, )"
             },
+            "ServiceStack.Redis": {
+              "target": "Package",
+              "version": "[8.2.2, )"
+            },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[6.35.0, )"
@@ -341,6 +345,14 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[7.0.17, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "ServiceStack.Redis": {
+              "target": "Package",
+              "version": "[8.2.2, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

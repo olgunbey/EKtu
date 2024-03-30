@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace EKtu.WEBAPI.Controllers
 {
@@ -22,14 +23,10 @@ namespace EKtu.WEBAPI.Controllers
             _tokenService = tokenService;
             this.options = options;
         }
-        [HttpPost] //[FromBody] string GenerateToken
-        public async Task<IActionResult> GenerateToken() //token'de bir sıkıntı var 
+        [HttpPost]
+        public async Task<IActionResult> GenerateToken([FromBody]string GenerateToken) //token'de bir sıkıntı var 
         {
-            //GenerateTokenRequestDto? generateTokenRequestDto = JsonSerializer.Deserialize<GenerateTokenRequestDto>(GenerateToken);
-            GenerateTokenRequestDto generateTokenRequestDto = new GenerateTokenRequestDto()
-            {
-                userId = 2
-            };
+            GenerateTokenRequestDto? generateTokenRequestDto = JsonSerializer.Deserialize<GenerateTokenRequestDto>(GenerateToken);
 
             var generateTokenResponseDto = await _tokenService.GeneratedTokenService(generateTokenRequestDto!);
 

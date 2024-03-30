@@ -12,6 +12,7 @@ namespace EKtu.WEBAPI.Controllers
         {
             if (response.StatusCode == 204)
                 return new ObjectResult(null);
+            Response.StatusCode = response.StatusCode;
             return new ObjectResult(response);
 
         }

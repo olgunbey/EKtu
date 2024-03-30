@@ -23,7 +23,7 @@ namespace EKtu.Persistence.Service.StudentService
             studentBuilder = new StudentBuilder();
         }
 
-        public async Task<Response<bool>> AddStudentHashPasswordAsync(StudentRequestDto studentRequestDto)
+        public async Task<Response<NoContent>> AddStudentHashPasswordAsync(StudentRequestDto studentRequestDto)
         {
           string HashedPassword= HashTransaction.HashPassword(studentRequestDto.StudentPassword);
 
@@ -39,11 +39,11 @@ namespace EKtu.Persistence.Service.StudentService
             {
                 await studentRepository.AddAsync(student);
                 await _saves.SaveChangesAsync();
-                return Response<bool>.Success(true, 200);
+                return Response<NoContent>.Success(200);
             }
             catch (Exception)
             {
-                return Response<bool>.Fail("hata öğrenci eklenemedi", 200);
+                return Response<NoContent>.Fail("hata öğrenci eklenemedi", 204);
 
                 throw;
             }
@@ -83,7 +83,7 @@ namespace EKtu.Persistence.Service.StudentService
         {
           Student student= await studentRepository.FirstOrDefaultAsync(y=>y.Email== studentEmail);
             if (student == null)
-                return Response<int>.Fail("mail adresi bulunamadı", 200);
+                return Response<int>.Fail("mail adresi bulunamadı", 404);
 
             return Response<int>.Success(student.Id, 200);
 

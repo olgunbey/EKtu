@@ -94,3 +94,9 @@ C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EK
 C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.WEBAPI\bin\Debug\net7.0\Microsoft.Extensions.Configuration.dll
 C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.WEBAPI\bin\Debug\net7.0\Microsoft.Extensions.Configuration.Abstractions.dll
 C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.WEBAPI\bin\Debug\net7.0\Microsoft.Extensions.Primitives.dll
+C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.WEBAPI\bin\Debug\net7.0\ServiceStack.Common.dll
+C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.WEBAPI\bin\Debug\net7.0\ServiceStack.Interfaces.dll
+C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.WEBAPI\bin\Debug\net7.0\ServiceStack.Redis.dll
+C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.WEBAPI\bin\Debug\net7.0\ServiceStack.Text.dll
+C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.WEBAPI\bin\Debug\net7.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.WEBAPI\bin\Debug\net7.0\Newtonsoft.Json.dll

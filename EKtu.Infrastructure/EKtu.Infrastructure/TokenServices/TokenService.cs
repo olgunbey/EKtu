@@ -50,9 +50,7 @@ namespace EKtu.Infrastructure.TokenServices
                
         }
         public bool CustomLifeTimeValidator(DateTime? notBefore,DateTime? expires, SecurityToken tokenToValidate, TokenValidationParameters @param)
-        {
-          //var y = param.Clone(); //burada herşeyi kontrol edebiliriz
-            
+        {   
             if(expires != null && notBefore !=null)
             {
                 var expiresNow = expires.Value.ToLocalTime();
@@ -88,10 +86,15 @@ namespace EKtu.Infrastructure.TokenServices
             GenerateTokenResponseDto response = new GenerateTokenResponseDto()
             {
                 AccessToken = token,
-                AccessTokenLifeTime = newTimes
-
+                AccessTokenLifeTime = newTimes,
+                RefreshToken = GenerateRefreshToken(),
+                RefreshTokenLifeTime=DateTime.Now.AddDays(1),
             };
            return Task.FromResult(Response<GenerateTokenResponseDto>.Success(response, 200));
+        }
+        private string GenerateRefreshToken()
+        {
+            return new Guid().ToString();
         }
     }
 }
