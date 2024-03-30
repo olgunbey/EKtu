@@ -10,7 +10,7 @@ namespace EKtu.Repository.IService.StudentService
 {
     public interface IStudentService:IBaseService<Student> 
     {
-        Task<Response<bool>> AddStudentHashPasswordAsync(StudentRequestDto studentRequestDto);
+        Task<Response<NoContent>> AddStudentHashPasswordAsync(StudentRequestDto studentRequestDto);
 
         Task<Response<List<StudentListExamGrandeResponseDto>>> StudentListExamGrandeAsync(int studentId);
 

@@ -1,9 +1,10 @@
-﻿using EKtu.Domain.Entities;
-using EKtu.Repository.Dtos;
+﻿using EKtu.Repository.Dtos;
 using EKtu.Repository.IService.StudentService;
+using EKtu.WEBAPI.Filters;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
+using System.Text.Json;
 
 namespace EKtu.WEBAPI.Controllers
 {
@@ -20,19 +21,27 @@ namespace EKtu.WEBAPI.Controllers
         public async Task<IActionResult> AddStudent([FromBody]StudentRequestDto studentRequestDto)
         {
             var responseDto=  await _studentService.AddStudentHashPasswordAsync(studentRequestDto);
-            return ResponseData<bool>(responseDto);
+            return ResponseData(responseDto);
         }
         [HttpGet]
-        [Authorize(Policy = "StudentPolicy")]
         public async Task<IActionResult> StudentListExamGrande([FromHeader]int studentId)
         {
+
             var response=  await _studentService.StudentListExamGrandeAsync(studentId);
-            return ResponseData<List<StudentListExamGrandeResponseDto>>(response);
+            return ResponseData(response);
         }
+
+        [TypeFilter(typeof(StudentLoginCache))]
         [HttpPost]
-        public async Task<IActionResult> StudentLogin([FromBody]StudentLoginRequestDto studentLoginRequestDto)
+        public async Task<IActionResult> StudentLogin([FromBody]StudentLoginRequestDto studentLoginRequestDto, [FromHeader]int studentId)
         {
-            var response= await  _studentService.StudentLogin(studentLoginRequestDto);
+            var response = await _studentService.StudentLogin(studentLoginRequestDto);
+            return ResponseData(response);
+        }
+        [HttpGet]
+        public async Task<IActionResult> StudentGetById([FromHeader]int id)
+        {
+            var response = await _studentService.GetByIdAsync(id);
             return ResponseData(response);
         }
     }

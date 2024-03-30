@@ -170,6 +170,10 @@
               "target": "Package",
               "version": "[6.35.0, )"
             },
+            "ServiceStack.Redis": {
+              "target": "Package",
+              "version": "[8.2.2, )"
+            },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[6.35.0, )"

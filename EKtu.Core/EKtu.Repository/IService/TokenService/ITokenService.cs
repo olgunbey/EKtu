@@ -13,5 +13,6 @@ namespace EKtu.Repository.IService.TokenService
 
         Task<Response<bool>> CheckToken(string accessToken);
 
+
     }
 }

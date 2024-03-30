@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ServiceStack.Redis;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DatabaseContext>(y => y.UseSqlServer(builder.Configuration.GetConnectionString("mydb"))); //burada kaldým
 builder.Services.AddedService();
 builder.Services.Configure<Configuration>(builder.Configuration.GetSection("Configuration"));
+builder.Services.AddSingleton<IRedisClient>(y =>
+{
+   var ClientManager=  new RedisManagerPool(builder.Configuration.GetConnectionString("redis"));
+   return ClientManager.GetClient();
+});
+
+
 builder.Services.AddAuthentication("Bearer").AddJwtBearer(x =>
 {
     x.Authority = "https://localhost:7134";
@@ -26,12 +34,6 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(x =>
     {
         ValidateAudience = true
     };
-});
-
-builder.Services.AddAuthorization(y =>
-{
-    y.AddPolicy("StudentPolicy", x => x.RequireClaim("scope", "student.read"));
-
 });
 builder.Services.AddOptions();
 

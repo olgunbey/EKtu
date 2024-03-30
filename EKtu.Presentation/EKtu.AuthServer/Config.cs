@@ -32,7 +32,7 @@ namespace EKtu.AuthServer
                 {
                     new Secret("secret".Sha256())
                 },
-                AllowedScopes={"teacher.read","teacher.update"}
+                AllowedScopes={"student.update"}
             },
             new Client()
             {
@@ -42,7 +42,7 @@ namespace EKtu.AuthServer
                 {
                     new Secret("secret".Sha256())
                 },
-                AllowedScopes={"teacher.delete"}
+                AllowedScopes={"teacher.delete","teacher.read","student.delete"}
             }
         };
         public static IEnumerable<ApiResource> GetApiResources() => new List<ApiResource>()
