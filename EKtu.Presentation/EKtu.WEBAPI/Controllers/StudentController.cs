@@ -1,5 +1,6 @@
 ﻿using EKtu.Repository.Dtos;
 using EKtu.Repository.IService.StudentService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EKtu.WEBAPI.Controllers
@@ -20,6 +21,7 @@ namespace EKtu.WEBAPI.Controllers
             return ResponseData(responseDto);
         }
         [HttpGet]
+        [Authorize(Policy ="StudentList")]
         public async Task<IActionResult> StudentListExamGrande([FromHeader]int studentId)
         {
 
@@ -27,12 +29,6 @@ namespace EKtu.WEBAPI.Controllers
             return ResponseData(response);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> StudentLogin([FromBody]StudentLoginRequestDto studentLoginRequestDto)
-        {
-            var response = await _studentService.StudentLogin(studentLoginRequestDto);
-            return ResponseData(response);
-        }
         [HttpGet]
         public async Task<IActionResult> StudentGetById([FromHeader]int id)
         {
