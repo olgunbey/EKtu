@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EKtu.Repository.IService.PrincipalService
 {
-    public interface IPrincipalService:IBaseService<Principal>,IPasswordService<Principal>
+    public interface IPrincipalService:IBaseService<Principal>
     {
     }
 }

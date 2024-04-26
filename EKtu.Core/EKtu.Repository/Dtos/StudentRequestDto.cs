@@ -10,6 +10,7 @@ namespace EKtu.Repository.Dtos
     {
         public string StudentName{ get; set; }
         public string StudentLastName{ get; set; }
+        public string Email{ get; set; }
         public string StudentPassword { get; set; }
         public string StudentTckNo{ get; set; }
         public int ClassId { get; set; }

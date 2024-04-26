@@ -33,6 +33,7 @@ namespace EKtu.Persistence.Service.StudentService
                 .LastName(studentRequestDto.StudentLastName)
                 .ClassId(studentRequestDto.ClassId)
                 .Password(HashedPassword)
+                .Email(studentRequestDto.Email)
                 .TckNo(studentRequestDto.StudentTckNo).Student();
 
             try //burayı bir transaction ile yönet
@@ -44,7 +45,6 @@ namespace EKtu.Persistence.Service.StudentService
             catch (Exception)
             {
                 return Response<NoContent>.Fail("hata öğrenci eklenemedi", 204);
-
                 throw;
             }
         }

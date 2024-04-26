@@ -30,6 +30,7 @@ namespace EKtu.WEBAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy ="StudentId")]
         public async Task<IActionResult> StudentGetById([FromHeader]int id)
         {
             var response = await _studentService.GetByIdAsync(id);

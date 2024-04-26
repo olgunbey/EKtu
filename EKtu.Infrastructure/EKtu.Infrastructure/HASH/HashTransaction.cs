@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EKtu.Infrastructure.HASH
 {
-    public class HashTransaction
+    public static class HashTransaction
     {
         public static string HashPassword(string password)
         {
