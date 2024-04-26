@@ -25,19 +25,13 @@ builder.Services.AddSingleton<IRedisClient>(y =>
    return ClientManager.GetClient();
 });
 
-builder.Services.AddAuthorization(x =>
-{
-    x.AddPolicy("StudentList", y =>
-    {
-        y.RequireClaim("scope", "exam.list");
-    });
-});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
 {
     x.Authority = "https://localhost:7134";
     x.Audience = "BaseApi";
 });
+
 builder.Services.AddOptions();
 
 var app = builder.Build();

@@ -14,6 +14,7 @@ namespace EKtu.Persistence.Builder.IBuilder
         public IStudentBuilder TckNo(string tckNo);
         public IStudentBuilder Password(string password);
         public IStudentBuilder ClassId(int classId);
+        public IStudentBuilder Email(string email);
         public Student Student();
     }
 }

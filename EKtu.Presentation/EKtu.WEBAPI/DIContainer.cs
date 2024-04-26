@@ -1,4 +1,5 @@
-﻿using EKtu.Infrastructure.CacheServices;
+﻿using EKtu.Domain.Entities;
+using EKtu.Infrastructure.CacheServices;
 using EKtu.Infrastructure.EmailService;
 using EKtu.Infrastructure.TokenServices;
 using EKtu.Persistence.Repository.EmailPasswordRepository;
@@ -7,6 +8,7 @@ using EKtu.Persistence.Repository.StudentRepository;
 using EKtu.Persistence.Repository.TeacherRepository;
 using EKtu.Persistence.Repositorys;
 using EKtu.Persistence.Service;
+using EKtu.Persistence.Service.EmailPasswordService;
 using EKtu.Persistence.Service.PrincipalService;
 using EKtu.Persistence.Service.StudentService;
 using EKtu.Persistence.Service.TeacherService;
@@ -42,7 +44,7 @@ namespace EKtu.WEBAPI
             serviceDescriptors.AddScoped<IPrincipalService,PrincipalService>();
             serviceDescriptors.AddScoped<IPrincipalRepository, PrincipalRepository>();
             serviceDescriptors.AddScoped(typeof(IPasswordRepository<>), typeof(EmailPasswordRepository<>));
-            serviceDescriptors.AddScoped(typeof(IPasswordService<>), typeof(EmailPasswordService<>));
+            serviceDescriptors.AddScoped(typeof(IPasswordService<>), typeof(PasswordService<>));
         }
     }
 }

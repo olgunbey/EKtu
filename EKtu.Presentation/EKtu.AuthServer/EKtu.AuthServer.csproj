@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\EKtu.Core\EKtu.Repository\EKtu.Repository.csproj" />
+    <ProjectReference Include="..\..\EKtu.Infrastructure\EKtu.Infrastructure\EKtu.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Ektu.Infrastructure\EKtu.Persistence\EKtu.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

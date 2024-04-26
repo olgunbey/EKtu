@@ -21,6 +21,12 @@ namespace EKtu.Persistence.Builder.BuilderCreate
             return this;
         }
 
+        public IStudentBuilder Email(string email)
+        {
+            student.Email = email;
+            return this;
+        }
+
         public IStudentBuilder FirstName(string firstName)
         {
             student.FirstName = firstName;

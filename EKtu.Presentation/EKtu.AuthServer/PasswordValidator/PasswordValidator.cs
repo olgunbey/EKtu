@@ -1,5 +1,5 @@
 ﻿using EKtu.Domain.Entities;
-using EKtu.Repository.IService;
+using EKtu.Repository.IService.EmailPasswordService;
 using IdentityModel;
 using IdentityServer4.Models;
 using IdentityServer4.Validation;
