@@ -2,11 +2,6 @@
 using EKtu.Persistence.Repositorys;
 using EKtu.Repository.IRepository.StudentRepository;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EKtu.Persistence.Repository.StudentRepository
 {

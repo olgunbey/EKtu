@@ -41,3 +41,7 @@ C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EK
 C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.AuthServer\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.AuthServer\obj\Debug\net7.0\EKtu.AuthServer.csproj.AssemblyReference.cache
 C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.AuthServer\obj\Debug\net7.0\EKtu.AuthServer.csproj.CopyComplete
+C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.AuthServer\bin\Debug\net7.0\EKtu.Domain.dll
+C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.AuthServer\bin\Debug\net7.0\EKtu.Repository.dll
+C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.AuthServer\bin\Debug\net7.0\EKtu.Repository.pdb
+C:\Users\olgun\OneDrive\Masaüstü\EKtuProje\EKtuProje\EKtu\EKtu.Presentation\EKtu.AuthServer\bin\Debug\net7.0\EKtu.Domain.pdb

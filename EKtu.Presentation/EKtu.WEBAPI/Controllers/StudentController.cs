@@ -1,10 +1,6 @@
 ﻿using EKtu.Repository.Dtos;
 using EKtu.Repository.IService.StudentService;
-using EKtu.WEBAPI.Filters;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using System.Text.Json;
 
 namespace EKtu.WEBAPI.Controllers
 {
@@ -31,9 +27,8 @@ namespace EKtu.WEBAPI.Controllers
             return ResponseData(response);
         }
 
-        [TypeFilter(typeof(StudentLoginCache))]
         [HttpPost]
-        public async Task<IActionResult> StudentLogin([FromBody]StudentLoginRequestDto studentLoginRequestDto, [FromHeader]int studentId)
+        public async Task<IActionResult> StudentLogin([FromBody]StudentLoginRequestDto studentLoginRequestDto)
         {
             var response = await _studentService.StudentLogin(studentLoginRequestDto);
             return ResponseData(response);

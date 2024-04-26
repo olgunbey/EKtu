@@ -4,53 +4,74 @@ namespace EKtu.AuthServer
 {
     public class Config
     {
+        public static IEnumerable<IdentityResource> GetIdentityResources() => new List<IdentityResource>()
+        {
+            new IdentityResources.OpenId(),
+            new IdentityResources.Email(),
+        };
         public static IEnumerable<ApiScope> GetApiScopes() => new List<ApiScope>()
         {
-            new ApiScope("student.read","öğrenci için okuma izni"),
-            new ApiScope("teacher.read","öğretmen için okuma izni"),
-            new ApiScope("teacher.update","öğretmen için güncelleme izni"),
-            new ApiScope("teacher.delete","öğretmen için silme izni")
+            new ApiScope("exam.update","not girişi"),
+            new ApiScope("exam.read","notları görme"),
+            new ApiScope("exam.list","sınav sonuçlarını listeleme"),
+
+            new ApiScope("student.delete","öğrenci silme"),
+            new ApiScope("student.update","öğrenci bilgi güncelleme"),
+            new ApiScope("student.added","öğrenci ekleme"),
+
+            new ApiScope("absence.entry","devamsızlık giriş")
+            
 
         };
         public static IEnumerable<Client> GetClients() => new List<Client>()
         {
             new Client()
             {
-                ClientId="StudentClient",
-                AllowedGrantTypes=GrantTypes.ClientCredentials,
-                ClientSecrets =
-                {
-                    new Secret("secret".Sha256())
-                },
-                AllowedScopes={"student.read"}
+                ClientId="ResourceOwnerTeacher",
+                AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
+                ClientSecrets=new[]{new Secret("secret".Sha256())},
+                AllowedScopes={"exam.update","exam.read"}
             },
             new Client()
             {
-                ClientId="TeacherClient",
-                AllowedGrantTypes=GrantTypes.ClientCredentials,
-                ClientSecrets =
-                {
-                    new Secret("secret".Sha256())
-                },
-                AllowedScopes={"student.update"}
+                ClientId="ResourceOwnerPrincipal",
+                AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
+                ClientSecrets=new[]{new Secret("secret".Sha256())},
+                AllowedScopes={"student.delete","student.update","student.added","exam.read", "absence.entry" }
             },
             new Client()
             {
-                ClientId="PrincipalClient",
-                AllowedGrantTypes=GrantTypes.ClientCredentials,
-                ClientSecrets =
-                {
-                    new Secret("secret".Sha256())
-                },
-                AllowedScopes={"teacher.delete","teacher.read","student.delete"}
+                ClientId="ResourceOwnerStudent",
+                AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
+                ClientSecrets=new[]{new Secret("secret".Sha256())},
+                AllowedScopes={"exam.list"}
             }
         };
         public static IEnumerable<ApiResource> GetApiResources() => new List<ApiResource>()
         {
-            new ApiResource("Api")
+            #region ApiResourceler
+            //new ApiResource()
+            //{
+            //    Name="TeacherApi",
+            //    Scopes={"exam.update","exam.read"},
+            //},
+            //new ApiResource()
+            //{
+            //    Name="StudentApi",
+            //    Scopes={"exam.list"}
+            //},
+            //new ApiResource()
+            //{
+            //    Name="PrincipalApi",
+            //    Scopes={ "student.delete", "student.update", "student.added", "exam.read", "absence.entry" }
+            //},
+            #endregion 
+            
+            new ApiResource()
             {
-                Scopes = new[] {"student.read","teacher.read","teacher.update","teacher.delete"}
-            },
+                Name="BaseApi",
+                Scopes={"exam.update","exam.read","exam.list", "student.delete", "student.update", "student.added", "exam.read", "absence.entry" }
+            }
         };
     }
 }

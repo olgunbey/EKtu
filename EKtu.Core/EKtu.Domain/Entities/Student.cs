@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EKtu.Domain.Entities
 {
-    public class Student:BaseEntity
+    public class Student:BasePersonEntity
     {
         public string FirstName{ get; set; }
         public string LastName { get; set; }
