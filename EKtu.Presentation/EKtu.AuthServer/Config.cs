@@ -19,7 +19,8 @@ namespace EKtu.AuthServer
             new ApiScope("student.update","öğrenci bilgi güncelleme"),
             new ApiScope("student.added","öğrenci ekleme"),
 
-            new ApiScope("absence.entry","devamsızlık giriş")
+            new ApiScope("absence.entry","devamsızlık giriş"),
+            new ApiScope("base.token","client credentials")
             
 
         };
@@ -57,6 +58,14 @@ namespace EKtu.AuthServer
                 RefreshTokenExpiration=TokenExpiration.Absolute,
                 AccessTokenLifetime=3,
                 AbsoluteRefreshTokenLifetime=900
+            },
+            new Client()
+            {
+                ClientId="ClientCredentials",
+                AllowedGrantTypes=GrantTypes.ClientCredentials,
+                ClientSecrets=new[]{new Secret("secret".Sha256())},
+                AllowedScopes={ "base.token" }
+
             }
         };
         public static IEnumerable<ApiResource> GetApiResources() => new List<ApiResource>()
@@ -82,7 +91,7 @@ namespace EKtu.AuthServer
             new ApiResource()
             {
                 Name="BaseApi",
-                Scopes={"exam.update","exam.read","exam.list", "student.delete", "student.update", "student.added", "exam.read", "absence.entry" }
+                Scopes={"exam.update","exam.read","exam.list", "student.delete", "student.update", "student.added", "exam.read", "absence.entry", "base.token" }
             }
         };
     }

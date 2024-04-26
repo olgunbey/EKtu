@@ -2,21 +2,27 @@
 using EKtu.Infrastructure.CacheServices;
 using EKtu.Infrastructure.EmailService;
 using EKtu.Infrastructure.TokenServices;
+using EKtu.Persistence.Builder.BuilderCreate;
+using EKtu.Persistence.Builder.IBuilder;
+using EKtu.Persistence.Repository.AddPersonRepository;
 using EKtu.Persistence.Repository.EmailPasswordRepository;
 using EKtu.Persistence.Repository.PrincipalRepository;
 using EKtu.Persistence.Repository.StudentRepository;
 using EKtu.Persistence.Repository.TeacherRepository;
 using EKtu.Persistence.Repositorys;
 using EKtu.Persistence.Service;
+using EKtu.Persistence.Service.AddPersonService;
 using EKtu.Persistence.Service.EmailPasswordService;
 using EKtu.Persistence.Service.PrincipalService;
 using EKtu.Persistence.Service.StudentService;
 using EKtu.Persistence.Service.TeacherService;
 using EKtu.Repository.IRepository;
+using EKtu.Repository.IRepository.AddPersonRepository;
 using EKtu.Repository.IRepository.PrincipalRepository;
 using EKtu.Repository.IRepository.StudentRepository;
 using EKtu.Repository.IRepository.TeacherRepository;
 using EKtu.Repository.IService;
+using EKtu.Repository.IService.AddPersonService;
 using EKtu.Repository.IService.CacheService;
 using EKtu.Repository.IService.EmailPasswordService;
 using EKtu.Repository.IService.EmailService;
@@ -45,6 +51,9 @@ namespace EKtu.WEBAPI
             serviceDescriptors.AddScoped<IPrincipalRepository, PrincipalRepository>();
             serviceDescriptors.AddScoped(typeof(IPasswordRepository<>), typeof(EmailPasswordRepository<>));
             serviceDescriptors.AddScoped(typeof(IPasswordService<>), typeof(PasswordService<>));
+            serviceDescriptors.AddScoped(typeof(IAddPersonService<>), typeof(AddPersonService<>));
+            serviceDescriptors.AddScoped(typeof(IAddPersonRepository<>), typeof(AddPersonRepository<>));
+            serviceDescriptors.AddSingleton<IStudentBuilder, StudentBuilder>();
         }
     }
 }

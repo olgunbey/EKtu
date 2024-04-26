@@ -13,6 +13,10 @@ namespace EKtu.WEBAPI
                 {
                     y.RequireClaim("scope", "exam.list");
                 });
+                x.AddPolicy("ClientCredentials", y =>
+                {
+                    y.RequireClaim("scope", "base.token");
+                });
             });
         }
     }

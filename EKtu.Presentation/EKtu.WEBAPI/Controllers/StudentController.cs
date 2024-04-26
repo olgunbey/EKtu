@@ -1,4 +1,8 @@
-﻿using EKtu.Repository.Dtos;
+﻿using EKtu.Domain.Entities;
+using EKtu.Persistence.Builder.IBuilder;
+using EKtu.Repository.Dtos;
+using EKtu.Repository.IRepository.AddPersonRepository;
+using EKtu.Repository.IService.AddPersonService;
 using EKtu.Repository.IService.StudentService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,22 +14,34 @@ namespace EKtu.WEBAPI.Controllers
     public class StudentController : ResponseBase
     {
         private readonly IStudentService _studentService;
-        public StudentController(IStudentService studentService)
+        private readonly IAddPersonService<Student> addPersonService;
+        private readonly IStudentBuilder studentBuilder;
+        public StudentController(IStudentService studentService,IAddPersonService<Student> addPersonService,IStudentBuilder studentBuilder)
         {
             _studentService = studentService;
+            this.addPersonService = addPersonService;
+            this.studentBuilder = studentBuilder;
         }
         [HttpPost]
+        [Authorize("ClientCredentials")]    
         public async Task<IActionResult> AddStudent([FromBody]StudentRequestDto studentRequestDto)
         {
-            var responseDto=  await _studentService.AddStudentHashPasswordAsync(studentRequestDto);
-            return ResponseData(responseDto);
+          Student studentBuilders=  studentBuilder
+                .LastName(studentRequestDto.StudentLastName)
+                .FirstName(studentRequestDto.StudentName)
+                .Email(studentRequestDto.Email)
+                .TckNo(studentRequestDto.StudentTckNo)
+                .ClassId(studentRequestDto.ClassId)
+                .Password(studentRequestDto.StudentPassword).Student();
+
+            return ResponseData(await addPersonService.AddAsync(studentBuilders));
         }
         [HttpGet]
         [Authorize(Policy ="StudentList")]
         public async Task<IActionResult> StudentListExamGrande([FromHeader]int studentId)
         {
 
-            var response=  await _studentService.StudentListExamGrandeAsync(studentId);
+            var response= await _studentService.StudentListExamGrandeAsync(studentId);
             return ResponseData(response);
         }
 

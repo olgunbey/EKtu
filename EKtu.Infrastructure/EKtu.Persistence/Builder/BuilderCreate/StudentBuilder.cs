@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EKtu.Persistence.Builder.BuilderCreate
 {
-    internal class StudentBuilder : IStudentBuilder
+    public class StudentBuilder : IStudentBuilder
     {
         private Student student;
         public StudentBuilder()
