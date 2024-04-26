@@ -30,21 +30,33 @@ namespace EKtu.AuthServer
                 ClientId="ResourceOwnerTeacher",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
-                AllowedScopes={"exam.update","exam.read"}
+                AllowedScopes={"exam.update","exam.read"},
+                RefreshTokenUsage=TokenUsage.ReUse,
+                RefreshTokenExpiration=TokenExpiration.Absolute,
+                AccessTokenLifetime=3,
+                AbsoluteRefreshTokenLifetime=900
             },
             new Client()
             {
                 ClientId="ResourceOwnerPrincipal",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
-                AllowedScopes={"student.delete","student.update","student.added","exam.read", "absence.entry" }
+                AllowedScopes={"student.delete","student.update","student.added","exam.read", "absence.entry" },
+                RefreshTokenUsage=TokenUsage.ReUse,
+                RefreshTokenExpiration=TokenExpiration.Absolute,
+                AccessTokenLifetime=3,
+                AbsoluteRefreshTokenLifetime=900
             },
             new Client()
             {
                 ClientId="ResourceOwnerStudent",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
-                AllowedScopes={"exam.list"}
+                AllowedScopes={"exam.list"},
+                RefreshTokenUsage=TokenUsage.ReUse,
+                RefreshTokenExpiration=TokenExpiration.Absolute,
+                AccessTokenLifetime=3,
+                AbsoluteRefreshTokenLifetime=900
             }
         };
         public static IEnumerable<ApiResource> GetApiResources() => new List<ApiResource>()
