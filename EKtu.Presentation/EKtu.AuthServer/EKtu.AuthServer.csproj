@@ -10,4 +10,8 @@
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\EKtu.Core\EKtu.Repository\EKtu.Repository.csproj" />
+  </ItemGroup>
+
 </Project>

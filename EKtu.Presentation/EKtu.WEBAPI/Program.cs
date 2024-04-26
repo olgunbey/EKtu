@@ -26,14 +26,10 @@ builder.Services.AddSingleton<IRedisClient>(y =>
 });
 
 
-builder.Services.AddAuthentication("Bearer").AddJwtBearer(x =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
 {
     x.Authority = "https://localhost:7134";
-    x.Audience = "Api";
-    x.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateAudience = true
-    };
+    x.Audience = "BaseApi";
 });
 builder.Services.AddOptions();
 

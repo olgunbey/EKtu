@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v7.0": {
       "EKtu.AuthServer/1.0.0": {
         "dependencies": {
+          "EKtu.Repository": "1.0.0",
           "IdentityServer4": "4.1.2"
         },
         "runtime": {
@@ -143,7 +144,20 @@
         }
       },
       "System.Security.Cryptography.Cng/4.5.0": {},
-      "System.Text.Encodings.Web/4.7.0": {}
+      "System.Text.Encodings.Web/4.7.0": {},
+      "EKtu.Domain/1.0.0": {
+        "runtime": {
+          "EKtu.Domain.dll": {}
+        }
+      },
+      "EKtu.Repository/1.0.0": {
+        "dependencies": {
+          "EKtu.Domain": "1.0.0"
+        },
+        "runtime": {
+          "EKtu.Repository.dll": {}
+        }
+      }
     }
   },
   "libraries": {
@@ -242,6 +256,16 @@
       "sha512": "sha512-IJanJWPQvya2sbGStt3Fkdy4IaomUBSadAfYWeJDQw0zclMk9ixSvMeei6cSmTTQ6ZkGIIAbhHZVCoLR7GgX7Q==",
       "path": "system.text.encodings.web/4.7.0",
       "hashPath": "system.text.encodings.web.4.7.0.nupkg.sha512"
+    },
+    "EKtu.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "EKtu.Repository/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

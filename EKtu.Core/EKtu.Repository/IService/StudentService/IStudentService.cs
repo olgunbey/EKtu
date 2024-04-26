@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EKtu.Repository.IService.StudentService
 {
-    public interface IStudentService:IBaseService<Student> 
+    public interface IStudentService:IBaseService<Student>
     {
         Task<Response<NoContent>> AddStudentHashPasswordAsync(StudentRequestDto studentRequestDto);
 
