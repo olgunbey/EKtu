@@ -33,7 +33,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 
 builder.Services.AddOptions();
-
+builder.Services.Authorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

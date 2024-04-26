@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EKtu.Persistence.Builder.IBuilder
 {
-    internal interface IStudentBuilder
+    public interface IStudentBuilder
     {
         public IStudentBuilder FirstName(string firstName);
         public IStudentBuilder LastName(string lastName);

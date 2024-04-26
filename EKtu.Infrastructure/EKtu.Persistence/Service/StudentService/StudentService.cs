@@ -23,32 +23,6 @@ namespace EKtu.Persistence.Service.StudentService
             studentBuilder = new StudentBuilder();
         }
 
-        public async Task<Response<NoContent>> AddStudentHashPasswordAsync(StudentRequestDto studentRequestDto)
-        {
-          string HashedPassword= HashTransaction.HashPassword(studentRequestDto.StudentPassword);
-
-
-          Student student= studentBuilder
-                .FirstName(studentRequestDto.StudentName)
-                .LastName(studentRequestDto.StudentLastName)
-                .ClassId(studentRequestDto.ClassId)
-                .Password(HashedPassword)
-                .Email(studentRequestDto.Email)
-                .TckNo(studentRequestDto.StudentTckNo).Student();
-
-            try //burayı bir transaction ile yönet
-            {
-                await studentRepository.AddAsync(student);
-                await _saves.SaveChangesAsync();
-                return Response<NoContent>.Success(200);
-            }
-            catch (Exception)
-            {
-                return Response<NoContent>.Fail("hata öğrenci eklenemedi", 204);
-                throw;
-            }
-        }
-
         public async Task<Response<List<StudentListExamGrandeResponseDto>>> StudentListExamGrandeAsync(int studentId)
         {
          var IQueryAbleStudent= await  studentRepository.StudentListExamGrandeAsync(studentId);
