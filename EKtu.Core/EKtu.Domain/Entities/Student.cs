@@ -8,10 +8,6 @@ namespace EKtu.Domain.Entities
 {
     public class Student:BasePersonEntity
     {
-        public string FirstName{ get; set; }
-        public string LastName { get; set; }
-        public string TckNo{ get; set; }
-        public string Password{ get; set; }
         public int ClassId { get; set; }
         public Class Class{ get; set; }
         public ICollection<StudentChooseLesson> StudentChooseLessons{ get; set; }

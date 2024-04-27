@@ -2,9 +2,11 @@
 using EKtu.Persistence.Builder.IBuilder;
 using EKtu.Repository.Dtos;
 using EKtu.Repository.IService.AddPersonService;
+using EKtu.Repository.IService.PrincipalService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 
 namespace EKtu.WEBAPI.Controllers
 {
@@ -14,10 +16,12 @@ namespace EKtu.WEBAPI.Controllers
     {
         private readonly IAddPersonService<Principal> addPrincipalService;
         private readonly IPrincipalBuilder principalBuilder;
-        public PrincipalController(IAddPersonService<Principal> addPrincipalService, IPrincipalBuilder principalBuilder)
+        private readonly IPrincipalService principalService;
+        public PrincipalController(IAddPersonService<Principal> addPrincipalService, IPrincipalBuilder principalBuilder, IPrincipalService principalService)
         {
             this.addPrincipalService = addPrincipalService;
             this.principalBuilder = principalBuilder;
+            this.principalService = principalService;
         }
         [HttpPost]
         [Authorize(Policy = "ClientCredentials")]
@@ -32,6 +36,14 @@ namespace EKtu.WEBAPI.Controllers
                 .GetPerson();
 
             return ResponseData(await addPrincipalService.AddAsync(Principal));
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "LessonApprove")]
+        public async Task<IActionResult> StudentChooseLessonApprove()
+        {
+
+            return ResponseData<NoContent>(await principalService.StudentChooseApproveAsync());
         }
     }
 }

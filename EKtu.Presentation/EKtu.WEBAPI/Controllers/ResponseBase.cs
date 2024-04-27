@@ -10,9 +10,9 @@ namespace EKtu.WEBAPI.Controllers
     {
         protected IActionResult ResponseData<T>(Response<T> response)
         {
+            Response.StatusCode = response.StatusCode;
             if (response.StatusCode == 204)
                 return new ObjectResult(null);
-            Response.StatusCode = response.StatusCode;
             return new ObjectResult(response);
 
         }

@@ -25,7 +25,7 @@ namespace EKtu.WEBAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> EmailSend(string targetEmail)
         {
-          Response<int> hasId= await studentService.StudentCheckEmail(targetEmail);
+          Response<int> hasId= await studentService.StudentCheckEmailAsync(targetEmail);
             if(!hasId.IsSuccessfull)
             {
                 return ResponseData(hasId);
