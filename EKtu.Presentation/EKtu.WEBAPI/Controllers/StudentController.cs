@@ -52,5 +52,11 @@ namespace EKtu.WEBAPI.Controllers
             var response = await _studentService.GetByIdAsync(id);
             return ResponseData(response);
         }
+        [HttpPost]
+        [Authorize(Policy ="StudentChooseLesson")]
+        public async Task<IActionResult> StudentChooseLesson([FromBody]StudentChooseLessonRequestDto studentChooseLessonRequestDto)
+        {
+            return ResponseData<NoContent>(await _studentService.StudentChooseLesson(studentChooseLessonRequestDto));
+        }
     }
 }

@@ -206,7 +206,7 @@ namespace EKtu.Persistence.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentChooseLesson");
+                    b.ToTable("StudentChooseLessons");
                 });
 
             modelBuilder.Entity("EKtu.Domain.Entities.Teacher", b =>

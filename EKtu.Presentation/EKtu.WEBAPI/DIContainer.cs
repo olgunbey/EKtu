@@ -1,5 +1,4 @@
-﻿using EKtu.Domain.Entities;
-using EKtu.Infrastructure.CacheServices;
+﻿using EKtu.Infrastructure.CacheServices;
 using EKtu.Infrastructure.EmailService;
 using EKtu.Infrastructure.TokenServices;
 using EKtu.Persistence.Builder.BuilderCreate;
@@ -30,6 +29,7 @@ using EKtu.Repository.IService.PrincipalService;
 using EKtu.Repository.IService.StudentService;
 using EKtu.Repository.IService.TeacherService;
 using EKtu.Repository.IService.TokenService;
+using System.ComponentModel;
 
 namespace EKtu.WEBAPI
 {
@@ -54,6 +54,8 @@ namespace EKtu.WEBAPI
             serviceDescriptors.AddScoped(typeof(IAddPersonService<>), typeof(AddPersonService<>));
             serviceDescriptors.AddScoped(typeof(IAddPersonRepository<>), typeof(AddPersonRepository<>));
             serviceDescriptors.AddSingleton<IStudentBuilder, StudentBuilder>();
+            serviceDescriptors.AddSingleton<ITeacherBuilder,TeacherBuilder>();
+            serviceDescriptors.AddSingleton<IPrincipalBuilder, PrincipalBuilder>();
         }
     }
 }

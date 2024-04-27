@@ -16,5 +16,7 @@ namespace EKtu.Repository.IService.StudentService
         Task<Response<int>> StudentLogin(StudentLoginRequestDto studentLoginRequestDto);
 
         Task<Response<int>> StudentCheckEmail(string studentEmail);
+
+        Task<Response<NoContent>> StudentChooseLesson(StudentChooseLessonRequestDto studentChooseLessonRequestDto);
     }
 }

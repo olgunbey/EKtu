@@ -62,5 +62,20 @@ namespace EKtu.Persistence.Service.StudentService
             return Response<int>.Success(student.Id, 200);
 
         }
+
+        public async Task<Response<NoContent>> StudentChooseLesson(StudentChooseLessonRequestDto studentChooseLessonRequestDto)
+        {
+            try
+            {
+                await studentRepository.StudentChooseLessonAsync(studentChooseLessonRequestDto);
+              await _saves.SaveChangesAsync();
+                return Response<NoContent>.Success(204);
+            }
+            catch (Exception)
+            {
+                return Response<NoContent>.Fail("Hata değer eklenemedi", 400);
+            }
+          
+        }
     }
 }

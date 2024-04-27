@@ -23,13 +23,15 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy = "ClientCredentials")]
         public async Task<IActionResult> AddPrincipal([FromBody]AddPrincipalRequestDto addPrincipalRequestDto)
         {
-          var Principal=  principalBuilder.FirstName(addPrincipalRequestDto.FirstName)
+          Principal Principal= principalBuilder.
+                FirstName(addPrincipalRequestDto.FirstName)
                 .LastName(addPrincipalRequestDto.LastName)
                 .Email(addPrincipalRequestDto.Email)
                 .Password(addPrincipalRequestDto.Password)
+                .TckNo(addPrincipalRequestDto.TckNo)
                 .GetPerson();
 
-            return ResponseData<NoContent>(await addPrincipalService.AddAsync(Principal));
+            return ResponseData(await addPrincipalService.AddAsync(Principal));
         }
     }
 }
