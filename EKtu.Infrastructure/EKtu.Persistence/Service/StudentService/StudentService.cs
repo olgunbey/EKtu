@@ -25,7 +25,7 @@ namespace EKtu.Persistence.Service.StudentService
 
         public async Task<Response<List<StudentListExamGrandeResponseDto>>> StudentListExamGrandeAsync(int studentId)
         {
-         var IQueryAbleStudent= await  studentRepository.StudentListExamGrandeAsync(studentId);
+         var IQueryAbleStudent= await studentRepository.StudentListExamGrandeAsync(studentId);
 
             var list =await IQueryAbleStudent.Select(y => new StudentListExamGrandeResponseDto()
             {
@@ -43,17 +43,8 @@ namespace EKtu.Persistence.Service.StudentService
 
         }
 
-        public async Task<Response<int>> StudentLogin(StudentLoginRequestDto studentLoginRequestDto)
-        {
-            Student? HasStudent = (await studentRepository.FindAllAsync(x => x.TckNo == studentLoginRequestDto.TckNo && x.Password == HashTransaction.HashPassword(studentLoginRequestDto.Password))).FirstOrDefault();
-            if (HasStudent == null)
-                return Response<int>.Fail("kullanıcı yok", 404);
 
-            return Response<int>.Success(HasStudent.Id, 200);
-
-        }
-
-        public async Task<Response<int>> StudentCheckEmail(string studentEmail)
+        public async Task<Response<int>> StudentCheckEmailAsync(string studentEmail)
         {
           Student student= await studentRepository.FirstOrDefaultAsync(y=>y.Email== studentEmail);
             if (student == null)
@@ -63,12 +54,12 @@ namespace EKtu.Persistence.Service.StudentService
 
         }
 
-        public async Task<Response<NoContent>> StudentChooseLesson(StudentChooseLessonRequestDto studentChooseLessonRequestDto)
+        public async Task<Response<NoContent>> StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto)
         {
             try
             {
                 await studentRepository.StudentChooseLessonAsync(studentChooseLessonRequestDto);
-              await _saves.SaveChangesAsync();
+                await _saves.SaveChangesAsync();
                 return Response<NoContent>.Success(204);
             }
             catch (Exception)

@@ -1,5 +1,6 @@
 ﻿using Azure;
 using EKtu.Domain.Entities;
+using EKtu.Infrastructure.HASH;
 using EKtu.Repository.Dtos;
 using EKtu.Repository.IRepository.AddPersonRepository;
 using EKtu.Repository.IService;
@@ -24,6 +25,7 @@ namespace EKtu.Persistence.Service.AddPersonService
 
         public async Task<EKtu.Repository.Dtos.Response<NoContent>> AddAsync(T data)
         {
+            data.Password=HashTransaction.HashPassword(data.Password);
             try
             {
                await repository.AddPersonAsync(data);
@@ -32,7 +34,7 @@ namespace EKtu.Persistence.Service.AddPersonService
             }
             catch (Exception)
             {
-                throw new Exception("değer eklenemedi"); //midleware ile hatayı yönet
+                return EKtu.Repository.Dtos.Response<NoContent>.Fail($"hata {typeof(T)} eklenemedi", 400);
 
                 throw;
             }

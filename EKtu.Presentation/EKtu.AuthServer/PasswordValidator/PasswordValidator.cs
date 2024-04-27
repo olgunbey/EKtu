@@ -1,4 +1,5 @@
 ﻿using EKtu.Domain.Entities;
+using EKtu.Repository.Dtos;
 using EKtu.Repository.IService.EmailPasswordService;
 using IdentityModel;
 using IdentityServer4.Models;
@@ -20,17 +21,17 @@ namespace EKtu.AuthServer.PasswordValidator
 
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-            int userId=0;
-             userId = context.Request.ClientId switch
+            Response<int> ResponseuserId;
+            ResponseuserId = context.Request.ClientId switch
             {
                 "ResourceOwnerTeacher" =>await teacherpasswordService.EmailAndPassword(context.UserName,context.Password),
                 "ResourceOwnerStudent" => await studentpasswordService.EmailAndPassword(context.UserName, context.Password),
                 "ResourceOwnerPrincipal" => await principalpasswordService.EmailAndPassword(context.UserName,context.Password),
             };
 
-            if(userId!=0)
+            if(ResponseuserId.IsSuccessfull)
             {
-                context.Result = new GrantValidationResult(userId.ToString(), OidcConstants.AuthenticationMethods.Password);
+                context.Result = new GrantValidationResult(ResponseuserId.Data.ToString(), OidcConstants.AuthenticationMethods.Password);
                     return;
             }
             context.Result=new GrantValidationResult(TokenRequestErrors.UnauthorizedClient);

@@ -13,10 +13,10 @@ namespace EKtu.Repository.IService.StudentService
 
         Task<Response<List<StudentListExamGrandeResponseDto>>> StudentListExamGrandeAsync(int studentId);
 
-        Task<Response<int>> StudentLogin(StudentLoginRequestDto studentLoginRequestDto);
 
-        Task<Response<int>> StudentCheckEmail(string studentEmail);
+        Task<Response<int>> StudentCheckEmailAsync(string studentEmail);
 
-        Task<Response<NoContent>> StudentChooseLesson(StudentChooseLessonRequestDto studentChooseLessonRequestDto);
+        Task<Response<NoContent>> StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto);
+
     }
 }

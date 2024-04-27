@@ -1,4 +1,5 @@
 ﻿using EKtu.Domain.Entities;
+using EKtu.Repository.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace EKtu.Repository.IRepository.PrincipalRepository
 {
     public interface IPrincipalRepository:IBaseRepository<Principal>
     {
+        Task StudentLessonApproveAsync();
     }
 }

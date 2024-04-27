@@ -8,10 +8,6 @@ namespace EKtu.Domain.Entities
 {
     public class Principal:BasePersonEntity
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string TckNo { get; set; }
-        public string Password { get; set; }
         public string Email{ get; set; }
     }
 }
