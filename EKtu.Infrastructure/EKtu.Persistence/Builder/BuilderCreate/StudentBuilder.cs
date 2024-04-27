@@ -10,15 +10,17 @@ namespace EKtu.Persistence.Builder.BuilderCreate
 {
     public class StudentBuilder : IStudentBuilder
     {
-        private Student student;
+        Student student;
         public StudentBuilder()
         {
             student = new Student();
         }
+
         public IStudentBuilder ClassId(int classId)
         {
             student.ClassId = classId;
             return this;
+
         }
 
         public IStudentBuilder Email(string email)
@@ -27,15 +29,19 @@ namespace EKtu.Persistence.Builder.BuilderCreate
             return this;
         }
 
-        public IStudentBuilder FirstName(string firstName)
+        public IStudentBuilder FirstName(string firstname)
         {
-            student.FirstName = firstName;
+            student.FirstName = firstname;
             return this;
         }
 
-        public IStudentBuilder LastName(string lastName)
+        public Student GetPerson()
         {
-            student.LastName = lastName;
+            return student;
+        }
+        public IStudentBuilder LastName(string lastname)
+        {
+            student.LastName = lastname;
             return this;
         }
 
@@ -45,14 +51,9 @@ namespace EKtu.Persistence.Builder.BuilderCreate
             return this;
         }
 
-        public Student Student()
+        public IStudentBuilder TckNo(string TckNo)
         {
-            return student;
-        }
-
-        public IStudentBuilder TckNo(string tckNo)
-        {
-           student.TckNo = tckNo;
+            student.TckNo = TckNo;
             return this;
         }
     }
