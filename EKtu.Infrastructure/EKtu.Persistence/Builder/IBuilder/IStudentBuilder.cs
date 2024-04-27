@@ -9,12 +9,14 @@ namespace EKtu.Persistence.Builder.IBuilder
 {
     public interface IStudentBuilder
     {
-        public IStudentBuilder FirstName(string firstName);
-        public IStudentBuilder LastName(string lastName);
-        public IStudentBuilder TckNo(string tckNo);
-        public IStudentBuilder Password(string password);
-        public IStudentBuilder ClassId(int classId);
-        public IStudentBuilder Email(string email);
-        public Student Student();
+        IStudentBuilder FirstName(string firstname);
+        IStudentBuilder LastName(string lastname);
+
+        IStudentBuilder Email(string email);
+        IStudentBuilder Password(string password);
+        IStudentBuilder TckNo(string TckNo);
+        IStudentBuilder ClassId(int ClassId);
+
+        Student GetPerson();
     }
 }
