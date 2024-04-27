@@ -1,4 +1,5 @@
 ﻿using EKtu.Domain.Entities;
+using EKtu.Persistence.Builder.IBuilder;
 using EKtu.Repository.Dtos;
 using EKtu.Repository.IService.AddPersonService;
 using EKtu.Repository.IService.TeacherService;
@@ -12,16 +13,24 @@ namespace EKtu.WEBAPI.Controllers
     public class TeacherController : ResponseBase
     {
         private readonly IAddPersonService<Teacher> addTeacherService;
+        private readonly ITeacherBuilder teacherBuilder;
 
-        public TeacherController(IAddPersonService<Teacher> addteacherService)
+        public TeacherController(IAddPersonService<Teacher> addteacherService, ITeacherBuilder teacherBuilder)
         {
-           this.addTeacherService = addteacherService;
+            this.addTeacherService = addteacherService;
+            this.teacherBuilder = teacherBuilder;
         }
         [HttpPost]
         [Authorize(Policy ="ClientCredentials")]
-        public async Task<IActionResult> AddStudent([FromBody]Teacher teacher)
+        public async Task<IActionResult> AddStudent([FromBody]AddTeacherRequestDto teacherRequestDto)
         {
-            return ResponseData<NoContent>(await this.addTeacherService.AddAsync(teacher));
+           var _teacher= this.teacherBuilder
+                .FirstName(teacherRequestDto.FirstName)
+                .LastName(teacherRequestDto.LastName)
+                .Password(teacherRequestDto.Password)
+                .TckNo(teacherRequestDto.TckNo)
+                .GetPerson();
+            return ResponseData<NoContent>(await this.addTeacherService.AddAsync(_teacher));
         }
     }
 }

@@ -15,36 +15,36 @@ namespace EKtu.Persistence.Builder.BuilderCreate
         {
             principal = new Principal();
         }
-        public IPersonBuilder Email(string email)
+        public IPrincipalBuilder Email(string email)
         {
             principal.Email = email;
             return this;
         }
 
-        public IPersonBuilder FirstName(string firstname)
+        public IPrincipalBuilder FirstName(string firstname)
         {
             principal.FirstName = firstname;
             return this;
         }
 
-        public BasePersonEntity GetPerson()
+        public Principal GetPerson()
         {
             return principal;
         }
 
-        public IPersonBuilder LastName(string lastname)
+        public IPrincipalBuilder LastName(string lastname)
         {
             principal.LastName = lastname;
             return this;
         }
 
-        public IPersonBuilder Password(string password)
+        public IPrincipalBuilder Password(string password)
         {
             principal.Password = password;
             return this;
         }
 
-        public IPersonBuilder TckNo(string TckNo)
+        public IPrincipalBuilder TckNo(string TckNo)
         {
             principal.TckNo = TckNo;
             return this;

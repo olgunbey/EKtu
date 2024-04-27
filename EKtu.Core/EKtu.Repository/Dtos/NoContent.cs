@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EKtu.Repository.Dtos
 {
-    public  class NoContent
+    public class NoContent
     {
         public List<string> Errors { get; set; }
         [JsonIgnore]
