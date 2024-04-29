@@ -42,7 +42,6 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy = "LessonApprove")]
         public async Task<IActionResult> StudentChooseLessonApprove()
         {
-
             return ResponseData<NoContent>(await principalService.StudentChooseApproveAsync());
         }
         [HttpPost]
@@ -50,6 +49,12 @@ namespace EKtu.WEBAPI.Controllers
         public async Task<IActionResult> AddLessons([FromBody]AddLessonRequestDto addLessonRequestDto)
         {
            return ResponseData<NoContent>(await principalService.AddLessonAsync(addLessonRequestDto));
+        }
+        [HttpPost]
+        [Authorize(Policy ="TeacherClassLesson")]
+        public async Task<IActionResult> TeacherClassLesson([FromBody]AddTeacherClassLessonRequestDto addTeacherClassLessonRequestDto)
+        {
+         return ResponseData<NoContent>(await principalService.AddTeacherClassLessonAsync(addTeacherClassLessonRequestDto));
         }
     }
 }

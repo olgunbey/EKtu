@@ -54,14 +54,17 @@ namespace EKtu.WEBAPI
             serviceDescriptors.AddScoped(typeof(IPasswordService<>), typeof(PasswordService<>));
             serviceDescriptors.AddScoped(typeof(IAddPersonService<>), typeof(AddPersonService<>));
             serviceDescriptors.AddScoped(typeof(IAddPersonRepository<>), typeof(AddPersonRepository<>));
-            serviceDescriptors.AddSingleton<IStudentBuilder, StudentBuilder>();
-            serviceDescriptors.AddSingleton<ITeacherBuilder,TeacherBuilder>();
-            serviceDescriptors.AddSingleton<IPrincipalBuilder, PrincipalBuilder>();
-            serviceDescriptors.AddSingleton<Principal>(y => new Principal());
-            serviceDescriptors.AddSingleton<Student>(y => new Student());
-            serviceDescriptors.AddSingleton<Teacher>(y => new Teacher());
-            serviceDescriptors.AddSingleton<Lesson>(y => new Lesson());
-            serviceDescriptors.AddSingleton<ILessonBuilder,LessonBuilder>();
+            serviceDescriptors.AddScoped<IStudentBuilder, StudentBuilder>();
+            serviceDescriptors.AddScoped<ITeacherBuilder,TeacherBuilder>();
+            serviceDescriptors.AddScoped<IPrincipalBuilder, PrincipalBuilder>();
+            serviceDescriptors.AddScoped<Principal>(y => new Principal());
+            serviceDescriptors.AddScoped<Student>(y => new Student());
+            serviceDescriptors.AddScoped<Teacher>(y => new Teacher());
+            serviceDescriptors.AddScoped<Lesson>(y => new Lesson());
+            serviceDescriptors.AddScoped<TeacherClassLesson>(y=> new TeacherClassLesson());
+            serviceDescriptors.AddScoped<ILessonBuilder,LessonBuilder>();
+            serviceDescriptors.AddScoped<ITeacherClassLessonBuilder,TeacherClassLessonBuilder>();
+
         }
     }
 }

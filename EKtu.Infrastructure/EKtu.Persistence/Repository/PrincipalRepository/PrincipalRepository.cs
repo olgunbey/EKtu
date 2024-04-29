@@ -32,5 +32,10 @@ namespace EKtu.Persistence.Repository.PrincipalRepository
             }).ToListAsync();
            await _dbContext.ExamNote.AddRangeAsync(StudentExamGrandeAdd);
         }
+
+        public async Task TeacherClassLessonAsync(TeacherClassLesson teacherClassLesson)
+        {
+           await _dbContext.TeacherClassLesson.AddAsync(teacherClassLesson);
+        }
     }
 }

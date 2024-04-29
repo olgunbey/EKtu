@@ -20,12 +20,14 @@ namespace EKtu.Persistence.Service.PrincipalService
         private readonly ISaves _saves;
         private readonly IPrincipalBuilder principalBuilder;
         private readonly ILessonBuilder lessonBuilder;
-        public PrincipalService(IBaseRepository<Principal> baseRepository, ISaves saves, IPrincipalRepository principalRepository, IPrincipalBuilder principalBuilder, ILessonBuilder lessonBuilder) : base(baseRepository, saves)
+        private readonly ITeacherClassLessonBuilder teacherClassLessonBuilder;
+        public PrincipalService(IBaseRepository<Principal> baseRepository, ISaves saves, IPrincipalRepository principalRepository, IPrincipalBuilder principalBuilder, ILessonBuilder lessonBuilder, ITeacherClassLessonBuilder teacherClassLessonBuilder = null) : base(baseRepository, saves)
         {
             this.principalRepository = principalRepository;
             this._saves = saves;
             this.principalBuilder = principalBuilder;
             this.lessonBuilder = lessonBuilder;
+            this.teacherClassLessonBuilder = teacherClassLessonBuilder;
         }
 
         public async Task<Response<NoContent>> AddLessonAsync(AddLessonRequestDto addLessonRequestDto)
@@ -52,6 +54,23 @@ namespace EKtu.Persistence.Service.PrincipalService
                 throw;
             }
            
+        }
+
+        public async Task<Response<NoContent>> AddTeacherClassLessonAsync(AddTeacherClassLessonRequestDto addTeacherClassLessonRequestDto)
+        {
+         TeacherClassLesson teacherClassLesson=   teacherClassLessonBuilder.TeacherId(addTeacherClassLessonRequestDto.TeacherId)
+                .LessonId(addTeacherClassLessonRequestDto.LessonId)
+                .ClassId(addTeacherClassLessonRequestDto.ClassId).Get();
+            try
+            {
+               await principalRepository.TeacherClassLessonAsync(teacherClassLesson);
+                await _saves.SaveChangesAsync();
+                return Response<NoContent>.Success(204);
+            }
+            catch (Exception)
+            {
+                return Response<NoContent>.Fail("hata öğretmen ders sınıf seçimi kaydedilemedi", 400);
+            }
         }
 
         public async Task<Response<NoContent>> StudentChooseApproveAsync()
