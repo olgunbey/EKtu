@@ -12,5 +12,7 @@ namespace EKtu.Repository.IRepository.PrincipalRepository
     {
         Task StudentLessonApproveAsync();
         Task AddLessonsAsync(Lesson lesson);
+
+        Task TeacherClassLessonAsync(TeacherClassLesson teacherClassLesson);
     }
 }

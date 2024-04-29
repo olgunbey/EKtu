@@ -22,7 +22,7 @@ namespace EKtu.WEBAPI.Controllers
         }
         [HttpPost]
         [Authorize(Policy ="ClientCredentials")]
-        public async Task<IActionResult> AddStudent([FromBody]AddTeacherRequestDto teacherRequestDto)
+        public async Task<IActionResult> AddTeacher([FromBody]AddTeacherRequestDto teacherRequestDto)
         {
            var _teacher= this.teacherBuilder
                 .FirstName(teacherRequestDto.FirstName)

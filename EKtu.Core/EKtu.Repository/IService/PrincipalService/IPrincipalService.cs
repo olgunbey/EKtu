@@ -12,5 +12,6 @@ namespace EKtu.Repository.IService.PrincipalService
     {
         Task<Response<NoContent>> StudentChooseApproveAsync();
         Task<Response<NoContent>> AddLessonAsync(AddLessonRequestDto addLessonRequestDto);
+        Task<Response<NoContent>> AddTeacherClassLessonAsync(AddTeacherClassLessonRequestDto addTeacherClassLessonRequestDto);
     }
 }

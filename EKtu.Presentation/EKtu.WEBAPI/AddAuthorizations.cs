@@ -29,6 +29,10 @@ namespace EKtu.WEBAPI
                 {
                     y.RequireClaim("scope", "lesson.added");
                 });
+                x.AddPolicy("TeacherClassLesson", y =>
+                {
+                    y.RequireClaim("scope", "teacher.classlesson");
+                });
             });
         }
     }
