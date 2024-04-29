@@ -22,6 +22,23 @@ namespace EKtu.Persistence.Repository.PrincipalRepository
            await _dbContext.Lesson.AddAsync(lesson);
         }
 
+        public Task<IQueryable<StudentChooseLesson>> StudentCalculateLetterGrandeAsync(int classId,int lessonId)
+        {
+           return Task.FromResult(_dbContext.StudentChooseLessons.Where(y => y.LessonId == lessonId).Include(y => y.Student)
+                .Where(y => y.Student.ClassId == classId)
+                .Include(y => y.ExamNote).AsQueryable());
+        }
+
+        public async Task StudentCalculateUpdatedAsync(List<ExamNote> studentCalculateExamLetterResponseDtos)
+        {
+            foreach (var examNote in studentCalculateExamLetterResponseDtos)
+            {
+                ExamNote examNotes= await _dbContext.ExamNote.FirstOrDefaultAsync(y => y.Id == examNote.Id);
+
+                examNotes.LetterGrade=examNote.LetterGrade;
+            }
+        }
+
         public async Task StudentLessonApproveAsync()
         {
             List<ExamNote> StudentExamGrandeAdd = await _dbContext.StudentChooseLessons.Select(y => new ExamNote()

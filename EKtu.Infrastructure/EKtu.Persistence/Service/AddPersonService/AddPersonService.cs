@@ -35,8 +35,6 @@ namespace EKtu.Persistence.Service.AddPersonService
             catch (Exception)
             {
                 return EKtu.Repository.Dtos.Response<NoContent>.Fail($"hata {typeof(T)} eklenemedi", 400);
-
-                throw;
             }
         }
     }

@@ -56,5 +56,11 @@ namespace EKtu.WEBAPI.Controllers
         {
          return ResponseData<NoContent>(await principalService.AddTeacherClassLessonAsync(addTeacherClassLessonRequestDto));
         }
+        [HttpGet]
+        [Authorize(Policy = "StudentCalculateLetterGrande")]
+        public async Task<IActionResult> StudentCalculateLetterGrade([FromHeader]StudentCalculateLetterGrandeDto studentCalculateLetterGrandeDto)
+        {
+         return ResponseData<NoContent>(await principalService.StudentCalculateLetterGrandeAsync(studentCalculateLetterGrandeDto));
+        }
     }
 }

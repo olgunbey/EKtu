@@ -33,6 +33,10 @@ namespace EKtu.WEBAPI
                 {
                     y.RequireClaim("scope", "teacher.classlesson");
                 });
+                x.AddPolicy("StudentCalculateLetterGrande", y =>
+                {
+                    y.RequireClaim("scope", "student.calculateexamgrande");
+                });
             });
         }
     }
