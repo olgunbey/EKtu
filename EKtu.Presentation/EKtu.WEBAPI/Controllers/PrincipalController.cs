@@ -45,5 +45,11 @@ namespace EKtu.WEBAPI.Controllers
 
             return ResponseData<NoContent>(await principalService.StudentChooseApproveAsync());
         }
+        [HttpPost]
+        [Authorize(Policy ="LessonAdded")]
+        public async Task<IActionResult> AddLessons([FromBody]AddLessonRequestDto addLessonRequestDto)
+        {
+           return ResponseData<NoContent>(await principalService.AddLessonAsync(addLessonRequestDto));
+        }
     }
 }

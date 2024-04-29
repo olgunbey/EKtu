@@ -11,9 +11,9 @@ namespace EKtu.Persistence.Builder.BuilderCreate
     public class TeacherBuilder : ITeacherBuilder
     {
         Teacher teacher;
-        public TeacherBuilder()
+        public TeacherBuilder(Teacher _teacher)
         {
-            teacher = new Teacher();
+            teacher = _teacher;
         }
 
         public ITeacherBuilder FirstName(string firstname)

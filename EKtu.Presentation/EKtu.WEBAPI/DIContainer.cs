@@ -1,4 +1,5 @@
-﻿using EKtu.Infrastructure.CacheServices;
+﻿using EKtu.Domain.Entities;
+using EKtu.Infrastructure.CacheServices;
 using EKtu.Infrastructure.EmailService;
 using EKtu.Infrastructure.TokenServices;
 using EKtu.Persistence.Builder.BuilderCreate;
@@ -56,6 +57,11 @@ namespace EKtu.WEBAPI
             serviceDescriptors.AddSingleton<IStudentBuilder, StudentBuilder>();
             serviceDescriptors.AddSingleton<ITeacherBuilder,TeacherBuilder>();
             serviceDescriptors.AddSingleton<IPrincipalBuilder, PrincipalBuilder>();
+            serviceDescriptors.AddSingleton<Principal>(y => new Principal());
+            serviceDescriptors.AddSingleton<Student>(y => new Student());
+            serviceDescriptors.AddSingleton<Teacher>(y => new Teacher());
+            serviceDescriptors.AddSingleton<Lesson>(y => new Lesson());
+            serviceDescriptors.AddSingleton<ILessonBuilder,LessonBuilder>();
         }
     }
 }

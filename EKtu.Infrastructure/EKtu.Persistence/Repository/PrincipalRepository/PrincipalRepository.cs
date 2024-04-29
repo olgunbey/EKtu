@@ -17,6 +17,10 @@ namespace EKtu.Persistence.Repository.PrincipalRepository
         {
         }
 
+        public async Task AddLessonsAsync(Lesson lesson)
+        {
+           await _dbContext.Lesson.AddAsync(lesson);
+        }
 
         public async Task StudentLessonApproveAsync()
         {

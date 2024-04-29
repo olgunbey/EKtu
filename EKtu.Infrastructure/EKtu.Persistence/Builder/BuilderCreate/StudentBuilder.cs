@@ -11,9 +11,9 @@ namespace EKtu.Persistence.Builder.BuilderCreate
     public class StudentBuilder : IStudentBuilder
     {
         Student student;
-        public StudentBuilder()
+        public StudentBuilder(Student _student)
         {
-            student = new Student();
+            student = _student;
         }
 
         public IStudentBuilder ClassId(int classId)

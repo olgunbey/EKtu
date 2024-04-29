@@ -11,5 +11,6 @@ namespace EKtu.Repository.IRepository.PrincipalRepository
     public interface IPrincipalRepository:IBaseRepository<Principal>
     {
         Task StudentLessonApproveAsync();
+        Task AddLessonsAsync(Lesson lesson);
     }
 }

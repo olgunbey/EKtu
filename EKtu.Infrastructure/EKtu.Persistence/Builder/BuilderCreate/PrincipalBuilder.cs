@@ -11,9 +11,9 @@ namespace EKtu.Persistence.Builder.BuilderCreate
     public class PrincipalBuilder : IPrincipalBuilder
     {
         Principal principal;
-        public PrincipalBuilder()
+        public PrincipalBuilder(Principal _principal)
         {
-            principal = new Principal();
+            principal = _principal;
         }
         public IPrincipalBuilder Email(string email)
         {
