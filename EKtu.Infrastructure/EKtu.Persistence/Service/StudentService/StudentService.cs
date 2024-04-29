@@ -16,11 +16,11 @@ namespace EKtu.Persistence.Service.StudentService
         private readonly IStudentRepository studentRepository;
         private ISaves _saves;
         private readonly IStudentBuilder studentBuilder;
-        public StudentService(IBaseRepository<Student> baseRepository, ISaves saves, IStudentRepository studentRepository) : base(baseRepository, saves)
+        public StudentService(IBaseRepository<Student> baseRepository, ISaves saves, IStudentRepository studentRepository,IStudentBuilder _studentBuilder) : base(baseRepository, saves)
         {
             this.studentRepository = studentRepository;
             this._saves = saves;
-            studentBuilder = new StudentBuilder();
+            studentBuilder = _studentBuilder;
         }
 
         public async Task<Response<List<StudentListExamGrandeResponseDto>>> StudentListExamGrandeAsync(int studentId)

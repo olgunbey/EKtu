@@ -1,4 +1,5 @@
-﻿using IdentityServer4.Models;
+﻿using EKtu.Domain.Entities;
+using IdentityServer4.Models;
 
 namespace EKtu.AuthServer
 {
@@ -22,7 +23,8 @@ namespace EKtu.AuthServer
             new ApiScope("absence.entry","devamsızlık giriş"),
             new ApiScope("base.token","client credentials"),
             new ApiScope("choose.lesson","öğrenci ders seçimi"),
-            new ApiScope("lesson.approve","seçilen dersleri onaylama")
+            new ApiScope("lesson.approve","seçilen dersleri onaylama"),
+            new ApiScope("lesson.added","ders ekleme")
             
 
         };
@@ -44,7 +46,7 @@ namespace EKtu.AuthServer
                 ClientId="ResourceOwnerPrincipal",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
-                AllowedScopes={"student.delete","student.update","student.added","exam.read", "absence.entry","lesson.approve" },
+                AllowedScopes={"student.delete","student.update","student.added","exam.read", "absence.entry","lesson.approve","lesson.added" },
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
                 AccessTokenLifetime=3,
@@ -93,7 +95,7 @@ namespace EKtu.AuthServer
             new ApiResource()
             {
                 Name="BaseApi",
-                Scopes={"exam.update","exam.read","exam.list", "student.delete", "student.update", "student.added", "exam.read", "absence.entry", "base.token", "choose.lesson","lesson.approve" }
+                Scopes={"exam.update","exam.read","exam.list", "student.delete", "student.update", "student.added", "exam.read", "absence.entry", "base.token", "choose.lesson","lesson.approve", "lesson.added" }
             }
         };
     }

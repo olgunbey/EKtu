@@ -19,11 +19,39 @@ namespace EKtu.Persistence.Service.PrincipalService
         private readonly IPrincipalRepository principalRepository;
         private readonly ISaves _saves;
         private readonly IPrincipalBuilder principalBuilder;
-        public PrincipalService(IBaseRepository<Principal> baseRepository, ISaves saves, IPrincipalRepository principalRepository, IPrincipalBuilder principalBuilder) : base(baseRepository, saves)
+        private readonly ILessonBuilder lessonBuilder;
+        public PrincipalService(IBaseRepository<Principal> baseRepository, ISaves saves, IPrincipalRepository principalRepository, IPrincipalBuilder principalBuilder, ILessonBuilder lessonBuilder) : base(baseRepository, saves)
         {
             this.principalRepository = principalRepository;
             this._saves = saves;
             this.principalBuilder = principalBuilder;
+            this.lessonBuilder = lessonBuilder;
+        }
+
+        public async Task<Response<NoContent>> AddLessonAsync(AddLessonRequestDto addLessonRequestDto)
+        {
+          Lesson lesson=  this.lessonBuilder
+                .LessonName(addLessonRequestDto.LessonName)
+                .OptionalLessonId(addLessonRequestDto.OptionalLessonId)
+                .HasOptional(addLessonRequestDto.HasOptional)
+                .Grade(addLessonRequestDto.Grade)
+                .Term(addLessonRequestDto.Term)
+                .GetLesson();
+
+            try
+            {
+                await principalRepository.AddLessonsAsync(lesson);
+                await _saves.SaveChangesAsync();
+
+                return Response<NoContent>.Success(204);
+            }
+            catch (Exception)
+            {
+                return Response<NoContent>.Fail("ders eklenemedi", 400);
+
+                throw;
+            }
+           
         }
 
         public async Task<Response<NoContent>> StudentChooseApproveAsync()
