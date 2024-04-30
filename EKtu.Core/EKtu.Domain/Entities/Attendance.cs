@@ -8,9 +8,10 @@ namespace EKtu.Domain.Entities
 {
     public class Attendance:BaseEntity
     {
-        public StudentChooseLesson StudentChooseLesson { get; set; }
-        public int StudentChooseLessonId{ get; set; }
-        public bool IsPresent { get; set; }
+        public StudentChooseLesson StudentChooseLesson{ get; set; }
+        public int StudentChooseLessonId { get; set; }
+        public DateTime AttendanceDate { get; set; }
+        public string ReasonForAbsence { get; set; }
 
     }
 }

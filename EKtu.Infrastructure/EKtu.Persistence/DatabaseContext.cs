@@ -15,6 +15,7 @@ namespace EKtu.Persistence
         public DbSet<TeacherClassLesson> TeacherClassLesson{ get; set; }
         public DbSet<Principal> Principal{ get; set; }
         public DbSet<StudentChooseLesson> StudentChooseLessons { get; set; }
+        public DbSet<Attendance> Attendances{ get; set; }
 
     }
 }
