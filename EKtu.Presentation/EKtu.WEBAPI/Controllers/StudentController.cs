@@ -6,7 +6,10 @@ using EKtu.Repository.IRepository.AddPersonRepository;
 using EKtu.Repository.IService.AddPersonService;
 using EKtu.Repository.IService.StudentService;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EKtu.WEBAPI.Controllers
 {
@@ -39,17 +42,19 @@ namespace EKtu.WEBAPI.Controllers
         }
         [HttpGet]
         [Authorize(Policy ="StudentList")]
-        public async Task<IActionResult> StudentListExamGrande([FromHeader]int studentId)
+        public async Task<IActionResult> StudentListExamGrande()
         {
-            var response= await _studentService.StudentListExamGrandeAsync(studentId);
+           var userId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+           var response= await _studentService.StudentListExamGrandeAsync(Convert.ToInt32(userId.Value));
             return ResponseData(response);
         }
 
         [HttpGet]
         [Authorize(Policy ="StudentId")]
-        public async Task<IActionResult> StudentGetById([FromHeader]int id)
+        public async Task<IActionResult> StudentGetById()
         {
-            var response = await _studentService.GetByIdAsync(id);
+          var userId=  User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            var response = await _studentService.GetByIdAsync(Convert.ToInt32(userId.Value));
             return ResponseData(response);
         }
         [HttpPost]
