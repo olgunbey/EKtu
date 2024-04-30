@@ -29,10 +29,6 @@ namespace EKtu.WEBAPI
                 {
                     y.RequireClaim("scope", "lesson.added");
                 });
-                x.AddPolicy("TeacherClassLesson", y =>
-                {
-                    y.RequireClaim("scope", "teacher.classlesson");
-                });
                 x.AddPolicy("StudentCalculateLetterGrande", y =>
                 {
                     y.RequireClaim("scope", "student.calculateexamgrande");
@@ -41,9 +37,9 @@ namespace EKtu.WEBAPI
                 {
                     y.RequireClaim("scope", "absence.entry");
                 });
-                x.AddPolicy("TeacherClassList", y =>
+                x.AddPolicy("TeacherClassLessonList", y =>
                 {
-                    y.RequireClaim("scope", "teacher.classlist");
+                    y.RequireClaim("scope", "teacher.classlessonlist");
                 });
                 
             });

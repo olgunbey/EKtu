@@ -36,11 +36,21 @@ namespace EKtu.WEBAPI.Controllers
             return ResponseData<NoContent>(await this.addTeacherService.AddAsync(_teacher));
         }
         [HttpGet]
-        [Authorize(Policy ="TeacherClassList")]
+        [Authorize(Policy = "TeacherClassLessonList")]
         public async Task<IActionResult> TeacherClassList()
         {
             var teacherId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
           return ResponseData<List<TeacherClassReponseDto>>(await teacherService.TeacherClass(Convert.ToInt32(teacherId.Value)));
+        
+        }
+        [HttpGet]
+        [Authorize(Policy = "TeacherClassLessonList")]
+        public async Task<IActionResult> TeacherClassLessonList([FromHeader]int classId)
+        {
+         var teacherId= User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+
+          return ResponseData<List<TeacherLessonDto>>(await teacherService.TeacherLesson(classId, Convert.ToInt32(teacherId.Value)));
+
         }
     }
 }

@@ -27,9 +27,9 @@ namespace EKtu.Persistence.Service.TeacherService
 
         public async Task<Response<List<TeacherClassReponseDto>>> TeacherClass(int teacherId)
         {
-            var teacherClassLessons = await (await teacherRepository.TeacherClass(teacherId)).ToListAsync();
+            var teacherClasses = await (await teacherRepository.TeacherClass(teacherId)).ToListAsync();
 
-            var responseDto= teacherClassLessons.DistinctBy(y=>y.TeacherId).Select(y => new TeacherClassReponseDto()
+            var responseDto= teacherClasses.DistinctBy(y=>y.TeacherId).Select(y => new TeacherClassReponseDto()
             {
               ClassId=y.ClassId,
               ClassName=y.Class.ClassName
@@ -42,9 +42,20 @@ namespace EKtu.Persistence.Service.TeacherService
             return Response<List<TeacherClassReponseDto>>.Success(responseDto, 200);
         }
 
-        public Task TeacherLesson(int classId, int teacherId)
+        public async Task<Response<List<TeacherLessonDto>>> TeacherLesson(int classId, int teacherId)
         {
-            throw new NotImplementedException();
+          var teacherClassLessons=await teacherRepository.TeacherClassLesson(teacherId, classId);
+
+          List<TeacherLessonDto> teacherLessonDtos= await teacherClassLessons.Select(y => new TeacherLessonDto()
+            {
+                LessonId=y.LessonId,
+                LessonName=y.Lesson.LessonName
+            }).ToListAsync();
+
+            if(teacherLessonDtos.Any())
+                return Response<List<TeacherLessonDto>>.Success(teacherLessonDtos, 200);
+
+            return Response<List<TeacherLessonDto>>.Fail("öğretmenin bu sınıfa girdiği ders yok", 400);
         }
     }
 }
