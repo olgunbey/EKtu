@@ -9,5 +9,6 @@ namespace EKtu.Repository.IRepository.TeacherRepository
 {
     public interface ITeacherRepository:IBaseRepository<Teacher>
     {
+        Task<IQueryable<TeacherClassLesson>> TeacherClass(int teacherId);
     }
 }

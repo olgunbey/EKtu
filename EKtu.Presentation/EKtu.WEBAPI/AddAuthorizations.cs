@@ -37,6 +37,15 @@ namespace EKtu.WEBAPI
                 {
                     y.RequireClaim("scope", "student.calculateexamgrande");
                 });
+                x.AddPolicy("AttendancePolicy", y =>
+                {
+                    y.RequireClaim("scope", "absence.entry");
+                });
+                x.AddPolicy("TeacherClassList", y =>
+                {
+                    y.RequireClaim("scope", "teacher.classlist");
+                });
+                
             });
         }
     }
