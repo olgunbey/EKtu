@@ -6,6 +6,7 @@ using EKtu.Repository.IRepository;
 using EKtu.Repository.IRepository.PrincipalRepository;
 using EKtu.Repository.IService;
 using EKtu.Repository.IService.PrincipalService;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,6 +75,51 @@ namespace EKtu.Persistence.Service.PrincipalService
             }
         }
 
+        public async Task<Response<NoContent>> AllStudentCalculateLetterGrandeAsync()
+        {
+            var AvgClassLesson= await(await principalRepository.AllStudentCalculateLetterGrandeAsync()).ToListAsync(); //burada sınıfların derslere gore gruplanmıs ortalaması var
+
+            foreach (var item in AvgClassLesson) //burada o sınıfa ait dersleri alan öğrencilerin examgrandesini hesaplayacagız
+            {
+             var data =  (await principalRepository.StudentCalculateLetterGrandeAsync(item.ClassId, item.LessonId)).ToList();
+
+             var StudentGpas=  data.Select(y => new StudentCalculateExamLetterResponseDto()
+                {
+                    ExamNoteId = y.ExamNote.Id,
+                    GradeAverage = (y.ExamNote.Exam1 + y.ExamNote.Exam2) / data.Count(),
+                    LatterGrande = (y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count() < item.Avg ? "FF" :
+                    ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) == 0 ? "FF" :
+                ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 20 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 24 ? "AA" :
+                ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 16 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 20 ? "AB" :
+                ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 12 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 16 ? "BB" :
+                ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 8 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 12 ? "CB" :
+                ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 4 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 8 ? "CC" :
+                ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 4 ? "DC" :""
+                
+                }).ToList() ;
+
+
+               var returnDatas= StudentGpas.Select(y => new ExamNote()
+                {
+                    Id = y.ExamNoteId,
+                    LetterGrade = y.LatterGrande
+                }).ToList();
+
+
+                try
+                {
+                    await principalRepository.StudentCalculateUpdatedAsync(returnDatas);
+                }
+                catch (Exception)
+                {
+
+                    return Response<NoContent>.Fail("harf notları hesaplanamadı", 400);
+                }
+            }
+            await _saves.SaveChangesAsync();
+            return Response<NoContent>.Success(204);
+        }
+
         public async Task<Response<NoContent>> StudentCalculateLetterGrandeAsync(StudentCalculateLetterGrandeDto studentCalculateLetterGrandeDto)
         {
             var StudentClassLessons = (await principalRepository.StudentCalculateLetterGrandeAsync(studentCalculateLetterGrandeDto.ClassId, studentCalculateLetterGrandeDto.LessonId));
@@ -85,7 +131,6 @@ namespace EKtu.Persistence.Service.PrincipalService
             var StudentGpa = StudentClassLessons.Select(y => new StudentCalculateExamLetterResponseDto() //öğrencilerin not ortalaması 60 //sınıf not ortalaması 40 CB olması gerekiyor
             { 
                 ExamNoteId=y.ExamNote.Id,
-                StudentId=y.StudentId,
                 GradeAverage=(y.ExamNote.Exam2+y.ExamNote.Exam1)/StudentClassLessons.Count(),
                 LatterGrande=(y.ExamNote.Exam2+y.ExamNote.Exam1)/StudentClassLessons.Count()<ClassAvg ? "FF":
                 ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / StudentClassLessons.Count()) > ClassAvg + 20 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / StudentClassLessons.Count()) <= ClassAvg + 24 ?"AA":
@@ -114,10 +159,6 @@ namespace EKtu.Persistence.Service.PrincipalService
                 return Response<NoContent>.Fail("harf notları hesaplanamadı", 400);
             }
            
-
-            
-
-            throw new NotImplementedException();
         }
 
         public async Task<Response<NoContent>> StudentChooseApproveAsync()

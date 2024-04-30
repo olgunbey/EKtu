@@ -22,6 +22,27 @@ namespace EKtu.Persistence.Repository.PrincipalRepository
            await _dbContext.Lesson.AddAsync(lesson);
         }
 
+        public Task<IQueryable<ClassExamNoteAverageResponseDto>> AllStudentCalculateLetterGrandeAsync()
+        {
+
+         return Task.FromResult(_dbContext.StudentChooseLessons.AsNoTracking()
+                .Include(y => y.Student)
+                .Include(y => y.ExamNote)
+                .GroupBy(y => new
+                {
+                    ClassId=y.Student.ClassId,
+                    LessonId=y.LessonId
+                }).Select(group =>new ClassExamNoteAverageResponseDto()
+                {
+                    ClassId=group.Key.ClassId,
+                    LessonId=group.Key.LessonId,
+                    Avg= group.Sum(y=>y.ExamNote.Exam1+y.ExamNote.Exam2)/(group.Count()*2)
+                }));
+
+
+        }
+
+
         public Task<IQueryable<StudentChooseLesson>> StudentCalculateLetterGrandeAsync(int classId,int lessonId)
         {
            return Task.FromResult(_dbContext.StudentChooseLessons.Where(y => y.LessonId == lessonId).Include(y => y.Student)
