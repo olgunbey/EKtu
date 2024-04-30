@@ -77,9 +77,9 @@ namespace EKtu.Persistence.Service.PrincipalService
 
         public async Task<Response<NoContent>> AllStudentCalculateLetterGrandeAsync()
         {
-            var AvgClassLesson= await(await principalRepository.AllStudentCalculateLetterGrandeAsync()).ToListAsync(); //burada sınıfların derslere gore gruplanmıs ortalaması var
+            var AvgClassLesson= await(await principalRepository.AllStudentCalculateLetterGrandeAsync()).ToListAsync();
 
-            foreach (var item in AvgClassLesson) //burada o sınıfa ait dersleri alan öğrencilerin examgrandesini hesaplayacagız
+            foreach (var item in AvgClassLesson) 
             {
              var data =  (await principalRepository.StudentCalculateLetterGrandeAsync(item.ClassId, item.LessonId)).ToList();
 
@@ -96,19 +96,17 @@ namespace EKtu.Persistence.Service.PrincipalService
                 ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 4 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 8 ? "CC" :
                 ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 4 ? "DC" :""
                 
-                }).ToList() ;
+                }).ToList();
 
 
-               var returnDatas= StudentGpas.Select(y => new ExamNote()
+               var examNotes= StudentGpas.Select(y => new ExamNote()
                 {
                     Id = y.ExamNoteId,
                     LetterGrade = y.LatterGrande
                 }).ToList();
-
-
                 try
                 {
-                    await principalRepository.StudentCalculateUpdatedAsync(returnDatas);
+                    await principalRepository.StudentCalculateUpdatedAsync(examNotes);
                 }
                 catch (Exception)
                 {
@@ -123,9 +121,6 @@ namespace EKtu.Persistence.Service.PrincipalService
         public async Task<Response<NoContent>> StudentCalculateLetterGrandeAsync(StudentCalculateLetterGrandeDto studentCalculateLetterGrandeDto)
         {
             var StudentClassLessons = (await principalRepository.StudentCalculateLetterGrandeAsync(studentCalculateLetterGrandeDto.ClassId, studentCalculateLetterGrandeDto.LessonId));
-
-
-
             int ClassAvg= StudentClassLessons.Sum(y => (y.ExamNote.Exam1 + y.ExamNote.Exam2) / StudentClassLessons.Count())/StudentClassLessons.Count(); //sınıf ortalaması
 
             var StudentGpa = StudentClassLessons.Select(y => new StudentCalculateExamLetterResponseDto() //öğrencilerin not ortalaması 60 //sınıf not ortalaması 40 CB olması gerekiyor
