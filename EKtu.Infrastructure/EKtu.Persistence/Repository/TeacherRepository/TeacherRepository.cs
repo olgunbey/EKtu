@@ -20,7 +20,13 @@ namespace EKtu.Persistence.Repository.TeacherRepository
         public Task<IQueryable<TeacherClassLesson>> TeacherClass(int teacherId)
         {
           return Task.FromResult(_dbContext.Set<TeacherClassLesson>().Where(y => y.TeacherId == teacherId).Include(y => y.Teacher).Include(y=>y.Class).Include(t=>t.Lesson).AsQueryable());
-               
+        
+        }
+
+        public Task<IQueryable<TeacherClassLesson>> TeacherClassLesson(int teacherId, int classId)
+        {
+           return Task.FromResult(_dbContext.Set<TeacherClassLesson>().Where(y => y.TeacherId == teacherId && y.ClassId == classId)
+                .Include(y => y.Lesson).AsQueryable());
         }
     }
 }

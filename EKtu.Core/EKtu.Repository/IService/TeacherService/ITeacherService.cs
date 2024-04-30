@@ -11,7 +11,8 @@ namespace EKtu.Repository.IService.TeacherService
     public interface ITeacherService:IBaseService<Teacher>
     {
         Task<Response<List<TeacherClassReponseDto>>> TeacherClass(int teacherId);
-        Task TeacherLesson(int classId,int teacherId);
+        Task<Response<List<TeacherLessonDto>>> TeacherLesson(int classId,int teacherId);
+
 
 
     }
