@@ -12,6 +12,7 @@ namespace EKtu.Domain.Entities
         public int StudentChooseLessonId { get; set; }
         public DateTime AttendanceDate { get; set; }
         public string ReasonForAbsence { get; set; }
+        public bool PermissionCheck{ get; set; }
 
     }
 }

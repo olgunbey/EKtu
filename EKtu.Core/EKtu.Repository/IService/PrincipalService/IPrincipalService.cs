@@ -16,5 +16,8 @@ namespace EKtu.Repository.IService.PrincipalService
         Task<Response<NoContent>> StudentCalculateLetterGrandeAsync(StudentCalculateLetterGrandeDto studentCalculateLetterGrandeDto);
 
         Task<Response<NoContent>> AllStudentCalculateLetterGrandeAsync();
+
+
+        Task<Response<NoContent>> StudentAttendanceAddAsync(StudentAttendanceRequestDto studentAttendanceRequestDto);
     }
 }

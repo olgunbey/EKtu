@@ -11,5 +11,6 @@ namespace EKtu.Domain.Entities
         public string ClassName { get; set; }
         public ICollection<Student> Students{ get; set; }
         public ICollection<TeacherClassLesson> TeacherClassLessons { get; set; }
+        public ICollection<Attendance> Attendances{ get; set; }
     }
 }
