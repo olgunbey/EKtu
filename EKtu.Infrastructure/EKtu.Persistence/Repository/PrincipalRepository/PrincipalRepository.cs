@@ -42,6 +42,15 @@ namespace EKtu.Persistence.Repository.PrincipalRepository
 
         }
 
+        public async Task<int> GetStudentChooseLessonIdAsync(int studentId, int lessonId)
+        {
+          return (await _dbContext.StudentChooseLessons.FirstOrDefaultAsync(y => y.StudentId==studentId && y.LessonId == lessonId))!.Id;
+        }
+
+        public async Task StudentAttendanceAddAsync(Attendance attendance)
+        {
+          await  _dbContext.Attendances.AddAsync(attendance);
+        }
 
         public Task<IQueryable<StudentChooseLesson>> StudentCalculateLetterGrandeAsync(int classId,int lessonId)
         {

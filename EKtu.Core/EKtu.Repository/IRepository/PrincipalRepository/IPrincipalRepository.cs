@@ -19,5 +19,9 @@ namespace EKtu.Repository.IRepository.PrincipalRepository
 
         Task<IQueryable<ClassExamNoteAverageResponseDto>> AllStudentCalculateLetterGrandeAsync();
 
+        Task StudentAttendanceAddAsync(Attendance attendance);
+
+        Task<int> GetStudentChooseLessonIdAsync(int studentId, int lessonId);
+
     }
 }

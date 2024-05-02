@@ -33,6 +33,9 @@ namespace EKtu.Persistence.Migrations
                     b.Property<DateTime>("AttendanceDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("PermissionCheck")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ReasonForAbsence")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

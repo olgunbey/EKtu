@@ -14,7 +14,7 @@ namespace EKtu.AuthServer
         {
             new ApiScope("exam.update","not girişi"),
             new ApiScope("exam.read","notları görme"),
-            new ApiScope("exam.list","sınav sonuçlarını listeleme"),
+            new ApiScope("exam.list","not sonuçlarını listeleme"),
 
             new ApiScope("student.delete","öğrenci silme"),
             new ApiScope("student.update","öğrenci bilgi güncelleme"),
@@ -38,22 +38,23 @@ namespace EKtu.AuthServer
                 ClientId="ResourceOwnerTeacher",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
-                AllowedScopes={"exam.update","exam.read","absence.entry","teacher.classlessonlist"},
+                AllowedScopes={"exam.update","exam.read","teacher.classlessonlist"},
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
                 AccessTokenLifetime=3,
-                AbsoluteRefreshTokenLifetime=900
+                AbsoluteRefreshTokenLifetime=25
             },
             new Client()
             {
                 ClientId="ResourceOwnerPrincipal",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
-                AllowedScopes={"student.delete","student.update","student.added","exam.read","lesson.approve","lesson.added","teacher.classlesson","student.calculateexamgrande" },
+                AllowedScopes={"student.delete","student.update","student.added","exam.read","lesson.approve","lesson.added","teacher.classlesson","student.calculateexamgrande","absence.entry" },
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
-                AccessTokenLifetime=3,
-                AbsoluteRefreshTokenLifetime=900
+                AccessTokenLifetime=1,
+                AbsoluteRefreshTokenLifetime=25,
+                UpdateAccessTokenClaimsOnRefresh=true,
             },
             new Client()
             {

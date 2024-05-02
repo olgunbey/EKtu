@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,14 +23,16 @@ namespace EKtu.Persistence.Service.PrincipalService
         private readonly IPrincipalBuilder principalBuilder;
         private readonly ILessonBuilder lessonBuilder;
         private readonly ITeacherClassLessonBuilder teacherClassLessonBuilder;
+        private readonly IAttendanceBuilder attendanceBuilder;
 
-        public PrincipalService(IBaseRepository<Principal> baseRepository, ISaves saves, IPrincipalRepository principalRepository, IPrincipalBuilder principalBuilder, ILessonBuilder lessonBuilder, ITeacherClassLessonBuilder teacherClassLessonBuilder = null) : base(baseRepository, saves)
+        public PrincipalService(IBaseRepository<Principal> baseRepository, ISaves saves, IPrincipalRepository principalRepository, IPrincipalBuilder principalBuilder, ILessonBuilder lessonBuilder, ITeacherClassLessonBuilder teacherClassLessonBuilder = null, IAttendanceBuilder attendanceBuilder = null) : base(baseRepository, saves)
         {
             this.principalRepository = principalRepository;
             this._saves = saves;
             this.principalBuilder = principalBuilder;
             this.lessonBuilder = lessonBuilder;
             this.teacherClassLessonBuilder = teacherClassLessonBuilder;
+            this.attendanceBuilder = attendanceBuilder;
         }
 
         public async Task<Response<NoContent>> AddLessonAsync(AddLessonRequestDto addLessonRequestDto)
@@ -116,6 +119,29 @@ namespace EKtu.Persistence.Service.PrincipalService
             }
             await _saves.SaveChangesAsync();
             return Response<NoContent>.Success(204);
+        }
+
+        public async Task<Response<NoContent>> StudentAttendanceAddAsync(StudentAttendanceRequestDto studentAttendanceRequestDto)
+        {
+
+            int studentChooseId = await principalRepository.GetStudentChooseLessonIdAsync(studentAttendanceRequestDto.StudentId, studentAttendanceRequestDto.LessonId);
+
+            Attendance attendance = attendanceBuilder
+                .StudentChooseLessonId(studentChooseId)
+                .PermissionCheck(studentAttendanceRequestDto.PermissionCheck)
+                .ReasonForAbsence(studentAttendanceRequestDto.ReasonForAbsence)
+                .AttendanceDate(studentAttendanceRequestDto.AttendanceDate)
+                .GetAttendance();
+            try
+            {
+                await principalRepository.StudentAttendanceAddAsync(attendance);
+                await _saves.SaveChangesAsync();
+                return Response<NoContent>.Success(200);
+            }
+            catch (Exception)
+            {
+                return Response<NoContent>.Fail("hata devamsızlıklar eklenemedi", 400);
+            }
         }
 
         public async Task<Response<NoContent>> StudentCalculateLetterGrandeAsync(StudentCalculateLetterGrandeDto studentCalculateLetterGrandeDto)

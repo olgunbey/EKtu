@@ -17,6 +17,8 @@ namespace EKtu.Persistence.EntityConfigurations
             builder.HasOne(y => y.StudentChooseLesson)
                 .WithMany(y => y.Attendances)
                 .HasForeignKey(y => y.StudentChooseLessonId);
+
+            builder.Property(y => y.PermissionCheck).HasDefaultValue(false);
         }
     }
 }

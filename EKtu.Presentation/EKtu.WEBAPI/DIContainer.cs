@@ -64,6 +64,8 @@ namespace EKtu.WEBAPI
             serviceDescriptors.AddScoped<TeacherClassLesson>(y=> new TeacherClassLesson());
             serviceDescriptors.AddScoped<ILessonBuilder,LessonBuilder>();
             serviceDescriptors.AddScoped<ITeacherClassLessonBuilder,TeacherClassLessonBuilder>();
+            serviceDescriptors.AddScoped<Attendance>(y => new Attendance());
+            serviceDescriptors.AddScoped<IAttendanceBuilder,AttendanceBuilder>();
 
         }
     }
