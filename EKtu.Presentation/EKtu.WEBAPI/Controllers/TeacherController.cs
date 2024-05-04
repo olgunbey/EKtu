@@ -52,5 +52,6 @@ namespace EKtu.WEBAPI.Controllers
           return ResponseData<List<TeacherLessonDto>>(await teacherService.TeacherLesson(classId, Convert.ToInt32(teacherId.Value)));
 
         }
+
     }
 }

@@ -35,8 +35,7 @@ namespace EKtu.WEBAPI.Controllers
                 .LastName(studentRequestDto.StudentLastName)
                 .FirstName(studentRequestDto.StudentName)
                 .Email(studentRequestDto.Email)
-                .TckNo(studentRequestDto.StudentTckNo)
-                .Password(studentRequestDto.StudentPassword).GetPerson();
+                .TckNo(studentRequestDto.StudentTckNo).Password(studentRequestDto.StudentPassword).GetPerson();
 
             return ResponseData(await addPersonService.AddAsync(studentBuilders));
         }
@@ -62,6 +61,13 @@ namespace EKtu.WEBAPI.Controllers
         public async Task<IActionResult> StudentChooseLesson([FromBody]StudentChooseLessonRequestDto studentChooseLessonRequestDto)
         {
             return ResponseData<NoContent>(await _studentService.StudentChooseLessonAsync(studentChooseLessonRequestDto));
+        }
+        [HttpGet]
+        [Authorize(Policy = "StudentAbsence")]
+        public async Task<IActionResult> StudentAbsenceList()
+        {
+          var userId=  User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            return ResponseData(await _studentService.StudentAbsenceAsync(Convert.ToInt32(userId.Value)));
         }
     }
 }

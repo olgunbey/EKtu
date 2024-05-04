@@ -33,6 +33,9 @@ namespace EKtu.Persistence.Migrations
                     b.Property<DateTime>("AttendanceDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("ClassId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("PermissionCheck")
                         .HasColumnType("bit");
 
@@ -44,6 +47,8 @@ namespace EKtu.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
 
                     b.HasIndex("StudentChooseLessonId");
 
@@ -296,8 +301,12 @@ namespace EKtu.Persistence.Migrations
 
             modelBuilder.Entity("EKtu.Domain.Entities.Attendance", b =>
                 {
-                    b.HasOne("EKtu.Domain.Entities.StudentChooseLesson", "StudentChooseLesson")
+                    b.HasOne("EKtu.Domain.Entities.Class", null)
                         .WithMany("Attendances")
+                        .HasForeignKey("ClassId");
+
+                    b.HasOne("EKtu.Domain.Entities.StudentChooseLesson", "StudentChooseLesson")
+                        .WithMany("Attendance")
                         .HasForeignKey("StudentChooseLessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -384,6 +393,8 @@ namespace EKtu.Persistence.Migrations
 
             modelBuilder.Entity("EKtu.Domain.Entities.Class", b =>
                 {
+                    b.Navigation("Attendances");
+
                     b.Navigation("Students");
 
                     b.Navigation("TeacherClassLessons");
@@ -408,7 +419,7 @@ namespace EKtu.Persistence.Migrations
 
             modelBuilder.Entity("EKtu.Domain.Entities.StudentChooseLesson", b =>
                 {
-                    b.Navigation("Attendances");
+                    b.Navigation("Attendance");
 
                     b.Navigation("ExamNote")
                         .IsRequired();

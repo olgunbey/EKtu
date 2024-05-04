@@ -28,7 +28,7 @@ namespace EKtu.AuthServer
             new ApiScope("teacher.classlesson","öğretmene ders ve sınıf atama"),
             new ApiScope("student.calculateexamgrande","öğrencilerin harf notunu hesaplama"),
             new ApiScope("teacher.classlessonlist","öğretmenin girdiği dersleri listeleme"),
-            
+            new ApiScope("student.absence","öğrenci devamsızlıklarını görme")
 
         };
         public static IEnumerable<Client> GetClients() => new List<Client>()
@@ -61,7 +61,7 @@ namespace EKtu.AuthServer
                 ClientId="ResourceOwnerStudent",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
-                AllowedScopes={"exam.list","choose.lesson"},
+                AllowedScopes={"exam.list","choose.lesson","student.absence"},
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
                 AccessTokenLifetime=3,
@@ -99,7 +99,7 @@ namespace EKtu.AuthServer
             new ApiResource()
             {
                 Name="BaseApi",
-                Scopes={"exam.update","exam.read","exam.list", "student.delete", "student.update", "student.added", "exam.read", "absence.entry", "base.token", "choose.lesson","lesson.approve", "lesson.added", "teacher.classlessonlist", "student.calculateexamgrande", "teacher.classlesson" }
+                Scopes={"exam.update","exam.read","exam.list", "student.delete", "student.update", "student.added", "exam.read", "absence.entry", "base.token", "choose.lesson","lesson.approve", "lesson.added", "teacher.classlessonlist", "student.calculateexamgrande", "teacher.classlesson", "student.absence" }
             }
         };
     }
