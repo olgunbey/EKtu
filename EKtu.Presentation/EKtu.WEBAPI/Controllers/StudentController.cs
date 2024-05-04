@@ -66,7 +66,7 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy = "StudentAbsence")]
         public async Task<IActionResult> StudentAbsenceList()
         {
-          var userId=  User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            var userId=  User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             return ResponseData(await _studentService.StudentAbsenceAsync(Convert.ToInt32(userId.Value)));
         }
 
@@ -74,7 +74,7 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy = "StudentCertificatePolicy")]
         public async Task<IActionResult> StudentCertificate()
         {
-          var userId= User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            var userId= User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             return ResponseData(await _studentService.StudentCertificateAsync(Convert.ToInt32(userId.Value)));
         
         }
