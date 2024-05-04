@@ -68,5 +68,24 @@ namespace EKtu.Persistence.Service.StudentService
             }
           
         }
+
+        public async Task<Response<List<StudentAbsenceDto>>> StudentAbsenceAsync(int userId)
+        {
+
+           var query = await studentRepository.SelectingStudentAbsent(userId);
+
+           var resp=  await query.GroupBy(x =>x.StudentChooseLesson.Lesson.LessonName).Select(y => new StudentAbsenceDto()
+            {
+               LessonName =y.Key,
+               AbsenceCount =y.Count()
+            }).ToListAsync();
+
+
+
+            if(resp.Any())
+                return Response<List<StudentAbsenceDto>>.Success(resp, 200);
+            return Response<List<StudentAbsenceDto>>.Success(204);
+
+        }
     }
 }

@@ -12,6 +12,21 @@ namespace EKtu.Persistence.Repository.StudentRepository
         {
         }
 
+        public Task<IQueryable<Attendance>> SelectingStudentAbsent(int userId)
+        {
+           return Task.FromResult(_dbContext.Attendances.Include(y => y.StudentChooseLesson).ThenInclude(y=>y.Lesson)
+                .Where(y => y.StudentChooseLesson.StudentId == userId));
+        }
+
+        public async Task<Student> StudentAbsenceAsync(int userId, int lessonId)
+        {
+            Student student= await _dbContext.FindAsync<Student>(userId);
+
+            await _dbContext.Entry(student).Collection(y => y.StudentChooseLessons).LoadAsync();
+
+            return student;
+        }
+
         public async Task StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto)
         {
 

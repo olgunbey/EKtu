@@ -41,6 +41,10 @@ namespace EKtu.WEBAPI
                 {
                     y.RequireClaim("scope", "teacher.classlessonlist");
                 });
+                x.AddPolicy("StudentAbsence", y =>
+                {
+                    y.RequireClaim("scope", "student.absence");
+                });
                 
             });
         }

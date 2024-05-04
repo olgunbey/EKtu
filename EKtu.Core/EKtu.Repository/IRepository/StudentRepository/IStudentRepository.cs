@@ -12,5 +12,10 @@ namespace EKtu.Repository.IRepository.StudentRepository
     {
         Task<IQueryable<Student>> StudentListExamGrandeAsync(int studentId);
         Task StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto);
+
+        Task<Student> StudentAbsenceAsync(int userId, int lessonId);
+
+
+        Task<IQueryable<Attendance>> SelectingStudentAbsent(int userId);
     }
 }

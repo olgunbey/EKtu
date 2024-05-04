@@ -18,5 +18,8 @@ namespace EKtu.Repository.IService.StudentService
 
         Task<Response<NoContent>> StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto);
 
+
+        Task<Response<List<StudentAbsenceDto>>> StudentAbsenceAsync(int userId);
+
     }
 }

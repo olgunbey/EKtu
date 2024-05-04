@@ -12,7 +12,7 @@ namespace EKtu.Domain.Entities
         public int LessonId{ get; set; }
         public Student Student{ get; set; }
         public Lesson Lesson{ get; set; }
-        public ICollection<Attendance> Attendances{ get; set; }
+        public List<Attendance> Attendance{ get; set; }
 
         public ExamNote ExamNote{ get; set; }
     }
