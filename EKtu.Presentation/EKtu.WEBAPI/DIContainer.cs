@@ -1,6 +1,9 @@
-﻿using EKtu.Domain.Entities;
+﻿using DinkToPdf;
+using DinkToPdf.Contracts;
+using EKtu.Domain.Entities;
 using EKtu.Infrastructure.CacheServices;
 using EKtu.Infrastructure.EmailService;
+using EKtu.Infrastructure.PdfServices;
 using EKtu.Infrastructure.TokenServices;
 using EKtu.Persistence.Builder.BuilderCreate;
 using EKtu.Persistence.Builder.IBuilder;
@@ -26,6 +29,7 @@ using EKtu.Repository.IService.AddPersonService;
 using EKtu.Repository.IService.CacheService;
 using EKtu.Repository.IService.EmailPasswordService;
 using EKtu.Repository.IService.EmailService;
+using EKtu.Repository.IService.PdfService;
 using EKtu.Repository.IService.PrincipalService;
 using EKtu.Repository.IService.StudentService;
 using EKtu.Repository.IService.TeacherService;
@@ -66,6 +70,8 @@ namespace EKtu.WEBAPI
             serviceDescriptors.AddScoped<ITeacherClassLessonBuilder,TeacherClassLessonBuilder>();
             serviceDescriptors.AddScoped<Attendance>(y => new Attendance());
             serviceDescriptors.AddScoped<IAttendanceBuilder,AttendanceBuilder>();
+            serviceDescriptors.AddScoped<IPdfService, PdfService>();
+            serviceDescriptors.AddScoped<IConverter>(y=> new SynchronizedConverter(new PdfTools()));
 
         }
     }

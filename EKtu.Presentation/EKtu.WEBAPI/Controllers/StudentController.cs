@@ -4,6 +4,7 @@ using EKtu.Persistence.Builder.IBuilder;
 using EKtu.Repository.Dtos;
 using EKtu.Repository.IRepository.AddPersonRepository;
 using EKtu.Repository.IService.AddPersonService;
+using EKtu.Repository.IService.PdfService;
 using EKtu.Repository.IService.StudentService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,11 +21,13 @@ namespace EKtu.WEBAPI.Controllers
         private readonly IStudentService _studentService;
         private readonly IAddPersonService<Student> addPersonService;
         private readonly IStudentBuilder studentBuilder;
-        public StudentController(IStudentService studentService, IAddPersonService<Student> addPersonService, IStudentBuilder studentBuilder)
+        private readonly IPdfService _pdfService;
+        public StudentController(IStudentService studentService, IAddPersonService<Student> addPersonService, IStudentBuilder studentBuilder, IPdfService pdfService)
         {
             _studentService = studentService;
             this.addPersonService = addPersonService;
             this.studentBuilder = studentBuilder;
+            _pdfService = pdfService;
         }
         [HttpPost]
         [Authorize("ClientCredentials")]    
@@ -70,13 +73,21 @@ namespace EKtu.WEBAPI.Controllers
             return ResponseData(await _studentService.StudentAbsenceAsync(Convert.ToInt32(userId.Value)));
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize(Policy = "StudentCertificatePolicy")]
         public async Task<IActionResult> StudentCertificate()
         {
             var userId= User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-            return ResponseData(await _studentService.StudentCertificateAsync(Convert.ToInt32(userId.Value)));
-        
+            var Resp = await _studentService.StudentCertificateAsync(Convert.ToInt32(userId.Value));
+
+            var bytes = _pdfService.PdfBytes(Resp.Data);
+
+
+            Random random = new Random();
+           var randoms= random.Next(1, 100000);
+            await System.IO.File.WriteAllBytesAsync(@$"C:\Users\olgun\OneDrive\Masaüstü\pdf\{randoms}.pdf",bytes);
+
+            return ResponseData(Response<byte[]>.Success(bytes, 200));
         }
     }
 }
