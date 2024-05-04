@@ -45,6 +45,10 @@ namespace EKtu.WEBAPI
                 {
                     y.RequireClaim("scope", "student.absence");
                 });
+                x.AddPolicy("StudentCertificatePolicy", y =>
+                {
+                    y.RequireClaim("scope", "student.certificate");
+                });
                 
             });
         }

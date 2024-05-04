@@ -87,5 +87,19 @@ namespace EKtu.Persistence.Service.StudentService
             return Response<List<StudentAbsenceDto>>.Success(204);
 
         }
+
+        public async Task<Response<StudentCertificateResponseDto>> StudentCertificateAsync(int userId)
+        {
+          Student? Student= await studentRepository.StudentCertificateAsync(userId);
+
+            if (Student is null)
+                return Response<StudentCertificateResponseDto>.Fail("öğrenci yok", 400);
+           return Response<StudentCertificateResponseDto>.Success(new StudentCertificateResponseDto()
+            {
+                TckNo=Student.TckNo,
+                FirstName=Student.FirstName,
+                LastName=Student.LastName,
+            },200);
+        }
     }
 }

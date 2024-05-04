@@ -18,6 +18,11 @@ namespace EKtu.Persistence.Repository.StudentRepository
                 .Where(y => y.StudentChooseLesson.StudentId == userId));
         }
 
+        public async Task<Student> StudentCertificateAsync(int userId)
+        {
+           Student student= await _dbContext.Student.FindAsync(userId);
+            return student;
+        }
 
         public async Task StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto)
         {
