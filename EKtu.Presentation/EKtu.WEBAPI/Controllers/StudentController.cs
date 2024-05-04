@@ -69,5 +69,14 @@ namespace EKtu.WEBAPI.Controllers
           var userId=  User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             return ResponseData(await _studentService.StudentAbsenceAsync(Convert.ToInt32(userId.Value)));
         }
+
+        [HttpPost]
+        [Authorize(Policy = "StudentCertificatePolicy")]
+        public async Task<IActionResult> StudentCertificate()
+        {
+          var userId= User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            return ResponseData(await _studentService.StudentCertificateAsync(Convert.ToInt32(userId.Value)));
+        
+        }
     }
 }

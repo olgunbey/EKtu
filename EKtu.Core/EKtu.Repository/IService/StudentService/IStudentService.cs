@@ -21,5 +21,7 @@ namespace EKtu.Repository.IService.StudentService
 
         Task<Response<List<StudentAbsenceDto>>> StudentAbsenceAsync(int userId);
 
+        Task<Response<StudentCertificateResponseDto>> StudentCertificateAsync(int userId);
+
     }
 }
