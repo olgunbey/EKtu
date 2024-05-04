@@ -34,9 +34,9 @@ namespace EKtu.Infrastructure.PdfServices
 <body>
 
     <div style=""text-align: center; font-size: 20px;"">
-        <p><strong> K.C  </strong></p>
+        <p><strong> T.C  </strong></p>
         <p><strong>  YÜKSEKOĞRETİM KURULU BAŞKANLIĞI </strong></p>
-        <p><strong>   AMED </strong></p>
+        <p><strong>   ANKARA </strong></p>
 
     </div>
 
@@ -55,7 +55,7 @@ namespace EKtu.Infrastructure.PdfServices
     </div>
 </div>
     <div class=""""lorem"""" style=""text-align:center;"">
-        <strong>ILGILI DAGA </strong>
+        <strong>ILGILI MAKAMA </strong>
         <p>Yukarıda kimlik bilgileri yer alan {1} isimli kişinin Karadeniz Teknik Üniversitesi tarafından yukarıda belirtilen
 programın kayıtlı öğrencisi olduğu bildirilmiştir.
 </p>
