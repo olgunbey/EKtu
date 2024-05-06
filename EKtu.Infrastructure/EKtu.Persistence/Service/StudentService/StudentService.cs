@@ -91,5 +91,24 @@ namespace EKtu.Persistence.Service.StudentService
                 LastName=Student.LastName,
             },200);
         }
+
+        public async Task<Response<List<GetStudentChooseLessonDto>>> GetStudentChooseLessonAsync(int userId)
+        {
+         IQueryable<StudentChooseLesson> QueryableLessonConfirmation= await studentRepository.GetStudentChooseLessonAsync(userId);
+
+            if (!QueryableLessonConfirmation.Any())
+                return Response<List<GetStudentChooseLessonDto>>.Fail("öğrenci ders seçmedi", 400);
+
+
+                List<GetStudentChooseLessonDto> getStudentChooseLessonDtos= await QueryableLessonConfirmation.Select(y => new GetStudentChooseLessonDto()
+            {
+                LessonId = y.LessonId,
+                LessonName = y.Lesson.LessonName
+            }).ToListAsync();
+
+            return Response<List<GetStudentChooseLessonDto>>.Success(getStudentChooseLessonDtos, 200);
+
+            
+        }
     }
 }

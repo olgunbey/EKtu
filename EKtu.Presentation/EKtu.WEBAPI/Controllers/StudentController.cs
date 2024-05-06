@@ -91,10 +91,12 @@ namespace EKtu.WEBAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy ="GetStudentChooseLesson")]
         public async Task<IActionResult> GetStudentChooseLesson()
         {
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
 
-            return Ok();
+            return ResponseData(await _studentService.GetStudentChooseLessonAsync(Convert.ToInt32(userId.Value)));
         }
     }
 }

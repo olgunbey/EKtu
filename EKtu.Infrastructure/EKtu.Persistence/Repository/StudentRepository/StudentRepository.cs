@@ -3,7 +3,6 @@ using EKtu.Persistence.Repositorys;
 using EKtu.Repository.Dtos;
 using EKtu.Repository.IRepository.StudentRepository;
 using Microsoft.EntityFrameworkCore;
-using ServiceStack;
 
 namespace EKtu.Persistence.Repository.StudentRepository
 {
@@ -11,6 +10,14 @@ namespace EKtu.Persistence.Repository.StudentRepository
     {
         public StudentRepository(DatabaseContext databaseContext) : base(databaseContext)
         {
+        }
+
+        public Task<IQueryable<StudentChooseLesson>> GetStudentChooseLessonAsync(int userId)
+        {
+           return Task.FromResult(_dbContext.StudentChooseLessons
+                .Where(y => y.StudentId == userId)
+                .Include(y => y.Student)
+                .Include(y => y.Lesson).AsQueryable());
         }
 
         public Task<List<StudentAbsenceDto>> SelectingStudentAbsent(int userId)
