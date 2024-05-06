@@ -9,6 +9,7 @@ namespace EKtu.Repository.Dtos
     public class StudentAbsenceDto
     {
         public string LessonName{ get; set; }
+        public List<DateTime> AbsenceDateTimes{ get; set; }
         public int AbsenceCount { get; set; }
     }
 }
