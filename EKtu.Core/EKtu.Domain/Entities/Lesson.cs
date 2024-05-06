@@ -18,5 +18,7 @@ namespace EKtu.Domain.Entities
         public ICollection<StudentChooseLesson>  StudentChooseLessons{ get; set; }
 
         public OptionalLesson? OptionalLesson{ get; set; }
+
+        public ICollection<LessonConfirmation> LessonConfirmation{ get; set; }
     }
 }

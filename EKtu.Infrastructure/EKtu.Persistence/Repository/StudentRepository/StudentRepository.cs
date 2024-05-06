@@ -53,7 +53,7 @@ namespace EKtu.Persistence.Repository.StudentRepository
 
         public Task<IQueryable<Student>> StudentListExamGrandeAsync(int studentId)
         {
-          return Task.FromResult(_dbContext.Student.Where(y=>y.Id==studentId).Include(y => y.StudentChooseLessons)
+          return Task.FromResult(_dbContext.Student.Where(y=>y.Id==studentId).Include(y => y.LessonConfirmation)
                 .ThenInclude(y => y.ExamNote)
                 .Include(y => y.StudentChooseLessons)
                 .ThenInclude(y => y.Lesson).AsQueryable());

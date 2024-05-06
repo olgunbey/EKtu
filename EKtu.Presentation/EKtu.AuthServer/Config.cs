@@ -29,7 +29,8 @@ namespace EKtu.AuthServer
             new ApiScope("student.calculateexamgrande","öğrencilerin harf notunu hesaplama"),
             new ApiScope("teacher.classlessonlist","öğretmenin girdiği dersleri listeleme"),
             new ApiScope("student.absence","öğrenci devamsızlıklarını görme"),
-            new ApiScope("student.certificate","öğrenci belgesi çıkarma")
+            new ApiScope("student.certificate","öğrenci belgesi çıkarma"),
+            new ApiScope("student.updatechooselesson","öğrenci seçtiği dersi güncelleyebilir")
 
         };
         public static IEnumerable<Client> GetClients() => new List<Client>()
@@ -62,7 +63,7 @@ namespace EKtu.AuthServer
                 ClientId="ResourceOwnerStudent",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
-                AllowedScopes={"exam.list","choose.lesson","student.absence","student.certificate"},
+                AllowedScopes={"exam.list","choose.lesson","student.absence","student.certificate","student.updatechooselesson"},
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
                 AccessTokenLifetime=3,
@@ -100,7 +101,7 @@ namespace EKtu.AuthServer
             new ApiResource()
             {
                 Name="BaseApi",
-                Scopes={"exam.update","exam.read","exam.list", "student.delete", "student.update", "student.added", "exam.read", "absence.entry", "base.token", "choose.lesson","lesson.approve", "lesson.added", "teacher.classlessonlist", "student.calculateexamgrande", "teacher.classlesson", "student.absence", "student.certificate" }
+                Scopes={"exam.update","exam.read","exam.list", "student.delete", "student.update", "student.added", "exam.read", "absence.entry", "base.token", "choose.lesson","lesson.approve", "lesson.added", "teacher.classlessonlist", "student.calculateexamgrande", "teacher.classlesson", "student.absence", "student.certificate", "student.updatechooselesson" }
             }
         };
     }

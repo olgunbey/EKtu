@@ -31,7 +31,7 @@ namespace EKtu.Persistence.Service.StudentService
             {
                 FirstName=y.FirstName,
                 LastName=y.LastName,
-                StudentChooseExamGrande=y.StudentChooseLessons.Select(x=> new StudentChooseLessonExamGrandeResponseDto()
+                StudentChooseExamGrande=y.LessonConfirmation.Select(x=> new StudentChooseLessonExamGrandeResponseDto()
                 {
                     Exam1=x.ExamNote.Exam1,
                     Exam2=x.ExamNote.Exam2,
@@ -73,8 +73,6 @@ namespace EKtu.Persistence.Service.StudentService
         {
 
            var query = (await studentRepository.SelectingStudentAbsent(userId)).ToList();
-
-
                 if (query.Any())
                     return Response<List<StudentAbsenceDto>>.Success(query, 200);
             return Response<List<StudentAbsenceDto>>.Success(204);
