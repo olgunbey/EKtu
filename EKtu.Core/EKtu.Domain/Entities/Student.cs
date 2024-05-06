@@ -12,5 +12,7 @@ namespace EKtu.Domain.Entities
         public Class Class{ get; set; }
         public ICollection<StudentChooseLesson> StudentChooseLessons{ get; set; }
         public string Email{ get; set; }
+        public ICollection<LessonConfirmation> LessonConfirmation{ get; set; }
+
     }
 }

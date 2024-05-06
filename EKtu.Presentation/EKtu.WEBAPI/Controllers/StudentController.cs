@@ -84,10 +84,19 @@ namespace EKtu.WEBAPI.Controllers
 
 
             Random random = new Random();
-           var randoms= random.Next(1, 100000);
+            var randoms= random.Next(1, 100000);
             await System.IO.File.WriteAllBytesAsync(@$"C:\Users\olgun\OneDrive\Masaüstü\pdf\{randoms}.pdf",bytes);
 
             return ResponseData(Response<byte[]>.Success(bytes, 200));
+        }
+
+        [HttpGet]
+        [Authorize(Policy ="GetStudentChooseLesson")]
+        public async Task<IActionResult> GetStudentChooseLesson()
+        {
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+
+            return ResponseData(await _studentService.GetStudentChooseLessonAsync(Convert.ToInt32(userId.Value)));
         }
     }
 }

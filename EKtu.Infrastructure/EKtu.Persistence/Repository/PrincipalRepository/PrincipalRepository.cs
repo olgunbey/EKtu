@@ -25,7 +25,7 @@ namespace EKtu.Persistence.Repository.PrincipalRepository
         public Task<IQueryable<ClassExamNoteAverageResponseDto>> AllStudentCalculateLetterGrandeAsync()
         {
 
-         return Task.FromResult(_dbContext.StudentChooseLessons.AsNoTracking()
+         return Task.FromResult(_dbContext.LessonConfirmation.AsNoTracking()
                 .Include(y => y.Student)
                 .Include(y => y.ExamNote)
                 .GroupBy(y => new
@@ -52,9 +52,9 @@ namespace EKtu.Persistence.Repository.PrincipalRepository
           await  _dbContext.Attendances.AddAsync(attendance);
         }
 
-        public Task<IQueryable<StudentChooseLesson>> StudentCalculateLetterGrandeAsync(int classId,int lessonId)
+        public Task<IQueryable<LessonConfirmation>> StudentCalculateLetterGrandeAsync(int classId,int lessonId)
         {
-           return Task.FromResult(_dbContext.StudentChooseLessons.Where(y => y.LessonId == lessonId).Include(y => y.Student)
+           return Task.FromResult(_dbContext.LessonConfirmation.Where(y => y.LessonId == lessonId).Include(y => y.Student)
                 .Where(y => y.Student.ClassId == classId)
                 .Include(y => y.ExamNote).AsQueryable());
         }
@@ -71,13 +71,12 @@ namespace EKtu.Persistence.Repository.PrincipalRepository
 
         public async Task StudentLessonApproveAsync()
         {
-            List<ExamNote> StudentExamGrandeAdd = await _dbContext.StudentChooseLessons.Select(y => new ExamNote()
+            List<LessonConfirmation> StudentExamGrandeAdd = await _dbContext.StudentChooseLessons.Select(y => new LessonConfirmation()
             {
-                StudentChooseLessonId = y.Id,
-                Exam1 = 0,
-                Exam2 = 0,
+                StudentId=y.StudentId,
+                LessonId=y.LessonId
             }).ToListAsync();
-           await _dbContext.ExamNote.AddRangeAsync(StudentExamGrandeAdd);
+           await _dbContext.LessonConfirmation.AddRangeAsync(StudentExamGrandeAdd);
         }
 
         public async Task TeacherClassLessonAsync(TeacherClassLesson teacherClassLesson)

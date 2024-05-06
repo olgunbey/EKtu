@@ -49,6 +49,15 @@ namespace EKtu.WEBAPI
                 {
                     y.RequireClaim("scope", "student.certificate");
                 });
+
+                x.AddPolicy("StudentUpdateChooseLesson", y =>
+                {
+                    y.RequireClaim("scope", "student.updatechooselesson");
+                });
+                x.AddPolicy("GetStudentChooseLesson", y =>
+                {
+                    y.RequireClaim("scope", "student.getchooselesson");
+                });
                 
             });
         }
