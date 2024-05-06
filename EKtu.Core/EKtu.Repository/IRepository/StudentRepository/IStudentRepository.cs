@@ -15,6 +15,6 @@ namespace EKtu.Repository.IRepository.StudentRepository
 
 
         Task<Student> StudentCertificateAsync(int userId);
-        Task<IQueryable<Attendance>> SelectingStudentAbsent(int userId);
+        Task<List<StudentAbsenceDto>> SelectingStudentAbsent(int userId);
     }
 }

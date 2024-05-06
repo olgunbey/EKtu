@@ -3,6 +3,7 @@ using EKtu.Persistence.Repositorys;
 using EKtu.Repository.Dtos;
 using EKtu.Repository.IRepository.StudentRepository;
 using Microsoft.EntityFrameworkCore;
+using ServiceStack;
 
 namespace EKtu.Persistence.Repository.StudentRepository
 {
@@ -12,10 +13,25 @@ namespace EKtu.Persistence.Repository.StudentRepository
         {
         }
 
-        public Task<IQueryable<Attendance>> SelectingStudentAbsent(int userId)
+        public Task<List<StudentAbsenceDto>> SelectingStudentAbsent(int userId)
         {
-           return Task.FromResult(_dbContext.Attendances.Include(y => y.StudentChooseLesson).ThenInclude(y=>y.Lesson)
-                .Where(y => y.StudentChooseLesson.StudentId == userId));
+          var Attendances=  _dbContext.Attendances.Include(y => y.StudentChooseLesson).ThenInclude(y => y.Lesson)
+                .Where(y => y.StudentChooseLesson.StudentId == userId).ToList();
+            List<StudentAbsenceDto> listAttendances=new List<StudentAbsenceDto>();
+          var AbsentLessonsName=  Attendances.GroupBy(y => y.StudentChooseLesson.Lesson.LessonName).ToList();
+
+
+            foreach (var item in AbsentLessonsName)
+            {
+               var attendance= Attendances.Where(y => y.StudentChooseLesson.Lesson.LessonName == item.Key).ToList();
+                listAttendances.Add(new StudentAbsenceDto()
+                {
+                    LessonName = item.Key,
+                    AbsenceCount = item.Count(),
+                    AbsenceDateTimes=attendance.Select(y=>y.AttendanceDate).ToList()
+                });
+            }
+            return Task.FromResult(listAttendances);
         }
 
         public async Task<Student> StudentCertificateAsync(int userId)
@@ -42,5 +58,7 @@ namespace EKtu.Persistence.Repository.StudentRepository
                 .Include(y => y.StudentChooseLessons)
                 .ThenInclude(y => y.Lesson).AsQueryable());
         }
+
+        
     }
 }
