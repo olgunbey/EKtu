@@ -3,6 +3,7 @@ using EKtu.Persistence.Repositorys;
 using EKtu.Repository.Dtos;
 using EKtu.Repository.IRepository.StudentRepository;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace EKtu.Persistence.Repository.StudentRepository
 {
@@ -66,6 +67,18 @@ namespace EKtu.Persistence.Repository.StudentRepository
                 .ThenInclude(y => y.Lesson).AsQueryable());
         }
 
-        
+        public async Task<int> StudentChangeLessonAsync(List<StudentChangeLessonRequestDto> studentChangeLessonRequestDtos,int studentId)
+        {
+             int count = 0;
+            foreach (var studentChangeLessonRequestDto in studentChangeLessonRequestDtos)
+            {
+                var CurrentStudentLesson= await _dbContext.StudentChooseLessons.FirstAsync(y => y.LessonId == studentChangeLessonRequestDto.CurrentLessonId && y.StudentId==studentId);
+
+                CurrentStudentLesson.LessonId = studentChangeLessonRequestDto.ChangeLessonId;
+                count++;
+            }
+            return count;
+        }
+
     }
 }

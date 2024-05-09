@@ -18,5 +18,6 @@ namespace EKtu.Repository.IRepository.StudentRepository
         Task<List<StudentAbsenceDto>> SelectingStudentAbsent(int userId);
 
         Task<IQueryable<StudentChooseLesson>> GetStudentChooseLessonAsync(int userId);
+        Task<int> StudentChangeLessonAsync(List<StudentChangeLessonRequestDto> studentChangeLessonRequestDtos, int studentId);
     }
 }

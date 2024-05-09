@@ -46,7 +46,7 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy ="StudentList")]
         public async Task<IActionResult> StudentListExamGrande()
         {
-           var userId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+           var userId = User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
            var response= await _studentService.StudentListExamGrandeAsync(Convert.ToInt32(userId.Value));
             return ResponseData(response);
         }
@@ -55,7 +55,7 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy ="StudentId")]
         public async Task<IActionResult> StudentGetById()
         {
-          var userId=  User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+          var userId=  User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             var response = await _studentService.GetByIdAsync(Convert.ToInt32(userId.Value));
             return ResponseData(response);
         }
@@ -69,7 +69,7 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy = "StudentAbsence")]
         public async Task<IActionResult> StudentAbsenceList()
         {
-            var userId=  User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            var userId=  User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             return ResponseData(await _studentService.StudentAbsenceAsync(Convert.ToInt32(userId.Value)));
         }
 
@@ -77,7 +77,7 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy = "StudentCertificatePolicy")]
         public async Task<IActionResult> StudentCertificate()
         {
-            var userId= User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            var userId= User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             var Resp = await _studentService.StudentCertificateAsync(Convert.ToInt32(userId.Value));
 
             var bytes = _pdfService.PdfBytes(Resp.Data);
@@ -94,9 +94,17 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy ="GetStudentChooseLesson")]
         public async Task<IActionResult> GetStudentChooseLesson()
         {
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            var userId = User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
 
             return ResponseData(await _studentService.GetStudentChooseLessonAsync(Convert.ToInt32(userId.Value)));
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "GetStudentChooseLesson")]
+        public async Task<IActionResult> StudentChangeLesson(List<StudentChangeLessonRequestDto> studentChangeLessonRequestDtos)
+        {
+            var userId = User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            return ResponseData(await _studentService.StudentChangeLessonAsync(studentChangeLessonRequestDtos, int.Parse(userId.Value)));
         }
     }
 }

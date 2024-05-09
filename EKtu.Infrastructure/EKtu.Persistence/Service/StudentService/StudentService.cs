@@ -56,6 +56,7 @@ namespace EKtu.Persistence.Service.StudentService
 
         public async Task<Response<NoContent>> StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto)
         {
+            //buradada cachleme işlemi olacak
             try
             {
                 await studentRepository.StudentChooseLessonAsync(studentChooseLessonRequestDto);
@@ -109,6 +110,23 @@ namespace EKtu.Persistence.Service.StudentService
             return Response<List<GetStudentChooseLessonDto>>.Success(getStudentChooseLessonDtos, 200);
 
             
+        }
+
+
+        public async Task<Response<int>> StudentChangeLessonAsync(List<StudentChangeLessonRequestDto> studentChangeLessonRequestDtos,int studentId)
+        {
+            //burada cachleme işlemi olacak
+            try
+            {
+              int count=  await studentRepository.StudentChangeLessonAsync(studentChangeLessonRequestDtos, studentId);
+                await _saves.SaveChangesAsync();
+                return Response<int>.Success(count,204);
+            }
+            catch (Exception)
+            {
+                return Response<int>.Fail("hata, ders değişimi gerçekleşmedi", 400);
+            }
+
         }
     }
 }
