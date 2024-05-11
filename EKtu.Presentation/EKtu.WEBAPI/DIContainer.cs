@@ -1,7 +1,7 @@
 ﻿using DinkToPdf;
 using DinkToPdf.Contracts;
+using EKtu.CacheService.CacheServices;
 using EKtu.Domain.Entities;
-using EKtu.Infrastructure.CacheServices;
 using EKtu.Infrastructure.EmailService;
 using EKtu.Infrastructure.PdfServices;
 using EKtu.Infrastructure.TokenServices;
@@ -19,6 +19,8 @@ using EKtu.Persistence.Service.EmailPasswordService;
 using EKtu.Persistence.Service.PrincipalService;
 using EKtu.Persistence.Service.StudentService;
 using EKtu.Persistence.Service.TeacherService;
+using EKtu.Repository.ICacheService;
+using EKtu.Repository.ICacheService.StudentCacheService;
 using EKtu.Repository.IRepository;
 using EKtu.Repository.IRepository.AddPersonRepository;
 using EKtu.Repository.IRepository.PrincipalRepository;
@@ -26,7 +28,6 @@ using EKtu.Repository.IRepository.StudentRepository;
 using EKtu.Repository.IRepository.TeacherRepository;
 using EKtu.Repository.IService;
 using EKtu.Repository.IService.AddPersonService;
-using EKtu.Repository.IService.CacheService;
 using EKtu.Repository.IService.EmailPasswordService;
 using EKtu.Repository.IService.EmailService;
 using EKtu.Repository.IService.PdfService;
@@ -51,7 +52,6 @@ namespace EKtu.WEBAPI
             serviceDescriptors.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));
             serviceDescriptors.AddScoped<IEmail, Email>();
             serviceDescriptors.AddScoped<ITokenService, TokenService>();
-            serviceDescriptors.AddScoped(typeof(ICache<>), typeof(Cache<>));
             serviceDescriptors.AddScoped<IPrincipalService,PrincipalService>();
             serviceDescriptors.AddScoped<IPrincipalRepository, PrincipalRepository>();
             serviceDescriptors.AddScoped(typeof(IPasswordRepository<>), typeof(EmailPasswordRepository<>));
@@ -72,6 +72,8 @@ namespace EKtu.WEBAPI
             serviceDescriptors.AddScoped<IAttendanceBuilder,AttendanceBuilder>();
             serviceDescriptors.AddScoped<IPdfService, PdfService>();
             serviceDescriptors.AddScoped<IConverter>(y=> new SynchronizedConverter(new PdfTools()));
+            serviceDescriptors.AddScoped<IStudentCacheService, StudentCacheService>();
+            serviceDescriptors.AddScoped<ICache, BaseCache>();
 
         }
     }

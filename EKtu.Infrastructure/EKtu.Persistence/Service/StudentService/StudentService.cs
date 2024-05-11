@@ -56,7 +56,6 @@ namespace EKtu.Persistence.Service.StudentService
 
         public async Task<Response<NoContent>> StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto)
         {
-            //buradada cachleme işlemi olacak
             try
             {
                 await studentRepository.StudentChooseLessonAsync(studentChooseLessonRequestDto);
@@ -93,21 +92,21 @@ namespace EKtu.Persistence.Service.StudentService
             },200);
         }
 
-        public async Task<Response<List<GetStudentChooseLessonDto>>> GetStudentChooseLessonAsync(int userId)
+        public async Task<Response<List<GetStudentChooseLessonResponseDto>>> GetStudentChooseLessonAsync(int userId)
         {
          IQueryable<StudentChooseLesson> QueryableLessonConfirmation= await studentRepository.GetStudentChooseLessonAsync(userId);
 
             if (!QueryableLessonConfirmation.Any())
-                return Response<List<GetStudentChooseLessonDto>>.Fail("öğrenci ders seçmedi", 400);
+                return Response<List<GetStudentChooseLessonResponseDto>>.Fail("öğrenci ders seçmedi", 400);
 
 
-                List<GetStudentChooseLessonDto> getStudentChooseLessonDtos= await QueryableLessonConfirmation.Select(y => new GetStudentChooseLessonDto()
+                List<GetStudentChooseLessonResponseDto> getStudentChooseLessonDtos= await QueryableLessonConfirmation.Select(y => new GetStudentChooseLessonResponseDto()
             {
                 LessonId = y.LessonId,
                 LessonName = y.Lesson.LessonName
             }).ToListAsync();
 
-            return Response<List<GetStudentChooseLessonDto>>.Success(getStudentChooseLessonDtos, 200);
+            return Response<List<GetStudentChooseLessonResponseDto>>.Success(getStudentChooseLessonDtos, 200);
 
             
         }
@@ -115,7 +114,6 @@ namespace EKtu.Persistence.Service.StudentService
 
         public async Task<Response<int>> StudentChangeLessonAsync(List<StudentChangeLessonRequestDto> studentChangeLessonRequestDtos,int studentId)
         {
-            //burada cachleme işlemi olacak
             try
             {
               int count=  await studentRepository.StudentChangeLessonAsync(studentChangeLessonRequestDtos, studentId);

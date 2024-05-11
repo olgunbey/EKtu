@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\EKtu.CacheService\EKtu.CacheService\EKtu.CacheService.csproj" />
     <ProjectReference Include="..\..\Ektu.Infrastructure\EKtu.Persistence\EKtu.Persistence.csproj" />
   </ItemGroup>
 

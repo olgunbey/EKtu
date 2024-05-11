@@ -80,5 +80,11 @@ namespace EKtu.Persistence.Repository.StudentRepository
             return count;
         }
 
+        public Task<IQueryable<StudentChooseLesson>> AllStudentChooseLessonAsync()
+        {
+           return Task.FromResult(_dbContext.StudentChooseLessons
+                .Include(y => y.Lesson)
+                .Include(y => y.Student).AsQueryable());
+        }
     }
 }

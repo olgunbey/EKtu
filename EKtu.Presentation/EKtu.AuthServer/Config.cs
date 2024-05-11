@@ -68,7 +68,7 @@ namespace EKtu.AuthServer
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
                 AccessTokenLifetime=3,
-                AbsoluteRefreshTokenLifetime=900
+                AbsoluteRefreshTokenLifetime=Convert.ToInt32(DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds())
             },
             new Client()
             {
