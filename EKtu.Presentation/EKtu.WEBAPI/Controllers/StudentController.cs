@@ -2,6 +2,7 @@
 using EKtu.Persistence.Builder.BuilderCreate;
 using EKtu.Persistence.Builder.IBuilder;
 using EKtu.Repository.Dtos;
+using EKtu.Repository.ICacheService.StudentCacheService;
 using EKtu.Repository.IRepository.AddPersonRepository;
 using EKtu.Repository.IService.AddPersonService;
 using EKtu.Repository.IService.PdfService;
@@ -22,12 +23,14 @@ namespace EKtu.WEBAPI.Controllers
         private readonly IAddPersonService<Student> addPersonService;
         private readonly IStudentBuilder studentBuilder;
         private readonly IPdfService _pdfService;
-        public StudentController(IStudentService studentService, IAddPersonService<Student> addPersonService, IStudentBuilder studentBuilder, IPdfService pdfService)
+        private readonly IStudentCacheService _studentCacheService;
+        public StudentController(IStudentService studentService, IAddPersonService<Student> addPersonService, IStudentBuilder studentBuilder, IPdfService pdfService, IStudentCacheService studentCacheService)
         {
             _studentService = studentService;
             this.addPersonService = addPersonService;
             this.studentBuilder = studentBuilder;
             _pdfService = pdfService;
+            _studentCacheService= studentCacheService;
         }
         [HttpPost]
         [Authorize("ClientCredentials")]    
@@ -63,7 +66,10 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy ="StudentChooseLesson")]
         public async Task<IActionResult> StudentChooseLesson([FromBody]StudentChooseLessonRequestDto studentChooseLessonRequestDto)
         {
-            return ResponseData<NoContent>(await _studentService.StudentChooseLessonAsync(studentChooseLessonRequestDto));
+            //var response=  await _studentService.StudentChooseLessonAsync(studentChooseLessonRequestDto);
+         var x =   await _studentCacheService.AllStudentCacheLesson();
+            //return ResponseData<NoContent>(response);
+            return Ok();
         }
         [HttpGet]
         [Authorize(Policy = "StudentAbsence")]
@@ -96,6 +102,9 @@ namespace EKtu.WEBAPI.Controllers
         {
             var userId = User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
 
+            var List=  await _studentCacheService.GetStudentCacheLesson(Convert.ToInt32(userId.Value));
+            if (List.Data.Any())
+                return ResponseData(List);
             return ResponseData(await _studentService.GetStudentChooseLessonAsync(Convert.ToInt32(userId.Value)));
         }
 
@@ -105,6 +114,12 @@ namespace EKtu.WEBAPI.Controllers
         {
             var userId = User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             return ResponseData(await _studentService.StudentChangeLessonAsync(studentChangeLessonRequestDtos, int.Parse(userId.Value)));
+        }
+        [HttpGet]
+        public async  Task<IActionResult> GetCache()
+        {
+          var y = await _studentCacheService.GetStudentCacheLesson(2);
+            return Ok(y);
         }
     }
 }

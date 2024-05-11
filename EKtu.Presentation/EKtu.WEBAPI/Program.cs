@@ -19,10 +19,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DatabaseContext>(y => y.UseSqlServer(builder.Configuration.GetConnectionString("mydb"))); //burada kaldým
 builder.Services.AddedService();
 builder.Services.Configure<Configuration>(builder.Configuration.GetSection("Configuration"));
-builder.Services.AddSingleton(y =>
+builder.Services.AddScoped(y =>
+
 {
    var ClientManager=  new RedisManagerPool(builder.Configuration.GetConnectionString("redis"));
-   return ClientManager.GetClient();
+   var valueTask=  ClientManager.GetClientAsync();
+    return valueTask.Result;
 });
 
 
