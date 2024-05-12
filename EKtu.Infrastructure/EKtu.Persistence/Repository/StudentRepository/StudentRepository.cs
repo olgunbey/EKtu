@@ -86,5 +86,13 @@ namespace EKtu.Persistence.Repository.StudentRepository
                 .Include(y => y.Lesson)
                 .Include(y => y.Student).AsQueryable());
         }
+
+        public Task<IQueryable<LessonConfirmation>> AllStudentExamGrande()
+        {
+           return Task.FromResult(_dbContext.LessonConfirmation.Include(y => y.Student)
+                .Include(y => y.ExamNote)
+                .Include(y=>y.Lesson)
+                .AsQueryable());
+        }
     }
 }
