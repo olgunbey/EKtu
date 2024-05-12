@@ -22,9 +22,9 @@ namespace EKtu.CacheService.CacheServices
            return await _redisClient.GetAsync<T>(cacheKey);
         }
 
-        public async Task SetCache<T>(IEnumerable<T> data, string cacheKey) //burada kaldım
+        public async Task SetCache<T>(IEnumerable<T> data, string cacheKey)
         {
-          var serializeData=  JsonSerializer.Serialize(data);
+          var serializeData= JsonSerializer.Serialize(data);
 
          bool hasCheck= await _redisClient.SetAsync(cacheKey, serializeData);
             if (!hasCheck)

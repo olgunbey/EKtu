@@ -67,7 +67,7 @@ namespace EKtu.AuthServer
                 AllowedScopes={"exam.list","choose.lesson","student.absence","student.certificate","student.updatechooselesson","student.getchooselesson"},
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
-                AccessTokenLifetime=3,
+                AccessTokenLifetime=15000,
                 AbsoluteRefreshTokenLifetime=Convert.ToInt32(DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds())
             },
             new Client()

@@ -8,6 +8,7 @@ namespace EKtu.Repository.Constant
 {
     public class CacheConstant
     {
-        public const string StudentChooseLesson= "StudentExamList";
+        public const string StudentChooseLesson= "StudentChooseLessonList";
+        public const string StudentExam = "StudentExamList"; 
     }
 }

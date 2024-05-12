@@ -21,5 +21,7 @@ namespace EKtu.Repository.IRepository.StudentRepository
         Task<int> StudentChangeLessonAsync(List<StudentChangeLessonRequestDto> studentChangeLessonRequestDtos, int studentId);
 
         Task<IQueryable<StudentChooseLesson>> AllStudentChooseLessonAsync();
+
+        Task<IQueryable<LessonConfirmation>> AllStudentExamGrande();
     }
 }

@@ -20,24 +20,121 @@ namespace EKtu.CacheService.CacheServices
         public async Task<Dictionary<int, List<StudentChooseLessonCacheDto>>> AllStudentCacheLesson() 
         {
             Dictionary<int, List<StudentChooseLessonCacheDto>> keyValuePairs = new();
-            List<StudentChooseLesson> studentChooseLessons= (await _studentRepository.AllStudentChooseLessonAsync()).ToList();
-
-           var  StudentChooseLessonStudentId= studentChooseLessons.Select(y => y.StudentId).Distinct().ToList();
-
-            foreach (var item in StudentChooseLessonStudentId)
+            string JsonDeserializerstring= await base.GetCache<string>(CacheConstant.StudentChooseLesson);
+            if(JsonDeserializerstring is not null) //cachelenen datalar var 
             {
-             var studentLessons= studentChooseLessons.Where(y => y.StudentId == item).ToList();
-                keyValuePairs.Add(item,studentChooseLessons.Where(y => y.StudentId == item).Select(y => new StudentChooseLessonCacheDto()
+              var JsonDeser= JsonSerializer.Deserialize<List<Dictionary<string, object>>>(JsonDeserializerstring);
+
+                foreach (var item in JsonDeser)
                 {
-                    LessonCacheDtos = new()
+                 var studentId= item["Key"].ToString();
+                 var Values= item["Value"].ToString();
+                 var DeserializeDatas= JsonSerializer.Deserialize<List<StudentChooseLessonCacheDto>>(Values);
+
+                 keyValuePairs.Add(Convert.ToInt16(studentId), DeserializeDatas);
+                }
+            }
+            
+            var studentChooseLessons= (await _studentRepository.AllStudentChooseLessonAsync());
+
+            var  StudentChooseLessonStudentId= studentChooseLessons.Select(y => y.StudentId).Distinct().ToList();
+
+            foreach (var studentId in StudentChooseLessonStudentId)
+            {
+                if (keyValuePairs.TryGetValue(studentId, out var Cachedata)) //bu kullanıcı cache'de var ayriyeten ders seçimlerini kontrol et
+                {
+                    var StudentsLessonIds = studentChooseLessons.Where(y => y.StudentId == studentId).Select(y => y.LessonId).ToList();
+
+                    foreach (var studentlessonId in StudentsLessonIds)
                     {
-                        LessonName=y.Lesson.LessonName,
-                        LessonId=y.LessonId
+                        if (Cachedata.Any(y => y.LessonCacheDtos.LessonId == studentlessonId))
+                        {
+                            //bu ders demekki cache'de mevcut
+                        }
+                        else
+                        {
+                            keyValuePairs.Remove(studentId);
+                            var newCacheData= studentChooseLessons.Where(y => y.StudentId == studentId).Select(y => new StudentChooseLessonCacheDto()
+                            {
+                                LessonCacheDtos = new LessonCacheDto()
+                                {
+                                    LessonId = y.LessonId,
+                                    LessonName = y.Lesson.LessonName
+                                }
+                            }).ToList() ;
+                            keyValuePairs.Add(studentId, newCacheData);
+                            break;
+                            //bu ders ya değiştirildi, ya da yok
+                        }
                     }
-                }).ToList());
+                }
+                else
+                {
+                    keyValuePairs.Add(studentId,studentChooseLessons.Where(y => y.StudentId == studentId).Select(y => new StudentChooseLessonCacheDto()
+                    {
+                        LessonCacheDtos = new LessonCacheDto()
+                        {
+                            LessonId = y.LessonId,
+                            LessonName = y.Lesson.LessonName
+                        }
+                    }).ToList());
+                }
+
             }
             await base.SetCache(keyValuePairs, CacheConstant.StudentChooseLesson);
             return keyValuePairs;
+        }
+
+        public async Task AllStudentExamCache()
+        {
+            var queryAble= (await _studentRepository.AllStudentExamGrande()).ToList();
+
+            var keyValuePairs = new Dictionary<int, List<AllStudentExamCacheDto>>();
+
+            var y = queryAble.Select(y => y.StudentId).Distinct().ToList();
+
+            foreach(var item in y)
+            {
+                var query = queryAble.Where(y => y.StudentId == item).ToList();
+
+
+                
+                keyValuePairs.Add(item, query.Where(y => y.ExamNote is not null).Select(p => new AllStudentExamCacheDto()
+                {
+                    Exam1 = p.ExamNote.Exam1,
+                    Exam2 = p.ExamNote.Exam2,
+                    StudentName = p.Student.FirstName,
+                    LessonId = p.LessonId,
+                    LessonName = p.Lesson.LessonName,
+                    LetterGrade = p.ExamNote.LetterGrade
+                }).ToList());
+            }
+            await base.SetCache(keyValuePairs, CacheConstant.StudentExam);
+        }
+
+        public async Task<Response<List<AllStudentExamCacheDto>>> GetAllStudentsExamCache(int userId)
+        {
+            string JsonSerializers= await base.GetCache<string>(CacheConstant.StudentExam);
+
+            var dictionary =new Dictionary<int, List<AllStudentExamCacheDto>>();
+
+            var JsonDeserializer= JsonSerializer.Deserialize<List<Dictionary<string, object>>>(JsonSerializers);
+
+            foreach (var item in JsonDeserializer)
+            {
+              var key=  item["Key"].ToString();
+              var value=  item["Value"].ToString();
+
+              var JsonSerializervalue= JsonSerializer.Deserialize<List<AllStudentExamCacheDto>>(value);
+
+                dictionary.Add(Convert.ToInt16(key), JsonSerializervalue);
+            }
+
+            if(dictionary.TryGetValue(userId, out var list))
+            {
+                return Response<List<AllStudentExamCacheDto>>.Success(list, 200);
+            }
+            return Response<List<AllStudentExamCacheDto>>.Fail("bu userId yok", 400);
         }
 
         public async Task<Response<List<GetStudentChooseLessonResponseDto>>> GetStudentCacheLesson(int studentId)
