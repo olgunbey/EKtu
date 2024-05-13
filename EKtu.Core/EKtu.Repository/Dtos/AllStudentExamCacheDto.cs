@@ -14,7 +14,6 @@ namespace EKtu.Repository.Dtos
         public int LessonId{ get; set; }
         public string LessonName { get; set; }
         public string LetterGrade { get; set; }
-        public int StudentId{ get; set; }
         public string StudentName{ get; set; }
     }
 
