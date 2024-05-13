@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EKtu.Repository.Dtos
 {
-    public class StudentChangeLessonRequestDto //burada kaldim
+    public class StudentChangeLessonRequestDto
     {
         public int CurrentLessonId{ get; set; }
         public int ChangeLessonId{ get; set; }

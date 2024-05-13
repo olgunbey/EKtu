@@ -40,8 +40,7 @@ namespace EKtu.WEBAPI.Controllers
         public async Task<IActionResult> TeacherClassList()
         {
             var teacherId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-          return ResponseData<List<TeacherClassReponseDto>>(await teacherService.TeacherClass(Convert.ToInt32(teacherId.Value)));
-        
+            return ResponseData<List<TeacherClassReponseDto>>(await teacherService.TeacherClass(Convert.ToInt32(teacherId.Value)));
         }
         [HttpGet]
         [Authorize(Policy = "TeacherClassLessonList")]
@@ -53,5 +52,10 @@ namespace EKtu.WEBAPI.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<IActionResult> EnteringStudentGrades() 
+        {
+            return Ok();
+        }
     }
 }

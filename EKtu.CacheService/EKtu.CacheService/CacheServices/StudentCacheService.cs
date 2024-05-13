@@ -5,6 +5,7 @@ using EKtu.Repository.ICacheService.StudentCacheService;
 using EKtu.Repository.IRepository.StudentRepository;
 using ServiceStack;
 using ServiceStack.Redis;
+using ServiceStack.SystemJson;
 using System.Text.Json;
 
 namespace EKtu.CacheService.CacheServices
@@ -41,30 +42,25 @@ namespace EKtu.CacheService.CacheServices
 
             foreach (var studentId in StudentChooseLessonStudentId)
             {
-                if (keyValuePairs.TryGetValue(studentId, out var Cachedata)) //bu kullanıcı cache'de var ayriyeten ders seçimlerini kontrol et
+                if (keyValuePairs.TryGetValue(studentId, out var Cachedata))
                 {
                     var StudentsLessonIds = studentChooseLessons.Where(y => y.StudentId == studentId).Select(y => y.LessonId).ToList();
 
                     foreach (var studentlessonId in StudentsLessonIds)
                     {
-                        if (Cachedata.Any(y => y.LessonCacheDtos.LessonId == studentlessonId))
-                        {
-                            //bu ders demekki cache'de mevcut
-                        }
-                        else
+                        if (!Cachedata.Any(y => y.LessonCacheDtos.LessonId == studentlessonId))
                         {
                             keyValuePairs.Remove(studentId);
-                            var newCacheData= studentChooseLessons.Where(y => y.StudentId == studentId).Select(y => new StudentChooseLessonCacheDto()
+                            var newCacheData = studentChooseLessons.Where(y => y.StudentId == studentId).Select(y => new StudentChooseLessonCacheDto()
                             {
                                 LessonCacheDtos = new LessonCacheDto()
                                 {
                                     LessonId = y.LessonId,
                                     LessonName = y.Lesson.LessonName
                                 }
-                            }).ToList() ;
+                            }).ToList();
                             keyValuePairs.Add(studentId, newCacheData);
                             break;
-                            //bu ders ya değiştirildi, ya da yok
                         }
                     }
                 }
@@ -87,27 +83,77 @@ namespace EKtu.CacheService.CacheServices
 
         public async Task AllStudentExamCache()
         {
-            var queryAble= (await _studentRepository.AllStudentExamGrande()).ToList();
+           string JsonSerializerData= await base.GetCache<string>(CacheConstant.StudentExam);
 
             var keyValuePairs = new Dictionary<int, List<AllStudentExamCacheDto>>();
 
-            var y = queryAble.Select(y => y.StudentId).Distinct().ToList();
-
-            foreach(var item in y)
+            if (JsonSerializerData != null)//cache'de değer var 
             {
-                var query = queryAble.Where(y => y.StudentId == item).ToList();
-
-
-                
-                keyValuePairs.Add(item, query.Where(y => y.ExamNote is not null).Select(p => new AllStudentExamCacheDto()
+                var JsonDeserializerCache = JsonSerializer.Deserialize<List<Dictionary<string,object>>>(JsonSerializerData);
+                foreach (var item in JsonDeserializerCache)
                 {
-                    Exam1 = p.ExamNote.Exam1,
-                    Exam2 = p.ExamNote.Exam2,
-                    StudentName = p.Student.FirstName,
-                    LessonId = p.LessonId,
-                    LessonName = p.Lesson.LessonName,
-                    LetterGrade = p.ExamNote.LetterGrade
-                }).ToList());
+                    var key = item["Key"].ToString();
+                    var Values = item["Value"].ToString();
+                    var JsonDeserializeExamGrande = JsonSerializer.Deserialize<List<AllStudentExamCacheDto>>(Values);
+
+                    if(JsonDeserializeExamGrande.Any())
+                    keyValuePairs.Add(Convert.ToInt16(key), JsonDeserializeExamGrande);
+                }
+            }
+
+
+            var queryAble= (await _studentRepository.AllStudentExamGrande()).ToList();
+
+            var DatabaseStudentId = queryAble.Select(y => y.StudentId).Distinct().ToList();
+
+            var DatabaseStudentLessonId=queryAble.Where(y=> DatabaseStudentId.Any(x=>x==y.StudentId)).Select(y=>y.LessonId).Distinct().ToList();
+
+            foreach(var item in DatabaseStudentId)
+            {
+                foreach (var itemLessonId in DatabaseStudentLessonId)
+                {
+                     var xy=  queryAble.Where(y => y.Lesson.Id == itemLessonId && y.StudentId == item).First();
+
+                    if (keyValuePairs.TryGetValue(item, out var CacheData))
+                    {
+                        if(xy.ExamNote is not null)
+                        {
+                            var dto = CacheData.Where(y => y.LessonId == itemLessonId).First();
+
+                            if (dto.Exam1 != xy.ExamNote.Exam1 || dto.Exam2 != xy.ExamNote.Exam2)
+                            {
+                                // yani burada not değişmiş
+                                keyValuePairs.Remove(item);
+
+                                var cacheDtos = queryAble.Where(y => y.StudentId == item && y.ExamNote is not null).Select(y => new AllStudentExamCacheDto()
+                                {
+                                    Exam1 = y.ExamNote.Exam1,
+                                    Exam2 = y.ExamNote.Exam2,
+                                    LessonId = y.LessonId,
+                                    LessonName = y.Lesson.LessonName,
+                                    LetterGrade = y.ExamNote.LetterGrade!
+                                }).ToList();
+                                keyValuePairs.Add(item, cacheDtos);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var cacheDtos = queryAble.Where(y => y.StudentId == item && y.ExamNote is not null).Select(y => new AllStudentExamCacheDto()
+                        {
+                            Exam1 = y.ExamNote.Exam1,
+                            Exam2 = y.ExamNote.Exam2,
+                            LessonId = y.LessonId,
+                            LessonName = y.Lesson.LessonName,
+                            LetterGrade = y.ExamNote.LetterGrade!
+                        }).ToList();
+                        if(cacheDtos.Any())
+                        keyValuePairs.Add(item, cacheDtos);
+                        break;
+
+                    }
+                }
             }
             await base.SetCache(keyValuePairs, CacheConstant.StudentExam);
         }
@@ -157,7 +203,7 @@ namespace EKtu.CacheService.CacheServices
                     LessonId = y.LessonCacheDtos.LessonId,
                     LessonName = y.LessonCacheDtos.LessonName
                 }).ToList(), 200);
-            }//demekki kullanıcı cache de degil bu kullanıcının derslerini önce bir cachle...
+            }
             return Response<List<GetStudentChooseLessonResponseDto>>.Fail("cachede lütfen kullanıcıyı cachle", 400);
 
         }

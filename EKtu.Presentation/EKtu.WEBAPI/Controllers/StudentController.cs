@@ -112,13 +112,9 @@ namespace EKtu.WEBAPI.Controllers
         public async Task<IActionResult> StudentChangeLesson(List<StudentChangeLessonRequestDto> studentChangeLessonRequestDtos)
         {
             var userId = User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-            return ResponseData(await _studentService.StudentChangeLessonAsync(studentChangeLessonRequestDtos, int.Parse(userId.Value)));
-        }
-        [HttpPost]
-        public async Task<IActionResult> StudentExamCache()
-        {
-           await _studentCacheService.AllStudentExamCache();
-            return Ok();
+            var resp= await _studentService.StudentChangeLessonAsync(studentChangeLessonRequestDtos, int.Parse(userId.Value));
+            await _studentCacheService.AllStudentCacheLesson();
+            return ResponseData(resp);
         }
     }
 }
