@@ -1,6 +1,7 @@
 ﻿using EKtu.Domain.Entities;
 using EKtu.Persistence.Builder.IBuilder;
 using EKtu.Repository.Dtos;
+using EKtu.Repository.ICacheService.StudentCacheService;
 using EKtu.Repository.IService.AddPersonService;
 using EKtu.Repository.IService.TeacherService;
 using Microsoft.AspNetCore.Authorization;
@@ -16,12 +17,14 @@ namespace EKtu.WEBAPI.Controllers
         private readonly IAddPersonService<Teacher> addTeacherService;
         private readonly ITeacherBuilder teacherBuilder;
         private readonly ITeacherService teacherService;
+        private readonly IStudentCacheService studentCacheService;
 
-        public TeacherController(IAddPersonService<Teacher> addteacherService, ITeacherBuilder teacherBuilder, ITeacherService teacherService)
+        public TeacherController(IAddPersonService<Teacher> addteacherService, ITeacherBuilder teacherBuilder, ITeacherService teacherService, IStudentCacheService studentCacheService)
         {
             this.addTeacherService = addteacherService;
             this.teacherBuilder = teacherBuilder;
             this.teacherService = teacherService;
+            this.studentCacheService = studentCacheService;
         }
         [HttpPost]
         [Authorize(Policy ="ClientCredentials")]
@@ -53,9 +56,20 @@ namespace EKtu.WEBAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EnteringStudentGrades() 
+        public async Task<IActionResult> EnteringStudentGrades([FromBody]List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos) 
         {
-            return Ok();
+           var resp=  teacherService.EnteringStudentGrades(enteringStudentGradesRequestDtos,out var data);
+            if(!data.Any())
+            {
+                await studentCacheService.StudentNewExamGrande(); //bu veritabanındaki bütün notları cachler
+            }
+            else
+            {
+               await teacherService.UpdateStudentGrades(enteringStudentGradesRequestDtos);
+               await studentCacheService.SetStudentCache(data,1); //parametreden gelen datalari cacchede güncelleyecek
+                //buradaki classid'yi ayarla
+            }
+            return ResponseData(resp);
         }
     }
 }

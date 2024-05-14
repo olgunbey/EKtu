@@ -13,7 +13,10 @@ namespace EKtu.Repository.IService.TeacherService
         Task<Response<List<TeacherClassReponseDto>>> TeacherClass(int teacherId);
         Task<Response<List<TeacherLessonDto>>> TeacherLesson(int classId,int teacherId);
 
+        Response<NoContent> EnteringStudentGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos,out List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos1);
 
+
+        Task<Response<NoContent>> UpdateStudentGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos);
 
     }
 }

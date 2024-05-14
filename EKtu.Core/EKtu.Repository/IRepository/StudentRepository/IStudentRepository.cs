@@ -23,5 +23,9 @@ namespace EKtu.Repository.IRepository.StudentRepository
         Task<IQueryable<StudentChooseLesson>> AllStudentChooseLessonAsync();
 
         Task<IQueryable<LessonConfirmation>> AllStudentExamGrande();
+
+        Task<IQueryable<Class>> ClassAllStudentExamGrandeList();
+
+        Task<IQueryable<Class>> GetClassList();
     }
 }
