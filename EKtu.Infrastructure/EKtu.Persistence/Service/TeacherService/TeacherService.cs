@@ -25,6 +25,24 @@ namespace EKtu.Persistence.Service.TeacherService
             this.teacherRepository = teacherRepository;
         }
 
+        public Response<NoContent> EnteringStudentGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos, out List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos1)
+        {
+
+            teacherRepository.EnteringStudentGrades(enteringStudentGradesRequestDtos, out var UpdateExamDtos);
+            enteringStudentGradesRequestDtos1 = UpdateExamDtos;
+            try
+            {
+                _saves.SaveChanges();
+               return Response<NoContent>.Success(204);
+            }
+            catch (Exception)
+            {
+                return Response<NoContent>.Fail("hata", 400);
+            }
+            
+        }
+
+
         public async Task<Response<List<TeacherClassReponseDto>>> TeacherClass(int teacherId)
         {
             var teacherClasses = await (await teacherRepository.TeacherClass(teacherId)).ToListAsync();
@@ -56,6 +74,21 @@ namespace EKtu.Persistence.Service.TeacherService
                 return Response<List<TeacherLessonDto>>.Success(teacherLessonDtos, 200);
 
             return Response<List<TeacherLessonDto>>.Fail("öğretmenin bu sınıfa girdiği ders yok", 400);
+        }
+
+        public async Task<Response<NoContent>> UpdateStudentGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos)
+        {
+            await teacherRepository.StudentUpdateGrades(enteringStudentGradesRequestDtos);
+            try
+            {
+               await _saves.SaveChangesAsync();
+               return Response<NoContent>.Success(204);
+            }
+            catch (Exception e)
+            {
+                return Response<NoContent>.Fail("öğrenci not güncellenemedi", 400);
+            }
+           
         }
     }
 }

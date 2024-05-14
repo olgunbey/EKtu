@@ -81,81 +81,32 @@ namespace EKtu.CacheService.CacheServices
             return keyValuePairs;
         }
 
-        public async Task AllStudentExamCache()
+
+        public async Task StudentNewExamGrande()
         {
-           string JsonSerializerData= await base.GetCache<string>(CacheConstant.StudentExam);
+          var AllStudentExamGrande= (await _studentRepository.ClassAllStudentExamGrandeList()).ToList();
+          var KeyValuePair = new Dictionary<int, List<AllStudentExamCacheDto>>();
+          var AllClassList=  (await _studentRepository.GetClassList()).ToList();
 
-            var keyValuePairs = new Dictionary<int, List<AllStudentExamCacheDto>>();
 
-            if (JsonSerializerData != null)//cache'de değer var 
+            foreach (var item in AllClassList)
             {
-                var JsonDeserializerCache = JsonSerializer.Deserialize<List<Dictionary<string,object>>>(JsonSerializerData);
-                foreach (var item in JsonDeserializerCache)
+                var CacheDto = AllStudentExamGrande.Where(y=>y.Id==item.Id).SelectMany(y => y.Students).Select(y => new AllStudentExamCacheDto()
                 {
-                    var key = item["Key"].ToString();
-                    var Values = item["Value"].ToString();
-                    var JsonDeserializeExamGrande = JsonSerializer.Deserialize<List<AllStudentExamCacheDto>>(Values);
-
-                    if(JsonDeserializeExamGrande.Any())
-                    keyValuePairs.Add(Convert.ToInt16(key), JsonDeserializeExamGrande);
-                }
-            }
-
-
-            var queryAble= (await _studentRepository.AllStudentExamGrande()).ToList();
-
-            var DatabaseStudentId = queryAble.Select(y => y.StudentId).Distinct().ToList();
-
-            var DatabaseStudentLessonId=queryAble.Where(y=> DatabaseStudentId.Any(x=>x==y.StudentId)).Select(y=>y.LessonId).Distinct().ToList();
-
-            foreach(var item in DatabaseStudentId)
-            {
-                foreach (var itemLessonId in DatabaseStudentLessonId)
-                {
-                     var xy=  queryAble.Where(y => y.Lesson.Id == itemLessonId && y.StudentId == item).First();
-
-                    if (keyValuePairs.TryGetValue(item, out var CacheData))
+                    StudentId = y.Id,
+                    AllStudentExamCacheDtos = y.LessonConfirmation.Where(y=>y.ExamNote is not null).Select(y => new AllStudentExamCacheDto2()
                     {
-                        if(xy.ExamNote is not null)
-                        {
-                            var dto = CacheData.Where(y => y.LessonId == itemLessonId).First();
-
-                            if (dto.Exam1 != xy.ExamNote.Exam1 || dto.Exam2 != xy.ExamNote.Exam2)
-                            {
-                                // yani burada not değişmiş
-                                keyValuePairs.Remove(item);
-
-                                var cacheDtos = queryAble.Where(y => y.StudentId == item && y.ExamNote is not null).Select(y => new AllStudentExamCacheDto()
-                                {
-                                    Exam1 = y.ExamNote.Exam1,
-                                    Exam2 = y.ExamNote.Exam2,
-                                    LessonId = y.LessonId,
-                                    LessonName = y.Lesson.LessonName,
-                                    LetterGrade = y.ExamNote.LetterGrade!
-                                }).ToList();
-                                keyValuePairs.Add(item, cacheDtos);
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var cacheDtos = queryAble.Where(y => y.StudentId == item && y.ExamNote is not null).Select(y => new AllStudentExamCacheDto()
-                        {
-                            Exam1 = y.ExamNote.Exam1,
-                            Exam2 = y.ExamNote.Exam2,
-                            LessonId = y.LessonId,
-                            LessonName = y.Lesson.LessonName,
-                            LetterGrade = y.ExamNote.LetterGrade!
-                        }).ToList();
-                        if(cacheDtos.Any())
-                        keyValuePairs.Add(item, cacheDtos);
-                        break;
-
-                    }
-                }
+                        Exam1 = y.ExamNote.Exam1,
+                        Exam2 = y.ExamNote.Exam2,
+                        LessonId = y.LessonId,
+                        LetterGrade = y.ExamNote.LetterGrade!,
+                        LessonName = y.Lesson.LessonName
+                    }).ToList(),
+                    StudentName = y.FirstName
+                }).ToList();
+                KeyValuePair.Add(item.Id, CacheDto);
             }
-            await base.SetCache(keyValuePairs, CacheConstant.StudentExam);
+            await base.SetCache(KeyValuePair, CacheConstant.StudentExam);
         }
 
         public async Task<Response<List<AllStudentExamCacheDto>>> GetAllStudentsExamCache(int userId)
@@ -181,6 +132,49 @@ namespace EKtu.CacheService.CacheServices
                 return Response<List<AllStudentExamCacheDto>>.Success(list, 200);
             }
             return Response<List<AllStudentExamCacheDto>>.Fail("bu userId yok", 400);
+        }
+
+        public async Task<Response<NoContent>> SetStudentCache(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos,int classId)
+        {
+
+         var JsonSerializerCacheData= await base.GetCache<string>("xxxx");
+            var keyValuePairs = new Dictionary<int, List<AllStudentExamCacheDto>>();
+            List<AllStudentExamCacheDto> allStudentExamCacheDtos = new();
+         var JsonSerializeDatas= JsonSerializer.Deserialize<List<Dictionary<string, object>>>(JsonSerializerCacheData);
+
+
+            foreach (var item in JsonSerializeDatas)
+            {
+                string key= item["Key"].ToString();
+                string Value= item["Value"].ToString();
+
+                var JsonDeserializers= JsonSerializer.Deserialize<List<AllStudentExamCacheDto>>(Value);
+                keyValuePairs.Add(Convert.ToInt16(key), JsonDeserializers);
+            }
+
+            foreach (var item in enteringStudentGradesRequestDtos)
+            {
+                if (keyValuePairs.TryGetValue(classId,out var CacheData))
+                {
+                  var Student= CacheData.First(y => y.StudentId == item.StudentId);
+
+                  var studentsLEsson= Student.AllStudentExamCacheDtos.First(y => y.LessonId == item.LessonId);
+
+                    if(studentsLEsson.Exam1 != item.Exam_1 || studentsLEsson.Exam2!=item.Exam_2)
+                    {
+                        studentsLEsson.Exam1 = item.Exam_1;
+                        studentsLEsson.Exam2 = item.Exam_2;
+                        keyValuePairs.Remove(classId);
+                        keyValuePairs.Add(classId, CacheData);
+                    }
+                }
+            }
+           await base.SetCache(keyValuePairs, "xxxx");
+
+           return Response<NoContent>.Success(203);
+            
+
+            
         }
 
         public async Task<Response<List<GetStudentChooseLessonResponseDto>>> GetStudentCacheLesson(int studentId)

@@ -12,9 +12,10 @@ namespace EKtu.Repository.ICacheService.StudentCacheService
         Task<Dictionary<int, List<StudentChooseLessonCacheDto>>> AllStudentCacheLesson();
 
         Task<Response<List<GetStudentChooseLessonResponseDto>>> GetStudentCacheLesson(int studentId);
-        Task AllStudentExamCache();
 
-        Task<Response<List<AllStudentExamCacheDto>>> GetAllStudentsExamCache(int userId);
+        Task<Response<NoContent>> SetStudentCache(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos,int classId);
+
+        Task StudentNewExamGrande();
 
 
     }
