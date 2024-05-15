@@ -42,32 +42,32 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy = "TeacherClassLessonList")]
         public async Task<IActionResult> TeacherClassList()
         {
-            var teacherId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            var teacherId = User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             return ResponseData<List<TeacherClassReponseDto>>(await teacherService.TeacherClass(Convert.ToInt32(teacherId.Value)));
         }
         [HttpGet]
         [Authorize(Policy = "TeacherClassLessonList")]
         public async Task<IActionResult> TeacherClassLessonList([FromHeader]int classId)
         {
-         var teacherId= User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+         var teacherId= User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
 
           return ResponseData<List<TeacherLessonDto>>(await teacherService.TeacherLesson(classId, Convert.ToInt32(teacherId.Value)));
 
         }
 
         [HttpPost]
-        public async Task<IActionResult> EnteringStudentGrades([FromBody]List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos) 
+        [Authorize(Policy ="TeacherEnteringGrades")]
+        public async Task<IActionResult> EnteringStudentGrades([FromBody]List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos, [FromQuery]int classId) 
         {
            var resp=  teacherService.EnteringStudentGrades(enteringStudentGradesRequestDtos,out var data);
             if(!data.Any())
             {
-                await studentCacheService.StudentNewExamGrande(); //bu veritabanındaki bütün notları cachler
+                await studentCacheService.StudentNewExamGrande();
             }
             else
             {
                await teacherService.UpdateStudentGrades(enteringStudentGradesRequestDtos);
-               await studentCacheService.SetStudentCache(data,1); //parametreden gelen datalari cacchede güncelleyecek
-                //buradaki classid'yi ayarla
+               await studentCacheService.SetStudentCache(data, classId); 
             }
             return ResponseData(resp);
         }

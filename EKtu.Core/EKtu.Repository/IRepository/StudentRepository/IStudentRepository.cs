@@ -27,5 +27,7 @@ namespace EKtu.Repository.IRepository.StudentRepository
         Task<IQueryable<Class>> ClassAllStudentExamGrandeList();
 
         Task<IQueryable<Class>> GetClassList();
+
+        ValueTask<Student> GetStudentClassIdWithStudentIdAsync(int studentId);
     }
 }

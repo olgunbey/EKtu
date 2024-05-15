@@ -58,6 +58,10 @@ namespace EKtu.WEBAPI
                 {
                     y.RequireClaim("scope", "student.getchooselesson");
                 });
+                x.AddPolicy("TeacherEnteringGrades", y =>
+                {
+                    y.RequireClaim("scope", "student.enteringgrades");
+                });
                 
             });
         }

@@ -111,5 +111,10 @@ namespace EKtu.Persistence.Repository.StudentRepository
         {
             return Task.FromResult(_dbContext.Class.AsQueryable());
         }
+
+        public async ValueTask<Student> GetStudentClassIdWithStudentIdAsync(int studentId)
+        {
+          return await _dbContext.Student.FindAsync(studentId);
+        }
     }
 }

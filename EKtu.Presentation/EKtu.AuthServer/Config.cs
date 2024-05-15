@@ -9,6 +9,7 @@ namespace EKtu.AuthServer
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Email(),
+            new IdentityResource("custom.profile","Custom profile",new[]{"classId"})
         };
         public static IEnumerable<ApiScope> GetApiScopes() => new List<ApiScope>()
         {
@@ -31,7 +32,8 @@ namespace EKtu.AuthServer
             new ApiScope("student.absence","öğrenci devamsızlıklarını görme"),
             new ApiScope("student.certificate","öğrenci belgesi çıkarma"),
             new ApiScope("student.updatechooselesson","öğrenci seçtiği dersi güncelleyebilir"),
-            new ApiScope("student.getchooselesson","öğrenci seçtiği dersleri görüntüleyebilir")
+            new ApiScope("student.getchooselesson","öğrenci seçtiği dersleri görüntüleyebilir"),
+            new ApiScope("student.enteringgrades","öğrencilere not girme yetkisi")
 
         };
         public static IEnumerable<Client> GetClients() => new List<Client>()
@@ -41,7 +43,7 @@ namespace EKtu.AuthServer
                 ClientId="ResourceOwnerTeacher",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
-                AllowedScopes={"exam.update","exam.read","teacher.classlessonlist"},
+                AllowedScopes={"exam.update","exam.read","teacher.classlessonlist","student.enteringgrades"},
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
                 AccessTokenLifetime=3,
@@ -64,7 +66,7 @@ namespace EKtu.AuthServer
                 ClientId="ResourceOwnerStudent",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
-                AllowedScopes={"exam.list","choose.lesson","student.absence","student.certificate","student.updatechooselesson","student.getchooselesson"},
+                AllowedScopes={"exam.list","choose.lesson","student.absence","student.certificate","student.updatechooselesson","student.getchooselesson","custom.profile"},
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
                 AccessTokenLifetime=15000,
@@ -81,28 +83,11 @@ namespace EKtu.AuthServer
         };
         public static IEnumerable<ApiResource> GetApiResources() => new List<ApiResource>()
         {
-            #region ApiResourceler
-            //new ApiResource()
-            //{
-            //    Name="TeacherApi",
-            //    Scopes={"exam.update","exam.read"},
-            //},
-            //new ApiResource()
-            //{
-            //    Name="StudentApi",
-            //    Scopes={"exam.list"}
-            //},
-            //new ApiResource()
-            //{
-            //    Name="PrincipalApi",
-            //    Scopes={ "student.delete", "student.update", "student.added", "exam.read", "absence.entry" }
-            //},
-            #endregion 
             
             new ApiResource()
             {
                 Name="BaseApi",
-                Scopes={"exam.update","exam.read","exam.list", "student.delete", "student.update", "student.added", "exam.read", "absence.entry", "base.token", "choose.lesson","lesson.approve", "lesson.added", "teacher.classlessonlist", "student.calculateexamgrande", "teacher.classlesson", "student.absence", "student.certificate", "student.updatechooselesson", "student.getchooselesson" }
+                Scopes={"exam.update","exam.read","exam.list", "student.delete", "student.update", "student.added", "exam.read", "absence.entry", "base.token", "choose.lesson","lesson.approve", "lesson.added", "teacher.classlessonlist", "student.calculateexamgrande", "teacher.classlesson", "student.absence", "student.certificate", "student.updatechooselesson", "student.getchooselesson", "student.enteringgrades" }
             }
         };
     }
