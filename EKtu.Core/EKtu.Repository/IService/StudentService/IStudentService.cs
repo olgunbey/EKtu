@@ -27,5 +27,7 @@ namespace EKtu.Repository.IService.StudentService
         Task<Response<List<GetStudentChooseLessonResponseDto>>> GetStudentChooseLessonAsync(int userId);
         Task<Response<int>> StudentChangeLessonAsync(List<StudentChangeLessonRequestDto> studentChangeLessonRequestDtos, int studentId);
 
+        Task<Response<int>> GetStudentClassIdWithStudentIdAsync(int studentId);
+
     }
 }
