@@ -1,5 +1,6 @@
 ﻿using EKtu.Domain.Entities;
 using IdentityServer4.Models;
+using static IdentityServer4.IdentityServerConstants;
 
 namespace EKtu.AuthServer
 {
@@ -9,7 +10,8 @@ namespace EKtu.AuthServer
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Email(),
-            new IdentityResource("custom.profile","Custom profile",new[]{"classId"})
+            new IdentityResource("custom.profile","Custom profile",new[]{"classId"}),
+
         };
         public static IEnumerable<ApiScope> GetApiScopes() => new List<ApiScope>()
         {
@@ -67,10 +69,11 @@ namespace EKtu.AuthServer
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
                 AllowedScopes={"exam.list","choose.lesson","student.absence","student.certificate","student.updatechooselesson","student.getchooselesson","custom.profile"},
+                AllowOfflineAccess=true,
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
-                AccessTokenLifetime=15000,
-                AbsoluteRefreshTokenLifetime=Convert.ToInt32(DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds())
+                AccessTokenLifetime=3600,
+                AbsoluteRefreshTokenLifetime=7200
             },
             new Client()
             {
