@@ -17,6 +17,8 @@ namespace EKtu.Repository.ICacheService.StudentCacheService
 
         Task StudentNewExamGrande();
 
+        Task<Response<List<CacheStudentExamListDto>>> GetCacheStudentGradeList(int classId, int studentId);
+
 
     }
 }

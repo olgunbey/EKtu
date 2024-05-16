@@ -19,6 +19,7 @@ using EKtu.Persistence.Service.EmailPasswordService;
 using EKtu.Persistence.Service.PrincipalService;
 using EKtu.Persistence.Service.StudentService;
 using EKtu.Persistence.Service.TeacherService;
+using EKtu.Repository.Dtos;
 using EKtu.Repository.ICacheService;
 using EKtu.Repository.ICacheService.StudentCacheService;
 using EKtu.Repository.IRepository;
@@ -74,6 +75,7 @@ namespace EKtu.WEBAPI
             serviceDescriptors.AddScoped<IConverter>(y=> new SynchronizedConverter(new PdfTools()));
             serviceDescriptors.AddScoped<IStudentCacheService, StudentCacheService>();
             serviceDescriptors.AddScoped<ICache, BaseCache>();
+            serviceDescriptors.AddSingleton(y => new TokenRequestDto());
 
         }
     }

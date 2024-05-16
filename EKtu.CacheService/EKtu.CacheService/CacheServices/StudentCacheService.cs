@@ -137,7 +137,11 @@ namespace EKtu.CacheService.CacheServices
         public async Task<Response<NoContent>> SetStudentCache(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos,int classId)
         {
 
-         var JsonSerializerCacheData= await base.GetCache<string>("xxxx");
+         var JsonSerializerCacheData= await base.GetCache<string>(CacheConstant.StudentExam);
+            if(JsonSerializerCacheData is null)
+            {
+                return Response<NoContent>.Fail("cache boş", 400);
+            }
             var keyValuePairs = new Dictionary<int, List<AllStudentExamCacheDto>>();
             List<AllStudentExamCacheDto> allStudentExamCacheDtos = new();
          var JsonSerializeDatas= JsonSerializer.Deserialize<List<Dictionary<string, object>>>(JsonSerializerCacheData);
@@ -169,11 +173,9 @@ namespace EKtu.CacheService.CacheServices
                     }
                 }
             }
-           await base.SetCache(keyValuePairs, "xxxx");
+           await base.SetCache(keyValuePairs, CacheConstant.StudentExam);
 
            return Response<NoContent>.Success(203);
-            
-
             
         }
 
@@ -200,6 +202,46 @@ namespace EKtu.CacheService.CacheServices
             }
             return Response<List<GetStudentChooseLessonResponseDto>>.Fail("cachede lütfen kullanıcıyı cachle", 400);
 
+        }
+
+        public async Task<Response<List<CacheStudentExamListDto>>> GetCacheStudentGradeList(int classId, int studentId)
+        {
+         string JsonSerializerData=  await base.GetCache<string>(CacheConstant.StudentExam);
+
+            if(JsonSerializerData is null)
+            {
+                return Response<List<CacheStudentExamListDto>>.Fail("cache boşş", 400);
+            }
+            var keyValuePair = new Dictionary<int, List<AllStudentExamCacheDto>>();
+
+            var BaseJsonDeserializeDatas= JsonSerializer.Deserialize<List<Dictionary<string, object>>>(JsonSerializerData);
+
+            foreach (var item in BaseJsonDeserializeDatas)
+            {
+                string Key= item["Key"].ToString();
+                var Values = item["Value"].ToString();
+
+                 var JsonData= JsonSerializer.Deserialize<List<AllStudentExamCacheDto>>(Values);
+
+                keyValuePair.Add(Convert.ToInt32(Key), JsonData);
+            }
+
+            if(keyValuePair.TryGetValue(classId,out var CacheData))
+            {
+              AllStudentExamCacheDto currentStudentExam= CacheData.First(y => y.StudentId == studentId);
+
+              var responsedata= currentStudentExam.AllStudentExamCacheDtos.Select(y => new CacheStudentExamListDto()
+                {
+                    LessonId = y.LessonId,
+                    LessonName = y.LessonName,
+                    LetterGrade = y.LetterGrade,
+                    Exam1 = y.Exam1,
+                    Exam2 = y.Exam2,
+                }).ToList();
+
+                return Response<List<CacheStudentExamListDto>>.Success(responsedata, 200);
+            }
+            return Response<List<CacheStudentExamListDto>>.Fail("bu sınıf yok", 400);
         }
     }
 }
