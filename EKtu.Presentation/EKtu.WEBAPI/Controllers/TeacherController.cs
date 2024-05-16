@@ -18,13 +18,15 @@ namespace EKtu.WEBAPI.Controllers
         private readonly ITeacherBuilder teacherBuilder;
         private readonly ITeacherService teacherService;
         private readonly IStudentCacheService studentCacheService;
+        private readonly TokenRequestDto tokenRequestDto;
 
-        public TeacherController(IAddPersonService<Teacher> addteacherService, ITeacherBuilder teacherBuilder, ITeacherService teacherService, IStudentCacheService studentCacheService)
+        public TeacherController(IAddPersonService<Teacher> addteacherService, ITeacherBuilder teacherBuilder, ITeacherService teacherService, IStudentCacheService studentCacheService, TokenRequestDto tokenRequestDto)
         {
             this.addTeacherService = addteacherService;
             this.teacherBuilder = teacherBuilder;
             this.teacherService = teacherService;
             this.studentCacheService = studentCacheService;
+            this.tokenRequestDto = tokenRequestDto;
         }
         [HttpPost]
         [Authorize(Policy ="ClientCredentials")]
@@ -42,14 +44,14 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy = "TeacherClassLessonList")]
         public async Task<IActionResult> TeacherClassList()
         {
-            var teacherId = User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            var teacherId = tokenRequestDto.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             return ResponseData<List<TeacherClassReponseDto>>(await teacherService.TeacherClass(Convert.ToInt32(teacherId.Value)));
         }
         [HttpGet]
         [Authorize(Policy = "TeacherClassLessonList")]
         public async Task<IActionResult> TeacherClassLessonList([FromHeader]int classId)
         {
-         var teacherId= User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+         var teacherId= tokenRequestDto.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
 
           return ResponseData<List<TeacherLessonDto>>(await teacherService.TeacherLesson(classId, Convert.ToInt32(teacherId.Value)));
 
@@ -67,7 +69,8 @@ namespace EKtu.WEBAPI.Controllers
             else
             {
                await teacherService.UpdateStudentGrades(enteringStudentGradesRequestDtos);
-               await studentCacheService.SetStudentCache(data, classId); 
+              var resps= await studentCacheService.SetStudentCache(data, classId);
+                return ResponseData(resps);
             }
             return ResponseData(resp);
         }
