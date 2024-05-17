@@ -18,7 +18,7 @@ namespace EKtu.Persistence.Service.EmailPasswordService
           var hasData=  await repository.EmailAndPassword(y => y.TckNo == tckno && y.Password == HashTransaction.HashPassword(password));
             if(hasData is null)
             {
-                return Response<int>.Fail("kullanıcı adı veya şifre yanlış", 400); //buralar middleware ile yakalanacak
+                return Response<int>.Fail("kullanıcı adı veya şifre yanlış", 400); 
             }
             return Response<int>.Success(hasData.Id, 200);
         }

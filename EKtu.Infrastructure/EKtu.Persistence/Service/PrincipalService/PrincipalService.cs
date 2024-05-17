@@ -2,6 +2,7 @@
 using EKtu.Infrastructure.HASH;
 using EKtu.Persistence.Builder.IBuilder;
 using EKtu.Repository.Dtos;
+using EKtu.Repository.Exceptions;
 using EKtu.Repository.IRepository;
 using EKtu.Repository.IRepository.PrincipalRepository;
 using EKtu.Repository.IService;
@@ -54,9 +55,7 @@ namespace EKtu.Persistence.Service.PrincipalService
             }
             catch (Exception)
             {
-                return Response<NoContent>.Fail("ders eklenemedi", 400);
-
-                throw;
+                throw new AddLessonErrorException("hata ders eklenemedi");
             }
            
         }
@@ -74,7 +73,7 @@ namespace EKtu.Persistence.Service.PrincipalService
             }
             catch (Exception)
             {
-                return Response<NoContent>.Fail("hata öğretmen ders sınıf seçimi kaydedilemedi", 400);
+                throw new AddTeacherClassLessonErrorException("hata!!");
             }
         }
 
@@ -110,14 +109,14 @@ namespace EKtu.Persistence.Service.PrincipalService
                 try
                 {
                     await principalRepository.StudentCalculateUpdatedAsync(examNotes);
+                    await _saves.SaveChangesAsync();
                 }
                 catch (Exception)
                 {
-
-                    return Response<NoContent>.Fail("harf notları hesaplanamadı", 400);
+                    throw new StudentCalculateLetterGradeErrorException("hata!!");
                 }
             }
-            await _saves.SaveChangesAsync();
+            
             return Response<NoContent>.Success(204);
         }
 
@@ -140,7 +139,7 @@ namespace EKtu.Persistence.Service.PrincipalService
             }
             catch (Exception)
             {
-                return Response<NoContent>.Fail("hata devamsızlıklar eklenemedi", 400);
+                throw new StudentAttendanceErrorException("hata!!");
             }
         }
 
@@ -192,7 +191,7 @@ namespace EKtu.Persistence.Service.PrincipalService
             }
             catch (Exception)
             {
-                return Response<NoContent>.Fail("Dersler kaydedilmedi", 400);
+                throw new StudentChooseApproveErrorException("hata!!!");
             }
         }
     }

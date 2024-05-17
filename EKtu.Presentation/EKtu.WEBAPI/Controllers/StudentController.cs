@@ -94,8 +94,6 @@ namespace EKtu.WEBAPI.Controllers
             var Resp = await _studentService.StudentCertificateAsync(Convert.ToInt32(userId.Value));
 
             var bytes = _pdfService.PdfBytes(Resp.Data);
-
-
             Random random = new Random();
             var randoms= random.Next(1, 100000);
             await System.IO.File.WriteAllBytesAsync(@$"C:\Users\olgun\OneDrive\Masaüstü\pdf\{randoms}.pdf",bytes);
