@@ -136,5 +136,23 @@ namespace EKtu.Persistence.Service.StudentService
             }
                return Response<int>.Success(student.ClassId, 200);
         }
+
+        public async Task<Response<StudentInformationResponseDto>> StudentInformation(int studentId)
+        {
+          Student students= await studentRepository.StudentInformation(studentId);
+
+            if(students is not Student)
+            {
+                throw new Exception("bu kullanıcı yok");
+            }
+
+           var responseData= new StudentInformationResponseDto()
+            {
+                ClassName = students.Class.ClassName,
+                StudentName = students.FirstName + " " + students.LastName
+            };
+
+            return Response<StudentInformationResponseDto>.Success(responseData, 200);
+        }
     }
 }

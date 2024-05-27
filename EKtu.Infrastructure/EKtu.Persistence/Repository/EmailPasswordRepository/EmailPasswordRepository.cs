@@ -14,7 +14,7 @@ namespace EKtu.Persistence.Repository.EmailPasswordRepository
         }
         public async Task<T> EmailAndPassword(Expression<Func<T, bool>> expression)
         {
-          return await db.Set<T>().FirstOrDefaultAsync(expression);
+          return await db.Set<T>().FirstAsync(expression);
         }
     }
 }

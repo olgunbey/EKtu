@@ -22,6 +22,7 @@ namespace EKtu.Repository.IRepository.PrincipalRepository
         Task StudentAttendanceAddAsync(Attendance attendance);
 
         Task<int> GetStudentChooseLessonIdAsync(int studentId, int lessonId);
+        ValueTask<Principal> PrincipalInformation(int userId);
 
     }
 }

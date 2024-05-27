@@ -60,6 +60,16 @@ namespace EKtu.Persistence.Service.TeacherService
             return Response<List<TeacherClassReponseDto>>.Success(responseDto, 200);
         }
 
+        public async Task<Response<TeacherInformationDto>> TeacherInformation(int userId)
+        {
+         var existTeacher= await teacherRepository.TeacherInformation(userId);
+            if(existTeacher is not Teacher)
+            {
+                throw new Exception("teacher yok");
+            }
+            return Response<TeacherInformationDto>.Success(new TeacherInformationDto() { TeacherName = existTeacher.FirstName + " " + existTeacher.LastName }, 200);
+        }
+
         public async Task<Response<List<TeacherLessonDto>>> TeacherLesson(int classId, int teacherId)
         {
           var teacherClassLessons=await teacherRepository.TeacherClassLesson(teacherId, classId);

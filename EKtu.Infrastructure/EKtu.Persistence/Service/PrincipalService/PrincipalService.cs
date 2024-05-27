@@ -120,6 +120,13 @@ namespace EKtu.Persistence.Service.PrincipalService
             return Response<NoContent>.Success(204);
         }
 
+        public async Task<Response<PrincipalInformationResponseDto>> PrincipalInformation(int userId)
+        {
+         Principal Principal=await principalRepository.PrincipalInformation(userId);
+
+            return Response<PrincipalInformationResponseDto>.Success(new PrincipalInformationResponseDto() { PrincipalName = Principal.FirstName + " " + Principal.LastName },200);
+        }
+
         public async Task<Response<NoContent>> StudentAttendanceAddAsync(StudentAttendanceRequestDto studentAttendanceRequestDto)
         {
 

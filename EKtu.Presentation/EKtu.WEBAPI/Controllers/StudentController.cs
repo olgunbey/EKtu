@@ -122,5 +122,13 @@ namespace EKtu.WEBAPI.Controllers
             await _studentCacheService.AllStudentCacheLesson();
             return ResponseData(resp);
         }
+        [HttpGet]
+        [Authorize(Policy = "StudentId")]
+        public async Task<IActionResult> StudentInformation()
+        {
+            var userId = tokenRequestDto.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            var response = await _studentService.StudentInformation(Convert.ToInt32(userId.Value));
+            return ResponseData(response);
+        }
     }
 }

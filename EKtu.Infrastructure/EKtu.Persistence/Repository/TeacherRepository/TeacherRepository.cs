@@ -79,5 +79,10 @@ namespace EKtu.Persistence.Repository.TeacherRepository
            return Task.FromResult(_dbContext.Set<TeacherClassLesson>().Where(y => y.TeacherId == teacherId && y.ClassId == classId)
                 .Include(y => y.Lesson).AsQueryable());
         }
+
+        public async ValueTask<Teacher> TeacherInformation(int userId)
+        {
+           return await _dbContext.Teacher.FindAsync(userId);
+        }
     }
 }
