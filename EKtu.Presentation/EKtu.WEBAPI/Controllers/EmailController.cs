@@ -1,7 +1,9 @@
-﻿using EKtu.Repository.Dtos;
+﻿using EKtu.Domain.Entities;
+using EKtu.Repository.Dtos;
 using EKtu.Repository.IService.EmailService;
 using EKtu.Repository.IService.StudentService;
 using EKtu.Repository.IService.TokenService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

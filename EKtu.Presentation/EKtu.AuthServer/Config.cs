@@ -10,7 +10,7 @@ namespace EKtu.AuthServer
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Email(),
-            new IdentityResource("custom.profile","Custom profile",new[]{"classId"}),
+            new IdentityResource("custom.profile","Custom profile",new[]{"name","classname"}),
 
         };
         public static IEnumerable<ApiScope> GetApiScopes() => new List<ApiScope>()
@@ -45,7 +45,7 @@ namespace EKtu.AuthServer
                 ClientId="ResourceOwnerTeacher",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
-                AllowedScopes={"exam.update","exam.read","teacher.classlessonlist","student.enteringgrades"},
+                AllowedScopes={"exam.update","exam.read","teacher.classlessonlist","student.enteringgrades","custom.profile","openid"},
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
                 AccessTokenLifetime=3,
@@ -56,7 +56,7 @@ namespace EKtu.AuthServer
                 ClientId="ResourceOwnerPrincipal",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
-                AllowedScopes={"student.delete","student.update","student.added","exam.read","lesson.approve","lesson.added","teacher.classlesson","student.calculateexamgrande","absence.entry" },
+                AllowedScopes={"student.delete","student.update","student.added","exam.read","lesson.approve","lesson.added","teacher.classlesson","student.calculateexamgrande","absence.entry","custom.profile","openid"},
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
                 AccessTokenLifetime=1,
@@ -68,7 +68,7 @@ namespace EKtu.AuthServer
                 ClientId="ResourceOwnerStudent",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets=new[]{new Secret("secret".Sha256())},
-                AllowedScopes={"exam.list","choose.lesson","student.absence","student.certificate","student.updatechooselesson","student.getchooselesson","custom.profile"},
+                AllowedScopes={"exam.list","choose.lesson","student.absence","student.certificate","student.updatechooselesson","student.getchooselesson","openid","custom.profile"},
                 AllowOfflineAccess=true,
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,

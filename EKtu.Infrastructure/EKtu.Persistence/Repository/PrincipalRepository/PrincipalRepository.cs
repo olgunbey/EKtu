@@ -47,6 +47,11 @@ namespace EKtu.Persistence.Repository.PrincipalRepository
           return (await _dbContext.StudentChooseLessons.FirstOrDefaultAsync(y => y.StudentId==studentId && y.LessonId == lessonId))!.Id;
         }
 
+        public async ValueTask<Principal> PrincipalInformation(int userId)
+        {
+           return await _dbContext.Principal.FindAsync(userId);
+        }
+
         public async Task StudentAttendanceAddAsync(Attendance attendance)
         {
           await  _dbContext.Attendances.AddAsync(attendance);

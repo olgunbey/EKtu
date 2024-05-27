@@ -29,5 +29,6 @@ namespace EKtu.Repository.IRepository.StudentRepository
         Task<IQueryable<Class>> GetClassList();
 
         ValueTask<Student> GetStudentClassIdWithStudentIdAsync(int studentId);
+        Task<Student> StudentInformation(int userId);
     }
 }

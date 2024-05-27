@@ -12,8 +12,16 @@ namespace EKtu.WEBAPI
         }
         public async Task Invoke(HttpContext context)
         {
-          
-            var userId = context.User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+
+            var y = context.User.Claims.FirstOrDefault(y=>y.Value=="base.token");
+
+            if(y is not null)
+            {
+               await _next(context);
+                return;
+            }
+            
+            var userId = context.User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             var classId = context.User.Claims.FirstOrDefault(x => x.Type == "classId");
 
             if(classId is not null)
@@ -25,7 +33,7 @@ namespace EKtu.WEBAPI
                 };
                 await _next(context);
             }
-            else
+            else if (userId is not null)
             {
                 tokenRequestDto.Claims = new List<System.Security.Claims.Claim>()
                 {
@@ -33,7 +41,6 @@ namespace EKtu.WEBAPI
                 };
                 await _next(context);
             }
-            
         }
     }
 }

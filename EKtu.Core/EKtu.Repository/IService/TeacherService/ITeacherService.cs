@@ -18,5 +18,7 @@ namespace EKtu.Repository.IService.TeacherService
 
         Task<Response<NoContent>> UpdateStudentGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos);
 
+        Task<Response<TeacherInformationDto>> TeacherInformation(int userId);
+
     }
 }

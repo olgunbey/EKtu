@@ -19,5 +19,7 @@ namespace EKtu.Repository.IService.PrincipalService
 
 
         Task<Response<NoContent>> StudentAttendanceAddAsync(StudentAttendanceRequestDto studentAttendanceRequestDto);
+
+        Task<Response<PrincipalInformationResponseDto>> PrincipalInformation(int userId);
     }
 }
