@@ -36,6 +36,7 @@ using EKtu.Repository.IService.PrincipalService;
 using EKtu.Repository.IService.StudentService;
 using EKtu.Repository.IService.TeacherService;
 using EKtu.Repository.IService.TokenService;
+using EKtu.WEBAPI.Filters;
 using System.ComponentModel;
 
 namespace EKtu.WEBAPI
@@ -76,6 +77,8 @@ namespace EKtu.WEBAPI
             serviceDescriptors.AddScoped<IStudentCacheService, StudentCacheService>();
             serviceDescriptors.AddScoped<ICache, BaseCache>();
             serviceDescriptors.AddSingleton(y => new TokenRequestDto());
+            serviceDescriptors.AddSingleton(y =>new StudentResponseTokenDto());
+            serviceDescriptors.AddSingleton<StudentTokenFilter>();
 
         }
     }

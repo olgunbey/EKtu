@@ -149,7 +149,8 @@ namespace EKtu.Persistence.Service.StudentService
            var responseData= new StudentInformationResponseDto()
             {
                 ClassName = students.Class.ClassName,
-                StudentName = students.FirstName + " " + students.LastName
+                StudentName = students.FirstName + " " + students.LastName,
+                ClassId= students.ClassId,
             };
 
             return Response<StudentInformationResponseDto>.Success(responseData, 200);

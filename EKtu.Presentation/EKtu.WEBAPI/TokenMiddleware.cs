@@ -13,6 +13,9 @@ namespace EKtu.WEBAPI
         public async Task Invoke(HttpContext context)
         {
 
+           await _next(context);
+
+            return;
             var y = context.User.Claims.FirstOrDefault(y=>y.Value=="base.token");
 
             if(y is not null)
