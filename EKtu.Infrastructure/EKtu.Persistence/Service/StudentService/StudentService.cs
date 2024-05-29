@@ -155,5 +155,18 @@ namespace EKtu.Persistence.Service.StudentService
 
             return Response<StudentInformationResponseDto>.Success(responseData, 200);
         }
+
+        public async Task<Response<List<ClassListResponseDto>>> GetClassList()
+        {
+          var GetClasses=  (await studentRepository.GetAllClassList());
+
+
+          var responseData= GetClasses.Select(y => new ClassListResponseDto()
+            {
+                ClassId = y.Id,
+                ClassName = y.ClassName,
+            }).ToList();
+            return Response<List<ClassListResponseDto>>.Success(responseData, 200);
+        }
     }
 }

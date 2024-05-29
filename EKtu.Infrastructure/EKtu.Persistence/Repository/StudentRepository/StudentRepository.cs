@@ -121,5 +121,10 @@ namespace EKtu.Persistence.Repository.StudentRepository
           return await _dbContext.Student.Include(y=>y.Class).FirstAsync(y=>y.Id==userId);
 
         }
+
+        public Task<IQueryable<Class>> GetAllClassList()
+        {
+            return Task.FromResult(_dbContext.Class.AsQueryable());
+        }
     }
 }

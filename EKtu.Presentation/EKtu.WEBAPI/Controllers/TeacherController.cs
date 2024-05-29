@@ -4,6 +4,7 @@ using EKtu.Repository.Dtos;
 using EKtu.Repository.ICacheService.StudentCacheService;
 using EKtu.Repository.IService.AddPersonService;
 using EKtu.Repository.IService.TeacherService;
+using EKtu.WEBAPI.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,15 +19,15 @@ namespace EKtu.WEBAPI.Controllers
         private readonly ITeacherBuilder teacherBuilder;
         private readonly ITeacherService teacherService;
         private readonly IStudentCacheService studentCacheService;
-        private readonly TokenRequestDto tokenRequestDto;
+        private readonly TeacherTokenResponseDto teacherTokenResponseDto;
 
-        public TeacherController(IAddPersonService<Teacher> addteacherService, ITeacherBuilder teacherBuilder, ITeacherService teacherService, IStudentCacheService studentCacheService, TokenRequestDto tokenRequestDto)
+        public TeacherController(IAddPersonService<Teacher> addteacherService, ITeacherBuilder teacherBuilder, ITeacherService teacherService, IStudentCacheService studentCacheService, TeacherTokenResponseDto teacherTokenResponseDto)
         {
             this.addTeacherService = addteacherService;
             this.teacherBuilder = teacherBuilder;
             this.teacherService = teacherService;
             this.studentCacheService = studentCacheService;
-            this.tokenRequestDto = tokenRequestDto;
+            this.teacherTokenResponseDto = teacherTokenResponseDto;
         }
         [HttpPost]
         [Authorize(Policy ="ClientCredentials")]
@@ -41,19 +42,18 @@ namespace EKtu.WEBAPI.Controllers
             return ResponseData<NoContent>(await this.addTeacherService.AddAsync(_teacher));
         }
         [HttpGet]
+        [ServiceFilter(typeof(TeacherTokenFilter))]
         [Authorize(Policy = "TeacherClassLessonList")]
         public async Task<IActionResult> TeacherClassList()
         {
-            var teacherId = tokenRequestDto.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-            return ResponseData<List<TeacherClassReponseDto>>(await teacherService.TeacherClass(Convert.ToInt32(teacherId.Value)));
+            return ResponseData<List<TeacherClassReponseDto>>(await teacherService.TeacherClass(teacherTokenResponseDto.Id));
         }
         [HttpGet]
+        [ServiceFilter(typeof(TeacherTokenFilter))]
         [Authorize(Policy = "TeacherClassLessonList")]
         public async Task<IActionResult> TeacherClassLessonList([FromHeader]int classId)
         {
-         var teacherId= tokenRequestDto.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-
-          return ResponseData<List<TeacherLessonDto>>(await teacherService.TeacherLesson(classId, Convert.ToInt32(teacherId.Value)));
+          return ResponseData<List<TeacherLessonDto>>(await teacherService.TeacherLesson(classId, teacherTokenResponseDto.Id));
 
         }
 

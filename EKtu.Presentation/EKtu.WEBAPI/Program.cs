@@ -69,7 +69,6 @@ app.UseHttpsRedirection();
 app.UseCors("Vuejs");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<TokenMiddleware>();
 
 app.MapControllers();
 

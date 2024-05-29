@@ -125,13 +125,13 @@ namespace EKtu.WEBAPI.Controllers
             await _studentCacheService.AllStudentCacheLesson();
             return ResponseData(resp);
         }
+
         [HttpGet]
-        [ServiceFilter(typeof(StudentTokenFilter))]
-        [Authorize(Policy = "StudentId")]
-        public async Task<IActionResult> StudentInformation()
+        [Authorize("ClientCredentials")]
+        public async Task<IActionResult> GetClassList()
         {
-            var response = await _studentService.StudentInformation(studentResponseTokenDto.UserId);
-            return ResponseData(response);
+         var responseData=  await _studentService.GetClassList();
+            return ResponseData(responseData);
         }
     }
 }

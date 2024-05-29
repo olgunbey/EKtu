@@ -17,7 +17,6 @@ namespace EKtu.WEBAPI.Controllers
         private readonly IAddPersonService<Principal> addPrincipalService;
         private readonly IPrincipalBuilder principalBuilder;
         private readonly IPrincipalService principalService;
-        private readonly TokenRequestDto tokenRequestDto;
         public PrincipalController(IAddPersonService<Principal> addPrincipalService, IPrincipalBuilder principalBuilder, IPrincipalService principalService)
         {
             this.addPrincipalService = addPrincipalService;
