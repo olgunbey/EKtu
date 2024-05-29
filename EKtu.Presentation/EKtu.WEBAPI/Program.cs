@@ -42,14 +42,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 {
     x.Authority = "https://localhost:7134";
     x.Audience = "BaseApi";
-    x.TokenValidationParameters = new()
-    {
-        ValidAudience = "BaseApi",
-        ValidateAudience = true,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secret")),
-        ValidateIssuer = true,
-    };
+    //x.TokenValidationParameters = new()
+    //{
+    //    ValidAudience = "BaseApi",
+    //    ValidateAudience = true,
+    //    ValidateIssuerSigningKey = true,
+    //    IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secret")),
+    //    ValidateIssuer = true,
+    //};
 });
 
 builder.Services.AddOptions();

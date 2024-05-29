@@ -7,6 +7,7 @@ using EKtu.Repository.IRepository.AddPersonRepository;
 using EKtu.Repository.IService.AddPersonService;
 using EKtu.Repository.IService.PdfService;
 using EKtu.Repository.IService.StudentService;
+using EKtu.WEBAPI.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -24,15 +25,15 @@ namespace EKtu.WEBAPI.Controllers
         private readonly IStudentBuilder studentBuilder;
         private readonly IPdfService _pdfService;
         private readonly IStudentCacheService _studentCacheService;
-        private readonly TokenRequestDto tokenRequestDto;
-        public StudentController(IStudentService studentService, IAddPersonService<Student> addPersonService, IStudentBuilder studentBuilder, IPdfService pdfService, IStudentCacheService studentCacheService, TokenRequestDto tokenRequestDto)
+        private readonly StudentResponseTokenDto studentResponseTokenDto;
+        public StudentController(IStudentService studentService, IAddPersonService<Student> addPersonService, IStudentBuilder studentBuilder, IPdfService pdfService, IStudentCacheService studentCacheService, StudentResponseTokenDto studentResponseTokenDto)
         {
             _studentService = studentService;
             this.addPersonService = addPersonService;
             this.studentBuilder = studentBuilder;
             _pdfService = pdfService;
             _studentCacheService = studentCacheService;
-            this.tokenRequestDto = tokenRequestDto;
+            this.studentResponseTokenDto = studentResponseTokenDto;
         }
         [HttpPost]
         [Authorize("ClientCredentials")]    
@@ -48,26 +49,28 @@ namespace EKtu.WEBAPI.Controllers
             return ResponseData(await addPersonService.AddAsync(studentBuilders));
         }
         [HttpGet]
+        [ServiceFilter(typeof(StudentTokenFilter))]
         [Authorize(Policy ="StudentList")]
         public async Task<IActionResult> StudentListExamGrande()
         {
-           var userId=tokenRequestDto.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-           var classId = tokenRequestDto.Claims.First(x => x.Type == "classId");
-         var resp=  await _studentCacheService.GetCacheStudentGradeList(Convert.ToInt32(classId.Value),Convert.ToInt32(userId.Value));
+         var resp=  await _studentCacheService.GetCacheStudentGradeList(studentResponseTokenDto.ClassId,studentResponseTokenDto.UserId);
             if(resp.Data.Any())
             {
                 return ResponseData(resp);
             }
-           var response= await _studentService.StudentListExamGrandeAsync(Convert.ToInt32(userId.Value));
+           var response= await _studentService.StudentListExamGrandeAsync(studentResponseTokenDto.UserId);
             return ResponseData(response);
         }
 
         [HttpGet]
-        [Authorize(Policy ="StudentId")]
+        [ServiceFilter(typeof(StudentTokenFilter))]
+        [Authorize(Policy ="StudentList")]
+
         public async Task<IActionResult> StudentGetById()
         {
-          var userId=  tokenRequestDto.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-          var response = await _studentService.GetByIdAsync(Convert.ToInt32(userId.Value));
+
+            var userId = studentResponseTokenDto.UserId;
+            var response = await _studentService.GetByIdAsync(userId);
             return ResponseData(response);
         }
         [HttpPost]
@@ -79,19 +82,19 @@ namespace EKtu.WEBAPI.Controllers
             return ResponseData<NoContent>(response);
         }
         [HttpGet]
+        [ServiceFilter(typeof(StudentTokenFilter))]
         [Authorize(Policy = "StudentAbsence")]
         public async Task<IActionResult> StudentAbsenceList()
         {
-            var userId=  tokenRequestDto.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-            return ResponseData(await _studentService.StudentAbsenceAsync(Convert.ToInt32(userId.Value)));
+            return ResponseData(await _studentService.StudentAbsenceAsync(studentResponseTokenDto.UserId));
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(StudentTokenFilter))]
         [Authorize(Policy = "StudentCertificatePolicy")]
         public async Task<IActionResult> StudentCertificate()
         {
-            var userId= tokenRequestDto.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-            var Resp = await _studentService.StudentCertificateAsync(Convert.ToInt32(userId.Value));
+            var Resp = await _studentService.StudentCertificateAsync(studentResponseTokenDto.UserId);
 
             var bytes = _pdfService.PdfBytes(Resp.Data);
             Random random = new Random();
@@ -102,32 +105,32 @@ namespace EKtu.WEBAPI.Controllers
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(StudentTokenFilter))]
         [Authorize(Policy ="GetStudentChooseLesson")]
         public async Task<IActionResult> GetStudentChooseLesson()
         {
-            var userId = tokenRequestDto.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
 
-            var List=  await _studentCacheService.GetStudentCacheLesson(Convert.ToInt32(userId.Value));
+            var List=  await _studentCacheService.GetStudentCacheLesson(studentResponseTokenDto.UserId);
             if (List.Data.Any())
                 return ResponseData(List);
-            return ResponseData(await _studentService.GetStudentChooseLessonAsync(Convert.ToInt32(userId.Value)));
+            return ResponseData(await _studentService.GetStudentChooseLessonAsync(studentResponseTokenDto.UserId));
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(StudentTokenFilter))]
         [Authorize(Policy = "GetStudentChooseLesson")]
         public async Task<IActionResult> StudentChangeLesson(List<StudentChangeLessonRequestDto> studentChangeLessonRequestDtos)
         {
-            var userId = tokenRequestDto.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-            var resp= await _studentService.StudentChangeLessonAsync(studentChangeLessonRequestDtos, int.Parse(userId.Value));
+            var resp= await _studentService.StudentChangeLessonAsync(studentChangeLessonRequestDtos,studentResponseTokenDto.UserId);
             await _studentCacheService.AllStudentCacheLesson();
             return ResponseData(resp);
         }
         [HttpGet]
+        [ServiceFilter(typeof(StudentTokenFilter))]
         [Authorize(Policy = "StudentId")]
         public async Task<IActionResult> StudentInformation()
         {
-            var userId = tokenRequestDto.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-            var response = await _studentService.StudentInformation(Convert.ToInt32(userId.Value));
+            var response = await _studentService.StudentInformation(studentResponseTokenDto.UserId);
             return ResponseData(response);
         }
     }

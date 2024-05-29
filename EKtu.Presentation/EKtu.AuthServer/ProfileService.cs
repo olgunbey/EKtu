@@ -28,7 +28,8 @@ namespace EKtu.AuthServer
                 var resp= new List<Claim>()
                 {
                     new Claim("name",responseDtos.Data.StudentName),
-                    new Claim("classname",responseDtos.Data.ClassName)
+                    new Claim("classname",responseDtos.Data.ClassName),
+                    new Claim("classId",responseDtos.Data.ClassId.ToString())
                 };
                 context.IssuedClaims.AddRange(resp);
             }
