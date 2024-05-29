@@ -76,9 +76,10 @@ namespace EKtu.WEBAPI
             serviceDescriptors.AddScoped<IConverter>(y=> new SynchronizedConverter(new PdfTools()));
             serviceDescriptors.AddScoped<IStudentCacheService, StudentCacheService>();
             serviceDescriptors.AddScoped<ICache, BaseCache>();
-            serviceDescriptors.AddSingleton(y => new TokenRequestDto());
+            serviceDescriptors.AddSingleton(y => new TeacherTokenResponseDto());
             serviceDescriptors.AddSingleton(y =>new StudentResponseTokenDto());
             serviceDescriptors.AddSingleton<StudentTokenFilter>();
+            serviceDescriptors.AddSingleton<TeacherTokenFilter>();
 
         }
     }
