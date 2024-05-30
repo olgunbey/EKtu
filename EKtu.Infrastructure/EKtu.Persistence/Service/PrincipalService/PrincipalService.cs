@@ -46,6 +46,11 @@ namespace EKtu.Persistence.Service.PrincipalService
                 .Term(addLessonRequestDto.Term)
                 .GetLesson();
 
+            if(lesson.OptionalLessonId==0)
+            {
+                lesson.OptionalLessonId = null;
+            }
+
             try
             {
                 await principalRepository.AddLessonsAsync(lesson);

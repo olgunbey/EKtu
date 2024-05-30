@@ -10,7 +10,7 @@ namespace EKtu.AuthServer
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Email(),
-            new IdentityResource("custom.profile","Custom profile",new[]{"name","classname","classId"}),
+            new IdentityResource("custom.profile","Custom profile",new[]{"name","classname","classId","grade"}),
 
         };
         public static IEnumerable<ApiScope> GetApiScopes() => new List<ApiScope>()

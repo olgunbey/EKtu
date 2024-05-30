@@ -24,9 +24,10 @@ namespace EKtu.WEBAPI.Filters
             {
                 var userId = context.HttpContext.User.Claims.First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
                 var classId = context.HttpContext.User.Claims.First(x => x.Type == "classId");
-
+                var grade = context.HttpContext.User.Claims.First(x => x.Type == "grade");
                 studentResponseTokenDto.UserId = Convert.ToInt32(userId.Value);
                 studentResponseTokenDto.ClassId = Convert.ToInt32(classId.Value);
+                studentResponseTokenDto.Grade = Convert.ToInt32(grade.Value);
             }
            
         }
