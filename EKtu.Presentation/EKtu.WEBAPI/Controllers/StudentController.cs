@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Ocsp;
 using System.Security.Claims;
 
 namespace EKtu.WEBAPI.Controllers
@@ -132,6 +133,14 @@ namespace EKtu.WEBAPI.Controllers
         {
          var responseData=  await _studentService.GetClassList();
             return ResponseData(responseData);
+        }
+        [HttpGet]
+        [ServiceFilter(typeof(StudentTokenFilter))]
+        [Authorize(Policy = "GetStudentChooseLesson")]
+        public async Task<IActionResult> TermLessonList([FromHeader]TermLessonListRequestDto termLessonListRequestDto)
+        {
+         var RespData= await  _studentService.GetLessonTerm(termLessonListRequestDto, studentResponseTokenDto.Grade);
+            return ResponseData(RespData);
         }
     }
 }

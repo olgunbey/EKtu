@@ -10,5 +10,6 @@ namespace EKtu.Repository.Dtos
     {
         public int UserId{ get; set; }
         public int ClassId{ get; set; }
+        public int Grade{ get; set; }
     }
 }

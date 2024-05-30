@@ -168,5 +168,39 @@ namespace EKtu.Persistence.Service.StudentService
             }).ToList();
             return Response<List<ClassListResponseDto>>.Success(responseData, 200);
         }
+
+        public async Task<Response<GetLessonResponseDto>> GetLessonTerm(TermLessonListRequestDto termLessonListRequestDto,int Grade)
+        {
+            var queryAbleData= await studentRepository.GetLessonTerm(termLessonListRequestDto, Grade);
+
+            var SecmeliDersInts = queryAbleData.GroupBy(y => y.OptionalLessonId).Select(y => y.Key).ToList();
+
+            SecmeliDersInts.Remove(null);
+
+
+
+            GetLessonResponseDto respData=new GetLessonResponseDto();
+
+
+            respData.AnaDers = queryAbleData.Where(y => y.OptionalLessonId == null).Select(y => new AnaDers()
+            {
+                LessonId = y.Id,
+                LessonName = y.LessonName,
+            }).ToList();
+            respData.SecmeliDers = SecmeliDersInts.Count > 0 ? queryAbleData.Where(y => y.OptionalLessonId != null).Select(x => new SecmeliDers()
+            {
+                LessonId = x.Id,
+                OptionalLessonId = (int)x.OptionalLessonId,
+                LessonName = x.LessonName
+            }).ToList() : null;
+
+
+
+            
+            return Response<GetLessonResponseDto>.Success(respData, 200);
+
+            
+          
+        }
     }
 }

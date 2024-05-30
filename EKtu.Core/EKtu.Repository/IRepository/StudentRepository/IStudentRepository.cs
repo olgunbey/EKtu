@@ -30,7 +30,7 @@ namespace EKtu.Repository.IRepository.StudentRepository
 
         ValueTask<Student> GetStudentClassIdWithStudentIdAsync(int studentId);
         Task<Student> StudentInformation(int userId);
-
         Task<IQueryable<Class>> GetAllClassList();
+        Task<IQueryable<Lesson>> GetLessonTerm(TermLessonListRequestDto termLessonListRequestDto, int Grade);
     }
 }
