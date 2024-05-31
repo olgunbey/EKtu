@@ -16,7 +16,7 @@ namespace EKtu.Repository.IService.StudentService
 
         Task<Response<int>> StudentCheckEmailAsync(string studentEmail);
 
-        Task<Response<NoContent>> StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto);
+        Task<Response<NoContent>> StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto,int studentId);
 
 
         Task<Response<List<StudentAbsenceDto>>> StudentAbsenceAsync(int userId);

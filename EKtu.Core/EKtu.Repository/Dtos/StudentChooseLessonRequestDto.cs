@@ -8,7 +8,6 @@ namespace EKtu.Repository.Dtos
 {
     public class StudentChooseLessonRequestDto
     {
-        public int StudentId{ get; set; }
         public List<int> LessonId { get; set; }
     }
 }

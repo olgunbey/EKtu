@@ -75,11 +75,12 @@ namespace EKtu.WEBAPI.Controllers
             return ResponseData(response);
         }
         [HttpPost]
+        [ServiceFilter(typeof(StudentTokenFilter))]
         [Authorize(Policy ="StudentChooseLesson")]
         public async Task<IActionResult> StudentChooseLesson([FromBody]StudentChooseLessonRequestDto studentChooseLessonRequestDto)
         {
-            var response = await _studentService.StudentChooseLessonAsync(studentChooseLessonRequestDto);
-            var x =   await _studentCacheService.AllStudentCacheLesson();
+            var response = await _studentService.StudentChooseLessonAsync(studentChooseLessonRequestDto, studentResponseTokenDto.UserId);
+            var x = await _studentCacheService.AllStudentCacheLesson();
             return ResponseData<NoContent>(response);
         }
         [HttpGet]
@@ -112,7 +113,7 @@ namespace EKtu.WEBAPI.Controllers
         {
 
             var List=  await _studentCacheService.GetStudentCacheLesson(studentResponseTokenDto.UserId);
-            if (List.Data.Any())
+            if (List.Data is not null)
                 return ResponseData(List);
             return ResponseData(await _studentService.GetStudentChooseLessonAsync(studentResponseTokenDto.UserId));
         }

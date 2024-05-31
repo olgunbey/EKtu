@@ -54,11 +54,11 @@ namespace EKtu.Persistence.Service.StudentService
 
         }
 
-        public async Task<Response<NoContent>> StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto)
+        public async Task<Response<NoContent>> StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto, int studentId)
         {
             try
             {
-                await studentRepository.StudentChooseLessonAsync(studentChooseLessonRequestDto);
+                await studentRepository.StudentChooseLessonAsync(studentChooseLessonRequestDto,studentId);
                 await _saves.SaveChangesAsync();
                 return Response<NoContent>.Success(204);
             }
