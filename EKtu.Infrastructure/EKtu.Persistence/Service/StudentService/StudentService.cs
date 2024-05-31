@@ -97,7 +97,7 @@ namespace EKtu.Persistence.Service.StudentService
          IQueryable<StudentChooseLesson> QueryableLessonConfirmation= await studentRepository.GetStudentChooseLessonAsync(userId);
 
             if (!QueryableLessonConfirmation.Any())
-                return Response<List<GetStudentChooseLessonResponseDto>>.Fail("öğrenci ders seçmedi", 400);
+                return Response<List<GetStudentChooseLessonResponseDto>>.Fail("Öğrenci ders seçimi yapılmadı", 400);
 
 
                 List<GetStudentChooseLessonResponseDto> getStudentChooseLessonDtos= await QueryableLessonConfirmation.Select(y => new GetStudentChooseLessonResponseDto()

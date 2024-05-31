@@ -6,11 +6,6 @@ using EKtu.Repository.Exceptions;
 using EKtu.Repository.IRepository.AddPersonRepository;
 using EKtu.Repository.IService;
 using EKtu.Repository.IService.AddPersonService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EKtu.Persistence.Service.AddPersonService
 {
@@ -27,6 +22,12 @@ namespace EKtu.Persistence.Service.AddPersonService
         public async Task<EKtu.Repository.Dtos.Response<NoContent>> AddAsync(T data)
         {
             data.Password=HashTransaction.HashPassword(data.Password);
+
+         bool hasUserTckNo= await repository.ExistUser(data.Password);
+            if(hasUserTckNo)
+            {
+                return EKtu.Repository.Dtos.Response<NoContent>.Fail("bu tckno'ya sahip kullanıcı var", 400);
+            }
             try
             {
                await repository.AddPersonAsync(data);
