@@ -10,5 +10,6 @@ namespace EKtu.Repository.IRepository.AddPersonRepository
     public interface IAddPersonRepository<T> where T : BasePersonEntity , new()
     {
         Task AddPersonAsync(T data);
+        Task<bool> ExistUser(string tckKo);
     }
 }

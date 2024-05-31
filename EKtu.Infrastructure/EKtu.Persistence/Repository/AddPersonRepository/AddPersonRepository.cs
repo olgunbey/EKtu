@@ -1,5 +1,6 @@
 ﻿using EKtu.Domain.Entities;
 using EKtu.Repository.IRepository.AddPersonRepository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,12 @@ namespace EKtu.Persistence.Repository.AddPersonRepository
         public async Task AddPersonAsync(T data)
         {
            await _databaseContext.Set<T>().AddAsync(data);
+        }
+
+        public async Task<bool> ExistUser(string tckKo)
+        {
+        return await _databaseContext.Set<T>().AnyAsync(y=>y.Password== tckKo);
+            
         }
     }
 }

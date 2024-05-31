@@ -119,7 +119,7 @@ namespace EKtu.WEBAPI.Controllers
 
         [HttpPost]
         [ServiceFilter(typeof(StudentTokenFilter))]
-        [Authorize(Policy = "GetStudentChooseLesson")]
+        [Authorize(Policy = "GetStudentChooseLesson")] 
         public async Task<IActionResult> StudentChangeLesson(List<StudentChangeLessonRequestDto> studentChangeLessonRequestDtos)
         {
             var resp= await _studentService.StudentChangeLessonAsync(studentChangeLessonRequestDtos,studentResponseTokenDto.UserId);

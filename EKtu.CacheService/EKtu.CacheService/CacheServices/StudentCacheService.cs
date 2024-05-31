@@ -192,7 +192,7 @@ namespace EKtu.CacheService.CacheServices
                 var DeserializeDatas= JsonSerializer.Deserialize<List<StudentChooseLessonCacheDto>>(Values);
                 result.Add(Convert.ToInt16(Key), DeserializeDatas);
             }
-            if (result.TryGetValue(studentId, out var student)) //demekki cachede bu kullanici var buradan cek
+            if (result.TryGetValue(studentId, out var student)) 
             {
                 return Response<List<GetStudentChooseLessonResponseDto>>.Success(student.Select(y => new GetStudentChooseLessonResponseDto()
                 {
@@ -201,7 +201,6 @@ namespace EKtu.CacheService.CacheServices
                 }).ToList(), 200);
             }
             return Response<List<GetStudentChooseLessonResponseDto>>.Fail("cachede lütfen kullanıcıyı cachle", 400);
-
         }
 
         public async Task<Response<List<CacheStudentExamListDto>>> GetCacheStudentGradeList(int classId, int studentId)
