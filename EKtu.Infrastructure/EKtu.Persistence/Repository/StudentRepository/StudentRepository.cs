@@ -48,12 +48,12 @@ namespace EKtu.Persistence.Repository.StudentRepository
             return student;
         }
 
-        public async Task StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto)
+        public async Task StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto,int studentId)
         {
 
          List<StudentChooseLesson> studentChooseLesson= studentChooseLessonRequestDto.LessonId.Select(y =>new StudentChooseLesson()
             {
-                StudentId=studentChooseLessonRequestDto.StudentId,
+                StudentId= studentId,
                 LessonId=y
             }).ToList();
                await _dbContext.StudentChooseLessons.AddRangeAsync(studentChooseLesson);

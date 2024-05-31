@@ -11,7 +11,7 @@ namespace EKtu.Repository.IRepository.StudentRepository
     public interface IStudentRepository:IBaseRepository<Student>
     {
         Task<IQueryable<Student>> StudentListExamGrandeAsync(int studentId);
-        Task StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto);
+        Task StudentChooseLessonAsync(StudentChooseLessonRequestDto studentChooseLessonRequestDto,int studentId);
 
 
         Task<Student> StudentCertificateAsync(int userId);
