@@ -13,7 +13,7 @@ namespace EKtu.Repository.IRepository.TeacherRepository
         Task<IQueryable<TeacherClassLesson>> TeacherClass(int teacherId);
 
         Task<IQueryable<TeacherClassLesson>> TeacherClassLesson(int teacherId, int classId);
-        Task StudentUpdateGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos);
+        Task<List<Student>> StudentUpdateGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos);
         ValueTask<Teacher> TeacherInformation(int userId);
         void EnteringStudentGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos,out List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos1);
     }

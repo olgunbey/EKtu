@@ -37,6 +37,7 @@ using EKtu.Repository.IService.StudentService;
 using EKtu.Repository.IService.TeacherService;
 using EKtu.Repository.IService.TokenService;
 using EKtu.WEBAPI.Filters;
+using EKtu.WEBAPI.Logging;
 using System.ComponentModel;
 
 namespace EKtu.WEBAPI
@@ -80,6 +81,7 @@ namespace EKtu.WEBAPI
             serviceDescriptors.AddSingleton(y =>new StudentResponseTokenDto());
             serviceDescriptors.AddSingleton<StudentTokenFilter>();
             serviceDescriptors.AddSingleton<TeacherTokenFilter>();
+            serviceDescriptors.AddTransient<MyLogging>();
 
         }
     }
