@@ -1,6 +1,7 @@
 using EKtu.Persistence;
 using EKtu.Repository.Dtos;
 using EKtu.WEBAPI;
+using EKtu.WEBAPI.ErrorHandlingMiddleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -42,14 +43,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 {
     x.Authority = "https://localhost:7134";
     x.Audience = "BaseApi";
-    //x.TokenValidationParameters = new()
-    //{
-    //    ValidAudience = "BaseApi",
-    //    ValidateAudience = true,
-    //    ValidateIssuerSigningKey = true,
-    //    IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secret")),
-    //    ValidateIssuer = true,
-    //};
 });
 
 builder.Services.AddOptions();
@@ -69,7 +62,7 @@ app.UseHttpsRedirection();
 app.UseCors("Vuejs");
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.ErrorMiddleware();
 app.MapControllers();
 
 app.Run();

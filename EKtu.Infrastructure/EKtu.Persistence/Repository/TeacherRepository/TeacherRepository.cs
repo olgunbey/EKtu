@@ -45,13 +45,14 @@ namespace EKtu.Persistence.Repository.TeacherRepository
             }
         }
 
-        public async Task StudentUpdateGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos)
+        public async Task<List<Student>> StudentUpdateGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos)
         {
+            List<Student> students = new List<Student>();
             foreach (var item in enteringStudentGradesRequestDtos)
             {
               Student? student= await _dbContext.Student.FindAsync(item.StudentId);
 
-               await _dbContext.Student.Entry(student)
+               await _dbContext.Student.Entry(student!)
                     .Collection(y => y.LessonConfirmation)
                     .Query()
                     .Where(y=>y.LessonId==item.LessonId)
@@ -63,9 +64,11 @@ namespace EKtu.Persistence.Repository.TeacherRepository
                 {
                     st.Exam2=item.Exam_2;
                     st.Exam1 = item.Exam_1;
+                    students.Add(student);
                 }
-
             }
+            return students;
+            
         }
 
         public Task<IQueryable<TeacherClassLesson>> TeacherClass(int teacherId)

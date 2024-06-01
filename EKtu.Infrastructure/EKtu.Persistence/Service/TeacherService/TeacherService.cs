@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace EKtu.Persistence.Service.TeacherService
@@ -88,15 +89,33 @@ namespace EKtu.Persistence.Service.TeacherService
 
         public async Task<Response<NoContent>> UpdateStudentGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos)
         {
-            await teacherRepository.StudentUpdateGrades(enteringStudentGradesRequestDtos);
+            string liststudentSerializer="";
+          List<Student> liststudent= await teacherRepository.StudentUpdateGrades(enteringStudentGradesRequestDtos);
+
+         var jsonserializerObject=  liststudent.DistinctBy(y=>y.FirstName).Select(y => new UpdateStudentGradesResponseDto()
+         {
+
+             ExamNoteResponseDtos=y.LessonConfirmation.Select(y=>y.ExamNote).Select(y=> new ExamNoteResponseDto()
+             {
+                    Exam_1=y.Exam1,
+                    Exam_2=y.Exam2,
+             }).ToList(),
+             FirstName=y.FirstName,
+         }).ToList();
+
+
+
+
             try
             {
                await _saves.SaveChangesAsync();
                return Response<NoContent>.Success(204);
+
             }
             catch (Exception e)
             {
-                return Response<NoContent>.Fail("öğrenci not güncellenemedi", 400);
+                liststudentSerializer = JsonSerializer.Serialize(jsonserializerObject);
+                throw new DontUpdateExamOfStudentException(liststudentSerializer);
             }
            
         }

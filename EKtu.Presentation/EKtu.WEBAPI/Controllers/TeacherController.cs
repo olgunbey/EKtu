@@ -61,15 +61,16 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy ="TeacherEnteringGrades")]
         public async Task<IActionResult> EnteringStudentGrades([FromBody]List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos, [FromQuery]int classId) 
         {
-           var resp=  teacherService.EnteringStudentGrades(enteringStudentGradesRequestDtos,out var data);
+
+            var resp=  teacherService.EnteringStudentGrades(enteringStudentGradesRequestDtos,out var data);
             if(!data.Any())
             {
                 await studentCacheService.StudentNewExamGrande();
             }
             else
             {
-               await teacherService.UpdateStudentGrades(enteringStudentGradesRequestDtos);
-              var resps= await studentCacheService.SetStudentCache(data, classId);
+                await teacherService.UpdateStudentGrades(enteringStudentGradesRequestDtos);
+                var resps = await studentCacheService.SetStudentCache(data, classId);
                 return ResponseData(resps);
             }
             return ResponseData(resp);
