@@ -45,6 +45,15 @@ namespace EKtu.Persistence.Repository.TeacherRepository
             }
         }
 
+        public async Task<IQueryable<LessonConfirmation>> GetAllStudentByClassIdAndLessonIdAsync(GetAllStudentByClassIdAndLessonIdRequestDto getAllStudentByClassIdAndLessonIdRequestDto)
+        {
+
+           return _dbContext.LessonConfirmation.Include(y => y.Student).AsNoTrackingWithIdentityResolution()
+                .Include(y => y.ExamNote)
+                .Where(y => y.Student.ClassId == getAllStudentByClassIdAndLessonIdRequestDto.ClassId && y.LessonId==getAllStudentByClassIdAndLessonIdRequestDto.LessonId).AsQueryable();
+
+        }
+
         public async Task<List<Student>> StudentUpdateGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos)
         {
             List<Student> students = new List<Student>();

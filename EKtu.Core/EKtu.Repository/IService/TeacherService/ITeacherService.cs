@@ -20,5 +20,7 @@ namespace EKtu.Repository.IService.TeacherService
 
         Task<Response<TeacherInformationDto>> TeacherInformation(int userId);
 
+        Task<Response<List<GetAllStudentByClassIdAndLessonIdResponseDto>>> GetAllStudentByClassIdAndLessonId(GetAllStudentByClassIdAndLessonIdRequestDto getAllStudentByClassIdAndLessonIdRequestDto);
+
     }
 }

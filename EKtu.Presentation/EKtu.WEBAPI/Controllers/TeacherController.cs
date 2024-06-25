@@ -6,7 +6,6 @@ using EKtu.Repository.IService.AddPersonService;
 using EKtu.Repository.IService.TeacherService;
 using EKtu.WEBAPI.Filters;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EKtu.WEBAPI.Controllers
@@ -74,6 +73,11 @@ namespace EKtu.WEBAPI.Controllers
                 return ResponseData(resps);
             }
             return ResponseData(resp);
+        }
+        [HttpPost]   
+        public async Task<IActionResult> GetAllStudentByClassIdAndLessonId([FromBody]GetAllStudentByClassIdAndLessonIdRequestDto getAllStudentByClassIdAndLessonIdRequestDto)
+        {
+         return ResponseData(await teacherService.GetAllStudentByClassIdAndLessonId(getAllStudentByClassIdAndLessonIdRequestDto));
         }
     }
 }

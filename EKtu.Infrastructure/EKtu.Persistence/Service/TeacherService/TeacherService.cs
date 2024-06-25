@@ -43,6 +43,22 @@ namespace EKtu.Persistence.Service.TeacherService
             
         }
 
+        public async Task<Response<List<GetAllStudentByClassIdAndLessonIdResponseDto>>> GetAllStudentByClassIdAndLessonId(GetAllStudentByClassIdAndLessonIdRequestDto getAllStudentByClassIdAndLessonIdRequestDto)
+        {
+            var respo =(await teacherRepository.GetAllStudentByClassIdAndLessonIdAsync(getAllStudentByClassIdAndLessonIdRequestDto)).ToList();
+
+
+          var responseData= respo.Select(y => new GetAllStudentByClassIdAndLessonIdResponseDto()
+            {
+                StudentId=y.StudentId,
+                StudentName=y.Student.FirstName+""+y.Student.LastName,
+                Exam_1=y.ExamNote.Exam1,
+                Exam_2=y.ExamNote.Exam2,
+            }).ToList();
+
+            return Response<List<GetAllStudentByClassIdAndLessonIdResponseDto>>.Success(responseData, 200);
+
+        }
 
         public async Task<Response<List<TeacherClassReponseDto>>> TeacherClass(int teacherId)
         {
