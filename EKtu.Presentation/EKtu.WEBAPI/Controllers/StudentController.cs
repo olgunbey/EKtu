@@ -52,16 +52,15 @@ namespace EKtu.WEBAPI.Controllers
         [HttpGet]
         [ServiceFilter(typeof(StudentTokenFilter))]
         [Authorize(Policy ="StudentList")]
-        public async Task<IActionResult> StudentListExamGrande() //ögrencinin kendi notlarını listeler
-        {
-         var resp=  await _studentCacheService.GetCacheStudentGradeList(studentResponseTokenDto.ClassId,studentResponseTokenDto.UserId);
-            if(resp.Data.Any())
+         public async Task<IActionResult> StudentListExamGrande([FromHeader]bool term) 
+         {
+         var resp= await _studentCacheService.GetCacheStudentGradeList(studentResponseTokenDto.ClassId,studentResponseTokenDto.UserId,term);
+            if(resp.Data is not null)
             {
                 return ResponseData(resp);
             }
-           var response= await _studentService.StudentListExamGrandeAsync(studentResponseTokenDto.UserId);
-            return ResponseData(response);
-        }
+            return ResponseData(resp);
+         }
 
         [HttpGet]
         [ServiceFilter(typeof(StudentTokenFilter))]

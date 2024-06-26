@@ -40,7 +40,6 @@ namespace EKtu.Persistence.Service.StudentService
             }).ToListAsync();
 
             return Response<List<StudentListExamGrandeResponseDto>>.Success(list, 200);
-
         }
 
 

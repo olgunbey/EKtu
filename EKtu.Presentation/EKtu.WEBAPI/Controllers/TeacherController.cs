@@ -62,16 +62,14 @@ namespace EKtu.WEBAPI.Controllers
         {
 
             var resp= teacherService.EnteringStudentGrades(enteringStudentGradesRequestDtos,out var data);
-            if(!data.Any())//demekki güncellenecek notlar yok, sadece yeni not girişleri yapıldı
+            if(!data.Any())
             {
                 await studentCacheService.StudentNewExamGrande();
             }
             else
             {
-                //burada güncellenecek notlar var
-                await teacherService.UpdateStudentGrades(enteringStudentGradesRequestDtos);
-                var resps = await studentCacheService.SetStudentCache(data, classId);
-                return ResponseData(resps);
+                 await teacherService.UpdateStudentGrades(enteringStudentGradesRequestDtos);
+                 await studentCacheService.StudentNewExamGrande();
             }
             return ResponseData(resp);
         }

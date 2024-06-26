@@ -104,7 +104,8 @@ namespace EKtu.CacheService.CacheServices
                         Exam2 = y.ExamNote.Exam2,
                         LessonId = y.LessonId,
                         LetterGrade = y.ExamNote.LetterGrade!,
-                        LessonName = y.Lesson.LessonName
+                        LessonName = y.Lesson.LessonName,
+                        Term=y.Lesson.Term,
                     }).ToList(),
                     StudentName = y.FirstName
                 }).ToList();
@@ -157,7 +158,8 @@ namespace EKtu.CacheService.CacheServices
                         Exam1=x.ExamNote.Exam1,
                         Exam2 = x.ExamNote.Exam2,
                         LessonId=x.LessonId,
-                        LessonName=x.Lesson.LessonName
+                        LessonName=x.Lesson.LessonName,
+                        Term=x.Lesson.Term
                     }).ToList()
                 }).ToList());
 
@@ -187,7 +189,12 @@ namespace EKtu.CacheService.CacheServices
                 {
                   var Student= CacheData.First(y => y.StudentId == item.StudentId);
 
-                  var studentsLEsson= Student.AllStudentExamCacheDtos.First(y => y.LessonId == item.LessonId);
+                  var studentsLEsson= Student.AllStudentExamCacheDtos.FirstOrDefault(y => y.LessonId == item.LessonId); //bu ders yoksa cachlenecek
+
+                    if (studentsLEsson == null)
+                    {
+                       await base.SetCache(keyValuePairs, CacheConstant.StudentExam);
+                    }
 
                     if(studentsLEsson.Exam1 != item.Exam_1 || studentsLEsson.Exam2!=item.Exam_2)
                     {
@@ -199,9 +206,7 @@ namespace EKtu.CacheService.CacheServices
                 }
             }
            await base.SetCache(keyValuePairs, CacheConstant.StudentExam);
-
            return Response<NoContent>.Success(203);
-            
         }
 
         public async Task<Response<List<GetStudentChooseLessonResponseDto>>> GetStudentCacheLesson(int studentId)
@@ -228,7 +233,7 @@ namespace EKtu.CacheService.CacheServices
             return Response<List<GetStudentChooseLessonResponseDto>>.Fail("cachede lütfen kullanıcıyı cachle", 400);
         }
 
-        public async Task<Response<List<CacheStudentExamListDto>>> GetCacheStudentGradeList(int classId, int studentId)
+        public async Task<Response<List<CacheStudentExamListDto>>> GetCacheStudentGradeList(int classId, int studentId, bool term)
         {
          string JsonSerializerData=  await base.GetCache<string>(CacheConstant.StudentExam);
 
@@ -253,14 +258,15 @@ namespace EKtu.CacheService.CacheServices
             if(keyValuePair.TryGetValue(classId,out var CacheData))
             {
               AllStudentExamCacheDto currentStudentExam= CacheData.First(y => y.StudentId == studentId);
+               
 
-              var responsedata= currentStudentExam.AllStudentExamCacheDtos.Select(y => new CacheStudentExamListDto()
+              var responsedata= currentStudentExam.AllStudentExamCacheDtos.Where(y=>y.Term==term).Select(y => new CacheStudentExamListDto()
                 {
                     LessonId = y.LessonId,
                     LessonName = y.LessonName,
                     LetterGrade = y.LetterGrade,
                     Exam1 = y.Exam1,
-                    Exam2 = y.Exam2,
+                    Exam2 = y.Exam2
                 }).ToList();
 
                 return Response<List<CacheStudentExamListDto>>.Success(responsedata, 200);
