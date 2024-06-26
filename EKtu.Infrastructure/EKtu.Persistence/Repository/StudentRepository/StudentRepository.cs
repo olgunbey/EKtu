@@ -63,7 +63,7 @@ namespace EKtu.Persistence.Repository.StudentRepository
         {
           return Task.FromResult(_dbContext.Student.Where(y=>y.Id==studentId).Include(y => y.LessonConfirmation)
                 .ThenInclude(y => y.ExamNote)
-                .Include(y => y.StudentChooseLessons)
+                .Include(y => y.LessonConfirmation)
                 .ThenInclude(y => y.Lesson).AsQueryable());
         }
 

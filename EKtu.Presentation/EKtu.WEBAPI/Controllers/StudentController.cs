@@ -59,7 +59,8 @@ namespace EKtu.WEBAPI.Controllers
             {
                 return ResponseData(resp);
             }
-            return ResponseData(resp);
+            var rsp = await _studentService.StudentListExamGrandeAsync(studentResponseTokenDto.UserId,term);
+            return ResponseData(rsp);
          }
 
         [HttpGet]

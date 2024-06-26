@@ -23,21 +23,25 @@ namespace EKtu.Persistence.Service.StudentService
             studentBuilder = _studentBuilder;
         }
 
-        public async Task<Response<List<StudentListExamGrandeResponseDto>>> StudentListExamGrandeAsync(int studentId)
+        public async Task<Response<List<StudentListExamGrandeResponseDto>>> StudentListExamGrandeAsync(int studentId, bool term)
         {
-         var IQueryAbleStudent= await studentRepository.StudentListExamGrandeAsync(studentId);
+         var IQueryAbleStudent= (await studentRepository.StudentListExamGrandeAsync(studentId)).ToList();
 
-            var list =await IQueryAbleStudent.Select(y => new StudentListExamGrandeResponseDto()
+            var list = IQueryAbleStudent.Select(y => new
             {
-                FirstName=y.FirstName,
-                LastName=y.LastName,
+                Student=y,
+                LessonConfirmation=y.LessonConfirmation.Where(y=>y.Lesson.Term==term),
+            } ).Select(y => new StudentListExamGrandeResponseDto()
+            {
+                FirstName=y.Student.FirstName,
+                LastName=y.Student.LastName,
                 StudentChooseExamGrande=y.LessonConfirmation.Select(x=> new StudentChooseLessonExamGrandeResponseDto()
                 {
-                    Exam1=x.ExamNote.Exam1,
-                    Exam2=x.ExamNote.Exam2,
+                    Exam1=x.ExamNote is not null ? x.ExamNote.Exam1:0,
+                    Exam2= x.ExamNote is not null ? x.ExamNote.Exam2 : 0,
                     LessonName=x.Lesson.LessonName
                 }).ToList(),
-            }).ToListAsync();
+            }).ToList();
 
             return Response<List<StudentListExamGrandeResponseDto>>.Success(list, 200);
         }

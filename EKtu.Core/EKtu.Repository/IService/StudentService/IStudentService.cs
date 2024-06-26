@@ -11,7 +11,7 @@ namespace EKtu.Repository.IService.StudentService
     public interface IStudentService:IBaseService<Student>
     {
 
-        Task<Response<List<StudentListExamGrandeResponseDto>>> StudentListExamGrandeAsync(int studentId);
+        Task<Response<List<StudentListExamGrandeResponseDto>>> StudentListExamGrandeAsync(int studentId,bool term);
 
 
         Task<Response<int>> StudentCheckEmailAsync(string studentEmail);
