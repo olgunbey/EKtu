@@ -24,20 +24,30 @@ namespace EKtu.Persistence.Repository.TeacherRepository
             outenteringStudentGradesRequestDtos = new();
             foreach (var item in enteringStudentGradesRequestDtos)
             {
-                LessonConfirmation lessonConfirmation =  _dbContext.LessonConfirmation.First(y => y.LessonId == item.LessonId && y.StudentId == item.StudentId);
-                 _dbContext.LessonConfirmation.Entry(lessonConfirmation).Reference(y => y.ExamNote).Load();
-                if (lessonConfirmation.ExamNote is null)
+                LessonConfirmation? lessonConfirmation =  _dbContext.LessonConfirmation.FirstOrDefault(y => y.LessonId == item.LessonId && y.StudentId == item.StudentId);
+
+                if(lessonConfirmation is null)
                 {
-                    _dbContext.ExamNote.Add(new ExamNote()
-                    {
-                       Exam1 = item.Exam_1,
-                       Exam2 = item.Exam_2,
-                       LessonConfirmationId = lessonConfirmation.Id,
-                    });
+                    return;
                 }
                 else
                 {
-                    outenteringStudentGradesRequestDtos.Add(item);
+                    _dbContext.LessonConfirmation.Entry(lessonConfirmation).Reference(y => y.ExamNote).Load();
+
+                    if(lessonConfirmation.ExamNote is null)
+                    {
+                        _dbContext.ExamNote.Add(new ExamNote()
+                        {
+                            Exam1 = item.Exam_1,
+                            Exam2 = item.Exam_2,
+                            LessonConfirmationId = lessonConfirmation.Id,
+                        });
+                    }
+                    else
+                    {
+                        //demekki güncelleme olacak
+                        outenteringStudentGradesRequestDtos.Add(item);
+                    }
                 }
                 
             }
