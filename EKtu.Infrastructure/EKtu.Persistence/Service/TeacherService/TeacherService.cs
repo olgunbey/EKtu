@@ -106,9 +106,9 @@ namespace EKtu.Persistence.Service.TeacherService
         public async Task<Response<NoContent>> UpdateStudentGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos)
         {
             string liststudentSerializer="";
-          List<Student> liststudent= await teacherRepository.StudentUpdateGrades(enteringStudentGradesRequestDtos);
+          List<Student> liststudent= await teacherRepository.StudentUpdateGrades(enteringStudentGradesRequestDtos); //güncelleneceklerde olası bir hata için loglamak için aldım
 
-         var jsonserializerObject=  liststudent.DistinctBy(y=>y.FirstName).Select(y => new UpdateStudentGradesResponseDto()
+         var jsonserializerObject= liststudent.DistinctBy(y=>y.FirstName).Select(y => new UpdateStudentGradesResponseDto()
          {
 
              ExamNoteResponseDtos=y.LessonConfirmation.Select(y=>y.ExamNote).Select(y=> new ExamNoteResponseDto()
@@ -118,9 +118,6 @@ namespace EKtu.Persistence.Service.TeacherService
              }).ToList(),
              FirstName=y.FirstName,
          }).ToList();
-
-
-
 
             try
             {

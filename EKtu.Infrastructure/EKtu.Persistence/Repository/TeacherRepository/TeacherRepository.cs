@@ -25,8 +25,6 @@ namespace EKtu.Persistence.Repository.TeacherRepository
             foreach (var item in enteringStudentGradesRequestDtos)
             {
                 LessonConfirmation lessonConfirmation =  _dbContext.LessonConfirmation.First(y => y.LessonId == item.LessonId && y.StudentId == item.StudentId);
-
-              var deneme=  _dbContext.ExamNote.Select(y => y.LessonConfirmationId).ToList();
                  _dbContext.LessonConfirmation.Entry(lessonConfirmation).Reference(y => y.ExamNote).Load();
                 if (lessonConfirmation.ExamNote is null)
                 {
@@ -52,6 +50,31 @@ namespace EKtu.Persistence.Repository.TeacherRepository
                 .Include(y => y.ExamNote)
                 .Where(y => y.Student.ClassId == getAllStudentByClassIdAndLessonIdRequestDto.ClassId && y.LessonId==getAllStudentByClassIdAndLessonIdRequestDto.LessonId).AsQueryable();
 
+        }
+
+        public Task<IQueryable<Student>> GetAllStudentExamNoteByClass(int classId, int lessonId)
+        {
+            return Task.FromResult(_dbContext.Student
+        .AsNoTrackingWithIdentityResolution()
+        .Where(y => y.ClassId == classId)
+        .Include(y=>y.LessonConfirmation)
+        .ThenInclude(y=>y.ExamNote)
+        .Include(y=>y.LessonConfirmation)
+        .ThenInclude(y=>y.Lesson)
+        .Select(student => new
+        {
+            Student = student,
+            LessonConfirmations = student.LessonConfirmation
+                .Where(lc => lc.LessonId == lessonId)
+                .ToList()
+        })
+        .AsEnumerable()
+        .Select(studentWithFilteredConfirmations => {
+            studentWithFilteredConfirmations.Student.LessonConfirmation = studentWithFilteredConfirmations.LessonConfirmations;
+            return studentWithFilteredConfirmations.Student;
+        })
+        .AsQueryable()
+            ); 
         }
 
         public async Task<List<Student>> StudentUpdateGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos)
