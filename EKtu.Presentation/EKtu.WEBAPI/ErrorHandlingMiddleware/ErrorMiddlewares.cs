@@ -10,24 +10,24 @@ namespace EKtu.WEBAPI.ErrorHandlingMiddleware
     {
         public static void ErrorMiddleware(this WebApplication webApplication)
         {
-            webApplication.UseExceptionHandler(exceptionHandlerApp =>
-            exceptionHandlerApp.Run(async context =>
-            {
-              var exceptionHandlerFeatures= context.Features.Get<IExceptionHandlerFeature>();
+            //webApplication.UseExceptionHandler(exceptionHandlerApp =>
+            //exceptionHandlerApp.Run(async context =>
+            //{
+            //  var exceptionHandlerFeatures= context.Features.Get<IExceptionHandlerFeature>();
 
 
-                if(exceptionHandlerFeatures!.Path=="/api/teacher/enteringstudentgrades")
-                {
-                    var requestServices= context.RequestServices.GetRequiredService<MyLogging>();
-                    requestServices.LogInformation(exceptionHandlerFeatures.Error.Message);
+            //    if(exceptionHandlerFeatures!.Path=="/api/teacher/enteringstudentgrades")
+            //    {
+            //        var requestServices= context.RequestServices.GetRequiredService<MyLogging>();
+            //        requestServices.LogInformation(exceptionHandlerFeatures.Error.Message);
 
-                }
+            //    }
 
-            })
+            //})
 
 
 
-            );
+            //);
         }
     }
 }
