@@ -50,9 +50,9 @@ namespace EKtu.WEBAPI.Controllers
         [HttpGet]
         [ServiceFilter(typeof(TeacherTokenFilter))]
         [Authorize(Policy = "TeacherClassLessonList")]
-        public async Task<IActionResult> TeacherClassLessonList([FromHeader]int classId)
+        public async Task<IActionResult> TeacherClassLessonList([FromHeader]string classId)
         {
-          return ResponseData<List<TeacherLessonDto>>(await teacherService.TeacherLesson(classId, teacherTokenResponseDto.Id));
+          return ResponseData<List<TeacherLessonDto>>(await teacherService.TeacherLesson(Convert.ToInt32(classId), teacherTokenResponseDto.Id));
 
         }
 
@@ -61,13 +61,14 @@ namespace EKtu.WEBAPI.Controllers
         public async Task<IActionResult> EnteringStudentGrades([FromBody]List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos, [FromQuery]int classId) 
         {
 
-            var resp=  teacherService.EnteringStudentGrades(enteringStudentGradesRequestDtos,out var data);
-            if(!data.Any())
+            var resp= teacherService.EnteringStudentGrades(enteringStudentGradesRequestDtos,out var data);
+            if(!data.Any())//demekki güncellenecek notlar yok, sadece yeni not girişleri yapıldı
             {
                 await studentCacheService.StudentNewExamGrande();
             }
             else
             {
+                //burada güncellenecek notlar var
                 await teacherService.UpdateStudentGrades(enteringStudentGradesRequestDtos);
                 var resps = await studentCacheService.SetStudentCache(data, classId);
                 return ResponseData(resps);

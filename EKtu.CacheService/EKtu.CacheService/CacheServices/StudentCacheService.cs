@@ -3,6 +3,9 @@ using EKtu.Repository.Constant;
 using EKtu.Repository.Dtos;
 using EKtu.Repository.ICacheService.StudentCacheService;
 using EKtu.Repository.IRepository.StudentRepository;
+using EKtu.Repository.IRepository.TeacherRepository;
+using EKtu.Repository.IService.StudentService;
+using EKtu.Repository.IService.TeacherService;
 using ServiceStack;
 using ServiceStack.Redis;
 using ServiceStack.SystemJson;
@@ -13,10 +16,11 @@ namespace EKtu.CacheService.CacheServices
     public class StudentCacheService : BaseCache, IStudentCacheService
     {
         IStudentRepository _studentRepository;
-        public StudentCacheService(IStudentRepository studentRepository, IRedisClientAsync redisClient):base(redisClient)
+        ITeacherRepository _teacherRepository;
+        public StudentCacheService(IStudentRepository studentRepository, IRedisClientAsync redisClient, ITeacherRepository teacherRepository) : base(redisClient)
         {
             _studentRepository = studentRepository;
-            
+            _teacherRepository = teacherRepository;
         }
         public async Task<Dictionary<int, List<StudentChooseLessonCacheDto>>> AllStudentCacheLesson() 
         {
@@ -137,10 +141,31 @@ namespace EKtu.CacheService.CacheServices
         public async Task<Response<NoContent>> SetStudentCache(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos,int classId)
         {
 
-         var JsonSerializerCacheData= await base.GetCache<string>(CacheConstant.StudentExam);
+            var JsonSerializerCacheData= await base.GetCache<string>(CacheConstant.StudentExam);
             if(JsonSerializerCacheData is null)
             {
-                return Response<NoContent>.Fail("cache boş", 400);
+
+                var dictionary = new Dictionary<int,List<AllStudentExamCacheDto>>();
+                var resp= (await _teacherRepository.GetAllStudentExamNoteByClass(classId, enteringStudentGradesRequestDtos.Select(y => y.LessonId).First())).ToList();
+
+                dictionary.Add(classId, resp.Select(y => new AllStudentExamCacheDto()
+                {
+                    StudentId = y.Id,
+                    StudentName=y.FirstName+ ""+y.LastName,
+                    AllStudentExamCacheDtos=y.LessonConfirmation.Select(x=> new AllStudentExamCacheDto2()
+                    {
+                        Exam1=x.ExamNote.Exam1,
+                        Exam2 = x.ExamNote.Exam2,
+                        LessonId=x.LessonId,
+                        LessonName=x.Lesson.LessonName
+                    }).ToList()
+                }).ToList());
+
+                await base.SetCache(dictionary,CacheConstant.StudentExam);
+
+
+
+                return Response<NoContent>.Success(203);
             }
             var keyValuePairs = new Dictionary<int, List<AllStudentExamCacheDto>>();
             List<AllStudentExamCacheDto> allStudentExamCacheDtos = new();
