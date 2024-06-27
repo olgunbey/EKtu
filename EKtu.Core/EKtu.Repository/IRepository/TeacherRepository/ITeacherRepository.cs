@@ -19,7 +19,7 @@ namespace EKtu.Repository.IRepository.TeacherRepository
         Task<IQueryable<LessonConfirmation>> GetAllStudentByClassIdAndLessonIdAsync(GetAllStudentByClassIdAndLessonIdRequestDto getAllStudentByClassIdAndLessonIdRequestDto);
         void EnteringStudentGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos,out List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos1);
 
-
+        Task<List<LessonConfirmation>> TestRepository(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos);
         Task<IQueryable<Student>> GetAllStudentExamNoteByClass(int classId,int lessonId);
     }
 }

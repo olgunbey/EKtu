@@ -60,16 +60,19 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy ="TeacherEnteringGrades")]
         public async Task<IActionResult> EnteringStudentGrades([FromBody]List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos, [FromQuery]int classId) 
         {
-
+            //ilk başta veritabanından o sınıf ve o derse ait öğrencilerin degerlerini cachle
             var resp= teacherService.EnteringStudentGrades(enteringStudentGradesRequestDtos,out var data);
-            if(!data.Any())
+            if(!data.Any())//demekki güncelleme yok sadece examnote girişi var
             {
-                await studentCacheService.StudentNewExamGrande();
+               await studentCacheService.TestCache(enteringStudentGradesRequestDtos, classId);
+                //burada veritabanındaki bütün veriler cachlenir.
+                //await studentCacheService.StudentNewExamGrande();
             }
             else
             {
-                 await teacherService.UpdateStudentGrades(enteringStudentGradesRequestDtos);
-                 await studentCacheService.StudentNewExamGrande();
+                //burada güncelleme var....
+                 await teacherService.UpdateStudentGrades(enteringStudentGradesRequestDtos); //veritabanında update işlemi yapar
+                 await studentCacheService.StudentUpdateExamNote(enteringStudentGradesRequestDtos,classId);
             }
             return ResponseData(resp);
         }
