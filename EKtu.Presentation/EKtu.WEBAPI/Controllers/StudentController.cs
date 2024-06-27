@@ -59,7 +59,7 @@ namespace EKtu.WEBAPI.Controllers
             {
                 return ResponseData(resp);
             }
-            var rsp = await _studentService.StudentListExamGrandeAsync(studentResponseTokenDto.UserId,term);
+            var rsp = await _studentService.StudentListExamGrandeAsync(studentResponseTokenDto.UserId,term);//burada veritabanından çektikten sonra cachle!!
             return ResponseData(rsp);
          }
 

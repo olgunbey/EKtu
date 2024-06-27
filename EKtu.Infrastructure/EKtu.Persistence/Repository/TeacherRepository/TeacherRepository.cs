@@ -24,7 +24,7 @@ namespace EKtu.Persistence.Repository.TeacherRepository
             outenteringStudentGradesRequestDtos = new();
             foreach (var item in enteringStudentGradesRequestDtos)
             {
-                LessonConfirmation? lessonConfirmation =  _dbContext.LessonConfirmation.FirstOrDefault(y => y.LessonId == item.LessonId && y.StudentId == item.StudentId);
+                LessonConfirmation? lessonConfirmation =  _dbContext.LessonConfirmation.FirstOrDefault(y => y.LessonId == item.LessonId && y.StudentId == item.StudentId); //öğrencinin bu derse kaydını kontrol eder 
 
                 if(lessonConfirmation is null)
                 {
@@ -34,7 +34,7 @@ namespace EKtu.Persistence.Repository.TeacherRepository
                 {
                     _dbContext.LessonConfirmation.Entry(lessonConfirmation).Reference(y => y.ExamNote).Load();
 
-                    if(lessonConfirmation.ExamNote is null)
+                    if(lessonConfirmation.ExamNote is null) //yani burada ögrencinin ders kaydı var ancak veritabanında examnote tablosunda notu yok
                     {
                         _dbContext.ExamNote.Add(new ExamNote()
                         {
@@ -45,7 +45,7 @@ namespace EKtu.Persistence.Repository.TeacherRepository
                     }
                     else
                     {
-                        //demekki güncelleme olacak
+                        //demekki veritabanında ögrencinin notu var, bu yüzden güncelleme olacak
                         outenteringStudentGradesRequestDtos.Add(item);
                     }
                 }
@@ -128,6 +128,21 @@ namespace EKtu.Persistence.Repository.TeacherRepository
         public async ValueTask<Teacher> TeacherInformation(int userId)
         {
            return await _dbContext.Teacher.FindAsync(userId);
+        }
+
+        public async Task<List<LessonConfirmation>> TestRepository(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos)
+        {
+            List<LessonConfirmation> lessonConfirmations=new List<LessonConfirmation>();
+
+            foreach (var item in enteringStudentGradesRequestDtos)
+            {
+              LessonConfirmation lessonConfirmation=await _dbContext.LessonConfirmation.FirstAsync(y => y.StudentId == item.StudentId && y.LessonId == item.LessonId);
+                await _dbContext.Entry(lessonConfirmation).Reference(y => y.Lesson).LoadAsync();
+                await _dbContext.Entry(lessonConfirmation).Reference(y=>y.ExamNote).LoadAsync();
+
+                lessonConfirmations.Add(lessonConfirmation);
+            }
+            return lessonConfirmations;
         }
     }
 }

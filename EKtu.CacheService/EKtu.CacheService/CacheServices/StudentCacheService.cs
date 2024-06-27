@@ -2,12 +2,14 @@
 using EKtu.Repository.Constant;
 using EKtu.Repository.Dtos;
 using EKtu.Repository.ICacheService.StudentCacheService;
+using EKtu.Repository.IRepository;
 using EKtu.Repository.IRepository.StudentRepository;
 using EKtu.Repository.IRepository.TeacherRepository;
 using EKtu.Repository.IService.StudentService;
 using EKtu.Repository.IService.TeacherService;
 using ServiceStack;
 using ServiceStack.Redis;
+using ServiceStack.Script;
 using ServiceStack.SystemJson;
 using System.Text.Json;
 
@@ -86,32 +88,87 @@ namespace EKtu.CacheService.CacheServices
         }
 
 
-        public async Task StudentNewExamGrande()
+        public async Task StudentUpdateExamNote(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos,int classId)
         {
-          var AllStudentExamGrande= (await _studentRepository.ClassAllStudentExamGrandeList()).ToList();
-          var KeyValuePair = new Dictionary<int, List<AllStudentExamCacheDto>>();
-          var AllClassList=  (await _studentRepository.GetClassList()).ToList();
+            var CacheStudentExamListByClassAndLesson = await base.GetCache<string>(CacheConstant.StudentExam);
+            var keyValuePairs = new Dictionary<int, List<AllStudentExamCacheDto>>();
 
-
-            foreach (var item in AllClassList)
+            if (CacheStudentExamListByClassAndLesson is not null)  //demekki cache'nin içi dolu
             {
-                var CacheDto = AllStudentExamGrande.Where(y=>y.Id==item.Id).SelectMany(y => y.Students).Select(y => new AllStudentExamCacheDto()
+                //bu if'te cache içini dolduruyoruz
+                List<AllStudentExamCacheDto> allStudentExamCacheDtos = new();
+                var JsonSerializeDatas = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(CacheStudentExamListByClassAndLesson);
+
+
+                foreach (var item in JsonSerializeDatas)
                 {
-                    StudentId = y.Id,
-                    AllStudentExamCacheDtos = y.LessonConfirmation.Where(y=>y.ExamNote is not null).Select(y => new AllStudentExamCacheDto2()
+                    string key = item["Key"].ToString();
+                    string Value = item["Value"].ToString();
+
+                    var JsonDeserializers = JsonSerializer.Deserialize<List<AllStudentExamCacheDto>>(Value);
+                    keyValuePairs.Add(Convert.ToInt16(key), JsonDeserializers);
+                }
+
+                AllStudentExamCacheDto2 tmp;
+                if(keyValuePairs.TryGetValue(classId, out var data)) //burada mutlaka zaten if'in içine girecek cünkü eklenmeden güncellenemez!!! eklenen notlar her türlü cache'de var!!
+                {
+                    foreach (var item in enteringStudentGradesRequestDtos)
                     {
-                        Exam1 = y.ExamNote.Exam1,
-                        Exam2 = y.ExamNote.Exam2,
-                        LessonId = y.LessonId,
-                        LetterGrade = y.ExamNote.LetterGrade!,
-                        LessonName = y.Lesson.LessonName,
-                        Term=y.Lesson.Term,
-                    }).ToList(),
-                    StudentName = y.FirstName
-                }).ToList();
-                KeyValuePair.Add(item.Id, CacheDto);
+
+                        var StudentCache=  data.Single(y => y.StudentId == item.StudentId);
+                        var studentLessonExamCache= StudentCache.AllStudentExamCacheDtos.Single(y=>y.LessonId== item.LessonId);
+
+                        tmp=studentLessonExamCache;
+
+                        data.Remove(StudentCache);
+                        StudentCache.AllStudentExamCacheDtos.Remove(studentLessonExamCache);
+
+                        StudentCache.AllStudentExamCacheDtos.Add(new AllStudentExamCacheDto2()
+                        {
+                            Exam1=item.Exam_1,
+                            Exam2=item.Exam_2,
+                            LessonId=item.LessonId,
+                            LessonName=tmp.LessonName,
+                            LetterGrade=tmp.LetterGrade,
+                            Term=tmp.Term,
+                        });
+                        data.Add(StudentCache);
+                    }
+                }
+               await this.SetCache(keyValuePairs, CacheConstant.StudentExam);
+
             }
-            await base.SetCache(KeyValuePair, CacheConstant.StudentExam);
+            else //eğer cache boş ise veritabanından bütün notları çekip cachler
+            {
+                var AllStudentExamGrande = (await _studentRepository.ClassAllStudentExamGrandeList()).ToList();
+                var KeyValuePair = new Dictionary<int, List<AllStudentExamCacheDto>>();
+                var AllClassList = (await _studentRepository.GetClassList()).ToList();
+
+                foreach (var item in AllClassList)
+                {
+                    var CacheDto = AllStudentExamGrande.Where(y => y.Id == item.Id).SelectMany(y => y.Students).Select(y => new AllStudentExamCacheDto()
+                    {
+                        StudentId = y.Id,
+                        AllStudentExamCacheDtos = y.LessonConfirmation.Where(y => y.ExamNote is not null).Select(y => new AllStudentExamCacheDto2()
+                        {
+                            Exam1 = y.ExamNote.Exam1,
+                            Exam2 = y.ExamNote.Exam2,
+                            LessonId = y.LessonId,
+                            LetterGrade = y.ExamNote.LetterGrade!,
+                            LessonName = y.Lesson.LessonName,
+                            Term = y.Lesson.Term,
+                        }).ToList(),
+                        StudentName = y.FirstName
+                    }).ToList();
+                    KeyValuePair.Add(item.Id, CacheDto);
+                }
+                await base.SetCache(KeyValuePair, CacheConstant.StudentExam);
+
+            }
+              
+
+
+
         }
 
         public async Task<Response<List<AllStudentExamCacheDto>>> GetAllStudentsExamCache(int userId)
@@ -273,5 +330,98 @@ namespace EKtu.CacheService.CacheServices
             }
             return Response<List<CacheStudentExamListDto>>.Fail("bu sınıf yok", 400);
         }
+
+
+
+        public async Task TestCache(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos,int classId)
+        {
+            var CacheStudentExamListByClassAndLesson = await base.GetCache<string>(CacheConstant.StudentExam);
+            var keyValuePairs = new Dictionary<int, List<AllStudentExamCacheDto>>();
+
+            if (CacheStudentExamListByClassAndLesson is not null)  //demekki cache'nin içi dolu
+            {
+                //bu if'te cache içini dolduruyoruz
+                List<AllStudentExamCacheDto> allStudentExamCacheDtos = new();
+                var JsonSerializeDatas = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(CacheStudentExamListByClassAndLesson);
+
+
+                foreach (var item in JsonSerializeDatas)
+                {
+                    string key = item["Key"].ToString();
+                    string Value = item["Value"].ToString();
+
+                    var JsonDeserializers = JsonSerializer.Deserialize<List<AllStudentExamCacheDto>>(Value);
+                    keyValuePairs.Add(Convert.ToInt16(key), JsonDeserializers);
+                }
+
+             var listLessonConfirmation= await  _teacherRepository.TestRepository(enteringStudentGradesRequestDtos);//burada yalnızca veritabanına ekledigim examnote'leri aldım
+
+
+                if(keyValuePairs.TryGetValue(classId,out var data))
+                {
+                    foreach (var item in enteringStudentGradesRequestDtos)
+                    {
+                     var datas = data.FirstOrDefault(y => y.StudentId == item.StudentId);
+
+                        if(datas is not null && !datas.AllStudentExamCacheDtos.Any(y=>y.LessonId==item.LessonId))//yani bu ögrencinin aslında diger dersleri rediste var, ancak bu notu değiştirilen dersi yok
+                        {
+                         var dbStudentExamNote= listLessonConfirmation.First(y => y.StudentId == item.StudentId && y.LessonId==item.LessonId);
+
+
+                            datas.AllStudentExamCacheDtos.Add(new AllStudentExamCacheDto2() //burada da bu öğrencinin db'ye eklenen examnote'si cache eklenir
+                            {
+                                Exam1 = dbStudentExamNote.ExamNote.Exam1,
+                                Exam2 = dbStudentExamNote.ExamNote.Exam2,
+                                LessonName = dbStudentExamNote.Lesson.LessonName,
+                                LessonId = dbStudentExamNote.LessonId,
+                                LetterGrade = dbStudentExamNote.ExamNote.LetterGrade,
+                                Term = dbStudentExamNote.Lesson.Term
+                            });
+
+                            keyValuePairs.Remove(classId);
+
+                            data.Add(datas);
+
+                            keyValuePairs.Add(classId, data);
+                        }
+
+                    }
+                   await this.SetCache(keyValuePairs, CacheConstant.StudentExam);
+
+                }
+
+            }
+            else
+            {
+                var AllStudentExamGrande = (await _studentRepository.ClassAllStudentExamGrandeList()).ToList();
+                var AllClassList = (await _studentRepository.GetClassList()).ToList();
+
+                foreach (var item in AllClassList)
+                {
+                    var CacheDto = AllStudentExamGrande.Where(y => y.Id == item.Id).SelectMany(y => y.Students).Select(y => new AllStudentExamCacheDto()
+                    {
+                        StudentId = y.Id,
+                        AllStudentExamCacheDtos = y.LessonConfirmation.Where(y => y.ExamNote is not null).Select(y => new AllStudentExamCacheDto2()
+                        {
+                            Exam1 = y.ExamNote.Exam1,
+                            Exam2 = y.ExamNote.Exam2,
+                            LessonId = y.LessonId,
+                            LetterGrade = y.ExamNote.LetterGrade!,
+                            LessonName = y.Lesson.LessonName,
+                            Term = y.Lesson.Term,
+                        }).ToList(),
+                        StudentName = y.FirstName
+                    }).ToList();
+                    keyValuePairs.Add(item.Id, CacheDto);
+                }
+                await base.SetCache(keyValuePairs, CacheConstant.StudentExam);
+            }
+            //1) ilk başta cachedeki verileri al  +
+            //2) ardından cachedeki aldıgımız verilere yeni eklenen examnote'leri ekle
+            //3) ardından son halini cachle
+
+
+        }
+        
     }
 }
