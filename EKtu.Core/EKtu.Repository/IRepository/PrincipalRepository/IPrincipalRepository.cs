@@ -24,5 +24,8 @@ namespace EKtu.Repository.IRepository.PrincipalRepository
         Task<int> GetStudentChooseLessonIdAsync(int studentId, int lessonId);
         ValueTask<Principal> PrincipalInformation(int userId);
 
+
+        Task<IQueryable<Lesson>> GetAllLessonAsync();
+
     }
 }

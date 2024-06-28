@@ -66,13 +66,12 @@ namespace EKtu.WEBAPI.Controllers
             {
                await studentCacheService.TestCache(enteringStudentGradesRequestDtos, classId);
                 //burada veritabanındaki bütün veriler cachlenir.
-                //await studentCacheService.StudentNewExamGrande();
             }
             else
             {
                 //burada güncelleme var....
                  await teacherService.UpdateStudentGrades(enteringStudentGradesRequestDtos); //veritabanında update işlemi yapar
-                 await studentCacheService.StudentUpdateExamNote(enteringStudentGradesRequestDtos,classId);
+                 await studentCacheService.StudentUpdateExamNote(enteringStudentGradesRequestDtos,classId); //cache'yi günceller
             }
             return ResponseData(resp);
         }

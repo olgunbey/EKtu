@@ -74,5 +74,11 @@ namespace EKtu.WEBAPI.Controllers
         {
           return ResponseData(await principalService.StudentAttendanceAddAsync(studentAttendanceRequestDto));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllLesson()
+        {
+            return ResponseData(await principalService.GetAllLessonAsync());
+        }
     }
 }

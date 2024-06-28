@@ -21,17 +21,18 @@ namespace EKtu.Persistence.Service.AddPersonService
 
         public async Task<EKtu.Repository.Dtos.Response<NoContent>> AddAsync(T data)
         {
-            data.Password=HashTransaction.HashPassword(data.Password);
+            
 
-         bool hasUserTckNo= await repository.ExistUser(data.Password);
+         bool hasUserTckNo= await repository.ExistUser(data.TckNo);
             if(hasUserTckNo)
             {
                 return EKtu.Repository.Dtos.Response<NoContent>.Fail("bu tckno'ya sahip kullanıcı var", 400);
             }
             try
             {
-               await repository.AddPersonAsync(data);
-               await saves.SaveChangesAsync();
+                data.Password = HashTransaction.HashPassword(data.Password);
+                await repository.AddPersonAsync(data);
+                await saves.SaveChangesAsync();
                 return EKtu.Repository.Dtos.Response<NoContent>.Success(204);
             }
             catch (Exception)
