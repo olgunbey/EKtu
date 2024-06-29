@@ -87,6 +87,11 @@ namespace EKtu.Persistence.Repository.TeacherRepository
             ); 
         }
 
+        public Task<IQueryable<Teacher>> GetAllTeacherAsync()
+        {
+           return Task.FromResult(_dbContext.Set<Teacher>().AsQueryable());
+        }
+
         public async Task<List<Student>> StudentUpdateGrades(List<EnteringStudentGradesRequestDto> enteringStudentGradesRequestDtos)
         {
             List<Student> students = new List<Student>();
