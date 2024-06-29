@@ -48,7 +48,7 @@ namespace EKtu.AuthServer
                 AllowedScopes={"exam.update","exam.read","teacher.classlessonlist","student.enteringgrades","custom.profile","openid"},
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
-                AccessTokenLifetime=3,
+                AccessTokenLifetime=99999999,
                 AbsoluteRefreshTokenLifetime=25
             },
             new Client()
@@ -59,7 +59,7 @@ namespace EKtu.AuthServer
                 AllowedScopes={"student.delete","student.update","student.added","exam.read","lesson.approve","lesson.added","teacher.classlesson","student.calculateexamgrande","absence.entry","custom.profile","openid"},
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
-                AccessTokenLifetime=1,
+                AccessTokenLifetime=99999999,
                 AbsoluteRefreshTokenLifetime=25,
                 UpdateAccessTokenClaimsOnRefresh=true,
             },
@@ -72,7 +72,7 @@ namespace EKtu.AuthServer
                 AllowOfflineAccess=true,
                 RefreshTokenUsage=TokenUsage.ReUse,
                 RefreshTokenExpiration=TokenExpiration.Absolute,
-                AccessTokenLifetime=3600,
+                AccessTokenLifetime=99999999,
                 AbsoluteRefreshTokenLifetime=7200
             },
             new Client()

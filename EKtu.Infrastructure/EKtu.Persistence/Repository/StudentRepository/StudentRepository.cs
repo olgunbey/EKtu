@@ -127,9 +127,9 @@ namespace EKtu.Persistence.Repository.StudentRepository
             return Task.FromResult(_dbContext.Class.AsQueryable());
         }
 
-        public Task<IQueryable<Lesson>> GetLessonTerm(TermLessonListRequestDto termLessonListRequestDto,int Grade)
+        public Task<IQueryable<Lesson>> GetLessonTerm(bool termLessonListRequestDto,int Grade)
         {
-           return Task.FromResult(_dbContext.Lesson.AsNoTracking().Where(y => y.Term == termLessonListRequestDto.Term && y.Grade==Grade));
+           return Task.FromResult(_dbContext.Lesson.AsNoTracking().Where(y => y.Term == termLessonListRequestDto && y.Grade==Grade));
         }
     }
 }

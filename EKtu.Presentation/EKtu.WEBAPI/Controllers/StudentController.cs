@@ -138,9 +138,9 @@ namespace EKtu.WEBAPI.Controllers
         [HttpGet]
         [ServiceFilter(typeof(StudentTokenFilter))]
         [Authorize(Policy = "GetStudentChooseLesson")]
-        public async Task<IActionResult> TermLessonList([FromHeader]TermLessonListRequestDto termLessonListRequestDto)
+        public async Task<IActionResult> TermLessonList([FromHeader]bool term)
         {
-         var RespData= await  _studentService.GetLessonTerm(termLessonListRequestDto, studentResponseTokenDto.Grade);
+         var RespData= await  _studentService.GetLessonTerm(term, studentResponseTokenDto.Grade);
             return ResponseData(RespData);
         }
     }
