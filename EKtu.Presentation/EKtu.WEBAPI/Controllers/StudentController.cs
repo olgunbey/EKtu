@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Ocsp;
+using System.Diagnostics;
 using System.Security.Claims;
 
 namespace EKtu.WEBAPI.Controllers
@@ -54,12 +55,12 @@ namespace EKtu.WEBAPI.Controllers
         [Authorize(Policy ="StudentList")]
          public async Task<IActionResult> StudentListExamGrande([FromHeader]bool term) 
          {
-         var resp= await _studentCacheService.GetCacheStudentGradeList(studentResponseTokenDto.ClassId,studentResponseTokenDto.UserId,term);
-            if(resp.Data is not null)
+            var resp = await _studentCacheService.GetCacheStudentGradeList(studentResponseTokenDto.ClassId, studentResponseTokenDto.UserId, term);
+            if (resp.Data is not null)
             {
                 return ResponseData(resp);
             }
-            var rsp = await _studentService.StudentListExamGrandeAsync(studentResponseTokenDto.UserId,term);//burada veritabanından çektikten sonra cachle!!
+            var rsp = await _studentService.StudentListExamGrandeAsync(studentResponseTokenDto.UserId,term,studentResponseTokenDto.Grade);//burada veritabanından çektikten sonra cachle!!
             return ResponseData(rsp);
          }
 
