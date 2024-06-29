@@ -23,14 +23,14 @@ namespace EKtu.Persistence.Service.StudentService
             studentBuilder = _studentBuilder;
         }
 
-        public async Task<Response<List<StudentListExamGrandeResponseDto>>> StudentListExamGrandeAsync(int studentId, bool term)
+        public async Task<Response<List<StudentListExamGrandeResponseDto>>> StudentListExamGrandeAsync(int studentId, bool term,int grade)
         {
          var IQueryAbleStudent= (await studentRepository.StudentListExamGrandeAsync(studentId)).ToList();
 
             var list = IQueryAbleStudent.Select(y => new
             {
                 Student=y,
-                LessonConfirmation=y.LessonConfirmation.Where(y=>y.Lesson.Term==term),
+                LessonConfirmation=y.LessonConfirmation.Where(y=>y.Lesson.Term==term && y.Lesson.Grade==grade),
             } ).Select(y => new StudentListExamGrandeResponseDto()
             {
                 FirstName=y.Student.FirstName,
