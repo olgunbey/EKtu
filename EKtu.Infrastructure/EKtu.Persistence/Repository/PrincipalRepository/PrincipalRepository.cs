@@ -42,6 +42,11 @@ namespace EKtu.Persistence.Repository.PrincipalRepository
 
         }
 
+        public Task<IQueryable<Lesson>> GetAllLessonAsync()
+        {
+            return Task.FromResult(_dbContext.Lesson.AsQueryable());
+        }
+
         public async Task<int> GetStudentChooseLessonIdAsync(int studentId, int lessonId)
         {
           return (await _dbContext.StudentChooseLessons.FirstOrDefaultAsync(y => y.StudentId==studentId && y.LessonId == lessonId))!.Id;

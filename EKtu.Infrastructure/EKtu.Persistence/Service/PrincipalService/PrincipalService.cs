@@ -8,12 +8,7 @@ using EKtu.Repository.IRepository.PrincipalRepository;
 using EKtu.Repository.IService;
 using EKtu.Repository.IService.PrincipalService;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace EKtu.Persistence.Service.PrincipalService
 {
@@ -90,39 +85,61 @@ namespace EKtu.Persistence.Service.PrincipalService
             {
              var data =  (await principalRepository.StudentCalculateLetterGrandeAsync(item.ClassId, item.LessonId)).ToList();
 
-             var StudentGpas=  data.Select(y => new StudentCalculateExamLetterResponseDto()
-                {
-                    ExamNoteId = y.ExamNote.Id,
-                    GradeAverage = (y.ExamNote.Exam1 + y.ExamNote.Exam2) / data.Count(),
-                    LatterGrande = (y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count() < item.Avg ? "FF" :
-                    ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) == 0 ? "FF" :
-                ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 20 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 24 ? "AA" :
-                ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 16 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 20 ? "AB" :
-                ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 12 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 16 ? "BB" :
-                ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 8 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 12 ? "CB" :
-                ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 4 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 8 ? "CC" :
-                ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 4 ? "DC" :""
+
+                    var StudentGpas = data.Where(y=>y.ExamNote is not null).Select(y => new StudentCalculateExamLetterResponseDto()
+                    {
+                        ExamNoteId = y.ExamNote.Id,
+                        GradeAverage = (y.ExamNote.Exam1 + y.ExamNote.Exam2) / data.Count(),
+                        LatterGrande = (y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count() < item.Avg ? "FF" :
+                   ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) == 0 ? "FF" :
+               ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 20 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 24 ? "AA" :
+               ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 16 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 20 ? "AB" :
+               ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 12 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 16 ? "BB" :
+               ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 8 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 12 ? "CB" :
+               ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) > item.Avg + 4 && ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 8 ? "CC" :
+               ((y.ExamNote.Exam2 + y.ExamNote.Exam1) / data.Count()) <= item.Avg + 4 ? "DC" : ""
+
+                    }).ToList();
+
+
+                    var examNotes = StudentGpas.Select(y => new ExamNote()
+                    {
+                        Id = y.ExamNoteId,
+                        LetterGrade = y.LatterGrande
+                    }).ToList();
+                    try
+                    {
+                        await principalRepository.StudentCalculateUpdatedAsync(examNotes);
+                        await _saves.SaveChangesAsync();
+                    }
+                    catch (Exception)
+                    {
+                        throw new StudentCalculateLetterGradeErrorException("hata!!");
+                    }
                 
-                }).ToList();
-
-
-               var examNotes= StudentGpas.Select(y => new ExamNote()
-                {
-                    Id = y.ExamNoteId,
-                    LetterGrade = y.LatterGrande
-                }).ToList();
-                try
-                {
-                    await principalRepository.StudentCalculateUpdatedAsync(examNotes);
-                    await _saves.SaveChangesAsync();
-                }
-                catch (Exception)
-                {
-                    throw new StudentCalculateLetterGradeErrorException("hata!!");
-                }
             }
-            
             return Response<NoContent>.Success(204);
+
+
+        }
+
+        public async Task<Response<List<GetAllLessonResponseDto>>> GetAllLessonAsync()
+        {
+          var  getAllLessons = (await principalRepository.GetAllLessonAsync());
+
+            if(getAllLessons is null)
+            {
+                return Response<List<GetAllLessonResponseDto>>.Fail("ders yok", 400);
+            }
+          var resp= await getAllLessons.Select(y => new GetAllLessonResponseDto()
+            {
+               LessonId=y.Id,
+               LessonName=y.LessonName,
+               
+            }).ToListAsync();
+
+            return Response<List<GetAllLessonResponseDto>>.Success(resp, 400);
+
         }
 
         public async Task<Response<PrincipalInformationResponseDto>> PrincipalInformation(int userId)

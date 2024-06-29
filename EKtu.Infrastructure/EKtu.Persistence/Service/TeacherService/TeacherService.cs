@@ -48,15 +48,15 @@ namespace EKtu.Persistence.Service.TeacherService
             var respo =(await teacherRepository.GetAllStudentByClassIdAndLessonIdAsync(getAllStudentByClassIdAndLessonIdRequestDto)).ToList();
 
 
-          var responseData= respo.Select(y => new GetAllStudentByClassIdAndLessonIdResponseDto()
+            var responseData2 = respo.Select(y => new GetAllStudentByClassIdAndLessonIdResponseDto()
             {
-                StudentId=y.StudentId,
-                StudentName=y.Student.FirstName+""+y.Student.LastName,
-                Exam_1=y.ExamNote.Exam1,
-                Exam_2=y.ExamNote.Exam2,
+                StudentId = y.StudentId!,  // Null kontrolü
+                StudentName = (y.Student?.FirstName ?? "") + " " + (y.Student?.LastName ?? ""),  // Null kontrolü ve boş string ekleme
+                Exam_1 = y.ExamNote?.Exam1 ?? 0,  // Null kontrolü
+                Exam_2 = y.ExamNote?.Exam2 ?? 0   // Null kontrolü
             }).ToList();
 
-            return Response<List<GetAllStudentByClassIdAndLessonIdResponseDto>>.Success(responseData, 200);
+            return Response<List<GetAllStudentByClassIdAndLessonIdResponseDto>>.Success(responseData2, 200);
 
         }
 
