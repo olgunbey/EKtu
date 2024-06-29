@@ -172,7 +172,7 @@ namespace EKtu.Persistence.Service.StudentService
             return Response<List<ClassListResponseDto>>.Success(responseData, 200);
         }
 
-        public async Task<Response<GetLessonResponseDto>> GetLessonTerm(TermLessonListRequestDto termLessonListRequestDto,int Grade)
+        public async Task<Response<GetLessonResponseDto>> GetLessonTerm(bool termLessonListRequestDto,int Grade)
         {
             var queryAbleData= await studentRepository.GetLessonTerm(termLessonListRequestDto, Grade);
 

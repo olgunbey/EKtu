@@ -32,7 +32,7 @@ namespace EKtu.Repository.IService.StudentService
         Task<Response<StudentInformationResponseDto>> StudentInformation(int studentId);
 
         Task<Response<List<ClassListResponseDto>>> GetClassList();
-        Task<Response<GetLessonResponseDto>> GetLessonTerm(TermLessonListRequestDto termLessonListRequestDto, int Grade);
+        Task<Response<GetLessonResponseDto>> GetLessonTerm(bool termLessonListRequestDto, int Grade);
 
     }
 }
