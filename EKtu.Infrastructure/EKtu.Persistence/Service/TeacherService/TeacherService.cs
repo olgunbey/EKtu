@@ -60,6 +60,25 @@ namespace EKtu.Persistence.Service.TeacherService
 
         }
 
+        public async Task<Response<List<GetAllTeacherResponseDto>>> GetAllTeacherAsync()
+        {
+         var ıqueryAble= (await  teacherRepository.GetAllTeacherAsync());
+
+          var resp= await ıqueryAble.Select(y => new GetAllTeacherResponseDto()
+            {
+               Id = y.Id,
+               Name=y.FirstName + " " + y.LastName,
+
+            }).ToListAsync();
+            
+            if(resp is null)
+            {
+                return Response<List<GetAllTeacherResponseDto>>.Fail("öğretmen yok", 400);
+            }
+            return Response<List<GetAllTeacherResponseDto>>.Success(resp, 400);
+
+        }
+
         public async Task<Response<List<TeacherClassReponseDto>>> TeacherClass(int teacherId)
         {
             var teacherClasses = await (await teacherRepository.TeacherClass(teacherId)).ToListAsync();

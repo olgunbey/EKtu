@@ -80,5 +80,11 @@ namespace EKtu.WEBAPI.Controllers
         {
          return ResponseData(await teacherService.GetAllStudentByClassIdAndLessonId(getAllStudentByClassIdAndLessonIdRequestDto));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllTeeacher()
+        {
+            return Ok();
+        }
     }
 }
